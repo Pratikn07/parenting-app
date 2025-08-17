@@ -44,20 +44,7 @@
     "plugins": [
       "expo-router", 
       "expo-font", 
-      "expo-web-browser",
-      [
-        "@react-native-async-storage/async-storage",
-        {
-          "ios": {
-            "NSPrivacyAccessedAPITypes": [
-              {
-                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
-                "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
-              }
-            ]
-          }
-        }
-      ]
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
