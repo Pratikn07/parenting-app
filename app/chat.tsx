@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Send, Mic, BookOpen, Heart, Calendar, Book, User, Paperclip } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { useAuthStore } from '../src/shared/stores/authStore';
 
 interface Message {
   id: string;
@@ -27,6 +28,7 @@ interface Message {
 }
 
 export default function ChatScreen() {
+  const { user } = useAuthStore();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -38,6 +40,20 @@ export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  // Get current time greeting
+  const getTimeGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  // Get user's first name
+  const getUserFirstName = () => {
+    if (!user?.name) return 'there';
+    return user.name.split(' ')[0];
+  };
 
   const sampleResponses = [
     {
@@ -119,7 +135,7 @@ export default function ChatScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Good evening, Sarah</Text>
+        <Text style={styles.headerTitle}>{getTimeGreeting()}, {getUserFirstName()}</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity
             style={styles.headerButton}

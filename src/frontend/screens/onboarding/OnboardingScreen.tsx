@@ -78,7 +78,7 @@ export default function OnboardingScreen() {
   };
 
   React.useEffect(() => {
-    AnalyticsService.screen('onboarding');
+    AnalyticsService.trackScreenView('onboarding');
   }, []);
 
   const addChild = () => {

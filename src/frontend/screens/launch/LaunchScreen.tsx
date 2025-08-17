@@ -18,7 +18,7 @@ export default function LaunchScreen() {
   const fadeOutAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    AnalyticsService.screen('launch');
+    AnalyticsService.trackScreenView('launch');
     
     // Logo animation sequence
     const logoAnimation = Animated.sequence([
