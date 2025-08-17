@@ -17,14 +17,12 @@ import { router } from 'expo-router';
 import { AuthService } from '../../../services/auth/AuthService';
 import { AnalyticsService } from '../../../services/analytics/AnalyticsService';
 import { AuthFormData } from '../../../shared/types/auth.types';
-import { useAuthStore } from '../../../shared/stores/authStore';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { SocialButton } from '../../components/auth/SocialButton';
 
 export default function AuthScreen() {
   const [isSignIn, setIsSignIn] = useState(false);
-  const { login } = useAuthStore();
   const [formData, setFormData] = useState<AuthFormData>({
     name: '',
     email: '',
@@ -35,8 +33,6 @@ export default function AuthScreen() {
     try {
       AnalyticsService.track('auth_apple_initiated');
       await AuthService.signInWithApple();
-      // Note: In a real app, you'd get the auth response and pass it to login()
-      await login(formData.email, formData.password); // Mock for now
       router.replace('/onboarding');
     } catch (error) {
       console.error('Apple Sign In failed:', error);
@@ -47,8 +43,6 @@ export default function AuthScreen() {
     try {
       AnalyticsService.track('auth_google_initiated');
       await AuthService.signInWithGoogle();
-      // Note: In a real app, you'd get the auth response and pass it to login()
-      await login(formData.email, formData.password); // Mock for now
       router.replace('/onboarding');
     } catch (error) {
       console.error('Google Sign In failed:', error);
@@ -60,11 +54,9 @@ export default function AuthScreen() {
       AnalyticsService.track(isSignIn ? 'auth_email_signin' : 'auth_email_signup');
       
       if (isSignIn) {
-        await login(formData.email, formData.password);
+        await AuthService.signIn(formData.email, formData.password);
       } else {
-        // For sign up, you'd typically call a signup service first, then login
         await AuthService.signUp(formData.name, formData.email, formData.password);
-        await login(formData.email, formData.password);
       }
       
       router.replace('/onboarding');

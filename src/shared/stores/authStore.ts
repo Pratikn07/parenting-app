@@ -80,7 +80,6 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           isAuthenticated: false,
-          hasCompletedOnboarding: false,
           error: null,
         });
       },
