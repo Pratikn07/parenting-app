@@ -8,66 +8,200 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Apple, Mail } from 'lucide-react-native';
+import { Apple, Mail, AlertCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 // Import from shared types and services
 import { AuthService } from '../../../services/auth/AuthService';
 import { AnalyticsService } from '../../../services/analytics/AnalyticsService';
 import { AuthFormData } from '../../../shared/types/auth.types';
+import { useAuthStore } from '../../../shared/stores/authStore';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { SocialButton } from '../../components/auth/SocialButton';
 
 export default function AuthScreen() {
+  const { login, signup, error, isLoading, clearError } = useAuthStore();
   const [isSignIn, setIsSignIn] = useState(false);
   const [formData, setFormData] = useState<AuthFormData>({
     name: '',
     email: '',
     password: '',
   });
+  const [formErrors, setFormErrors] = useState<Partial<AuthFormData>>({});
+  const [isOAuthLoading, setIsOAuthLoading] = useState<'apple' | 'google' | null>(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+
+  // Form validation
+  const validateForm = (): boolean => {
+    const errors: Partial<AuthFormData> = {};
+    
+    if (!isSignIn && !formData.name.trim()) {
+      errors.name = 'Name is required';
+    }
+    
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+    
+    if (!formData.password) {
+      errors.password = 'Password is required';
+    } else if (!isSignIn && formData.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters';
+    } else if (!isSignIn && !/(?=.*[a-zA-Z])(?=.*\d)/.test(formData.password)) {
+      errors.password = 'Password must contain both letters and numbers';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleContinueWithApple = async () => {
     try {
+      setIsOAuthLoading('apple');
+      clearError();
       AnalyticsService.track('auth_apple_initiated');
-      await AuthService.signInWithApple();
-      router.replace('/onboarding');
+      
+      // For now, show setup required message
+      Alert.alert(
+        'OAuth Setup Required',
+        'Apple Sign In requires configuration in your Supabase dashboard. Please configure Apple OAuth provider in Authentication > Settings.',
+        [{ text: 'OK' }]
+      );
+      
     } catch (error) {
       console.error('Apple Sign In failed:', error);
+      Alert.alert('Sign In Failed', 'Apple Sign In is not configured. Please use email authentication or contact support.');
+    } finally {
+      setIsOAuthLoading(null);
     }
   };
 
   const handleContinueWithGoogle = async () => {
     try {
+      setIsOAuthLoading('google');
+      clearError();
       AnalyticsService.track('auth_google_initiated');
-      await AuthService.signInWithGoogle();
-      router.replace('/onboarding');
+      
+      // For now, show setup required message
+      Alert.alert(
+        'OAuth Setup Required',
+        'Google Sign In requires configuration in your Supabase dashboard. Please configure Google OAuth provider in Authentication > Settings.',
+        [{ text: 'OK' }]
+      );
+      
     } catch (error) {
       console.error('Google Sign In failed:', error);
+      Alert.alert('Sign In Failed', 'Google Sign In is not configured. Please use email authentication or contact support.');
+    } finally {
+      setIsOAuthLoading(null);
     }
   };
 
   const handleEmailAuth = async () => {
+    if (!validateForm()) return;
+    
+    clearError();
+    
     try {
       AnalyticsService.track(isSignIn ? 'auth_email_signin' : 'auth_email_signup');
       
       if (isSignIn) {
-        await AuthService.signIn(formData.email, formData.password);
+        await login(formData.email, formData.password);
       } else {
-        await AuthService.signUp(formData.name, formData.email, formData.password);
+        await signup(formData.name, formData.email, formData.password);
       }
       
-      router.replace('/onboarding');
+      // Navigation will be handled by the auth store and app routing
     } catch (error) {
       console.error('Email auth failed:', error);
+      // Error will be displayed via auth store error state
     }
   };
 
-  const handleForgotPassword = () => {
-    AnalyticsService.track('auth_forgot_password');
-    // TODO: Implement forgot password
+  const handleForgotPassword = async () => {
+    if (!resetEmail.trim()) {
+      Alert.alert('Email Required', 'Please enter your email address to reset your password.');
+      return;
+    }
+    
+    if (!/\S+@\S+\.\S+/.test(resetEmail)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+      AnalyticsService.track('auth_forgot_password');
+      
+      await AuthService.resetPassword(resetEmail);
+      
+      Alert.alert(
+        'Password Reset Sent',
+        'Check your email for password reset instructions.',
+        [{ text: 'OK', onPress: () => setShowForgotPassword(false) }]
+      );
+      
+    } catch (error) {
+      console.error('Password reset failed:', error);
+      Alert.alert('Reset Failed', 'Unable to send password reset email. Please try again.');
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const renderForgotPasswordModal = () => {
+    if (!showForgotPassword) return null;
+    
+    return (
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Reset Password</Text>
+          <Text style={styles.modalSubtitle}>
+            Enter your email address and we'll send you a link to reset your password.
+          </Text>
+          
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Enter your email"
+            value={resetEmail}
+            onChangeText={setResetEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          
+          <View style={styles.modalButtons}>
+            <TouchableOpacity
+              style={styles.modalButtonSecondary}
+              onPress={() => setShowForgotPassword(false)}
+              disabled={resetLoading}
+            >
+              <Text style={styles.modalButtonSecondaryText}>Cancel</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.modalButtonPrimary, resetLoading && styles.modalButtonDisabled]}
+              onPress={handleForgotPassword}
+              disabled={resetLoading}
+            >
+              {resetLoading ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <Text style={styles.modalButtonPrimaryText}>Send Reset Link</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -83,17 +217,32 @@ export default function AuthScreen() {
         >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Welcome to My Curated Haven</Text>
+            <Text style={styles.title}>Welcome to Your Parenting Compass</Text>
             <Text style={styles.subtitle}>
               Your trusted companion for the parenting journey
             </Text>
           </View>
 
+          {/* Error Display */}
+          {error && (
+            <View style={styles.errorContainer}>
+              <AlertCircle size={16} color="#EF4444" strokeWidth={2} />
+              <Text style={styles.errorText}>{error}</Text>
+              <TouchableOpacity onPress={clearError} style={styles.errorClose}>
+                <Text style={styles.errorCloseText}>×</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* Auth Toggle */}
           <View style={styles.authToggle}>
             <TouchableOpacity
               style={[styles.toggleButton, !isSignIn && styles.toggleButtonActive]}
-              onPress={() => setIsSignIn(false)}
+              onPress={() => {
+                setIsSignIn(false);
+                clearError();
+                setFormErrors({});
+              }}
               activeOpacity={0.7}
             >
               <Text style={[styles.toggleText, !isSignIn && styles.toggleTextActive]}>
@@ -102,7 +251,11 @@ export default function AuthScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.toggleButton, isSignIn && styles.toggleButtonActive]}
-              onPress={() => setIsSignIn(true)}
+              onPress={() => {
+                setIsSignIn(true);
+                clearError();
+                setFormErrors({});
+              }}
               activeOpacity={0.7}
             >
               <Text style={[styles.toggleText, isSignIn && styles.toggleTextActive]}>
@@ -113,18 +266,37 @@ export default function AuthScreen() {
 
           {/* Social Sign In */}
           <View style={styles.socialContainer}>
-            <SocialButton
-              provider="apple"
+            <TouchableOpacity
+              style={[styles.socialButton, styles.appleButton]}
               onPress={handleContinueWithApple}
-              icon={<Apple size={20} color="#000000" strokeWidth={2} fill="#000000" />}
-              text="Continue with Apple"
-            />
+              disabled={isLoading || isOAuthLoading !== null}
+              activeOpacity={0.7}
+            >
+              {isOAuthLoading === 'apple' ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <>
+                  <Apple size={20} color="#FFFFFF" strokeWidth={2} fill="#FFFFFF" />
+                  <Text style={styles.appleButtonText}>Continue with Apple</Text>
+                </>
+              )}
+            </TouchableOpacity>
 
-            <SocialButton
-              provider="google"
+            <TouchableOpacity
+              style={[styles.socialButton, styles.googleButton]}
               onPress={handleContinueWithGoogle}
-              text="Continue with Google"
-            />
+              disabled={isLoading || isOAuthLoading !== null}
+              activeOpacity={0.7}
+            >
+              {isOAuthLoading === 'google' ? (
+                <ActivityIndicator size="small" color="#1F2937" />
+              ) : (
+                <>
+                  <Text style={styles.googleIcon}>G</Text>
+                  <Text style={styles.googleButtonText}>Continue with Google</Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
 
           {/* Divider */}
@@ -137,48 +309,84 @@ export default function AuthScreen() {
           {/* Email Form */}
           <View style={styles.formContainer}>
             {!isSignIn && (
-              <Input
-                label="Your name"
-                placeholder="Enter your name"
-                value={formData.name}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
-                autoCapitalize="words"
-              />
+              <View>
+                <Input
+                  label="Your name"
+                  placeholder="Enter your name"
+                  value={formData.name}
+                  onChangeText={(text) => {
+                    setFormData(prev => ({ ...prev, name: text }));
+                    if (formErrors.name) {
+                      setFormErrors(prev => ({ ...prev, name: undefined }));
+                    }
+                  }}
+                  autoCapitalize="words"
+                  error={formErrors.name}
+                />
+              </View>
             )}
 
-            <Input
-              label="Email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+            <View>
+              <Input
+                label="Email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChangeText={(text) => {
+                  setFormData(prev => ({ ...prev, email: text }));
+                  if (formErrors.email) {
+                    setFormErrors(prev => ({ ...prev, email: undefined }));
+                  }
+                }}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                error={formErrors.email}
+              />
+            </View>
 
-            <Input
-              label="Password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, password: text }))}
-              secureTextEntry
-              helperText={!isSignIn ? "At least 8 characters with letters and numbers" : undefined}
-            />
+            <View>
+              <Input
+                label="Password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChangeText={(text) => {
+                  setFormData(prev => ({ ...prev, password: text }));
+                  if (formErrors.password) {
+                    setFormErrors(prev => ({ ...prev, password: undefined }));
+                  }
+                }}
+                secureTextEntry
+                helperText={!isSignIn ? "At least 8 characters with letters and numbers" : undefined}
+                error={formErrors.password}
+              />
+            </View>
 
             {isSignIn && (
               <TouchableOpacity
                 style={styles.forgotPassword}
-                onPress={handleForgotPassword}
+                onPress={() => {
+                  setResetEmail(formData.email);
+                  setShowForgotPassword(true);
+                }}
                 activeOpacity={0.7}
               >
                 <Text style={styles.forgotPasswordText}>Forgot password?</Text>
               </TouchableOpacity>
             )}
 
-            <Button
-              title={isSignIn ? 'Sign in' : 'Create account'}
+            <TouchableOpacity
+              style={[styles.emailButton, isLoading && styles.emailButtonDisabled]}
               onPress={handleEmailAuth}
-              variant="primary"
-            />
+              disabled={isLoading || isOAuthLoading !== null}
+              activeOpacity={0.7}
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <Text style={styles.emailButtonText}>
+                  {isSignIn ? 'Sign in' : 'Create account'}
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
 
           {/* Terms */}
@@ -198,6 +406,9 @@ export default function AuthScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      
+      {/* Forgot Password Modal */}
+      {renderForgotPasswordModal()}
     </SafeAreaView>
   );
 }
@@ -219,7 +430,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 32,
   },
   title: {
     fontSize: 28,
@@ -234,6 +445,30 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     textAlign: 'center',
     lineHeight: 24,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 24,
+  },
+  errorText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#EF4444',
+    marginLeft: 8,
+  },
+  errorClose: {
+    padding: 4,
+  },
+  errorCloseText: {
+    fontSize: 18,
+    color: '#EF4444',
+    fontWeight: 'bold',
   },
   authToggle: {
     flexDirection: 'row',
@@ -270,6 +505,38 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 32,
   },
+  socialButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    gap: 12,
+  },
+  appleButton: {
+    backgroundColor: '#000000',
+  },
+  appleButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  googleButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  googleIcon: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4285F4',
+  },
+  googleButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -299,6 +566,23 @@ const styles = StyleSheet.create({
     color: '#D4635A',
     fontWeight: '500',
   },
+  emailButton: {
+    backgroundColor: '#D4635A',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 56,
+  },
+  emailButtonDisabled: {
+    backgroundColor: '#E5E7EB',
+  },
+  emailButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
   termsContainer: {
     alignItems: 'center',
     marginBottom: 16,
@@ -321,5 +605,84 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     textAlign: 'center',
     fontStyle: 'italic',
+  },
+  // Modal styles
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: '#1F2937',
+    marginBottom: 24,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButtonSecondary: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    alignItems: 'center',
+  },
+  modalButtonSecondaryText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  modalButtonPrimary: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    backgroundColor: '#D4635A',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 48,
+  },
+  modalButtonDisabled: {
+    backgroundColor: '#E5E7EB',
+  },
+  modalButtonPrimaryText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
