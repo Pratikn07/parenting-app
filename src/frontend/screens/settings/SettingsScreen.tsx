@@ -655,8 +655,8 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   filterChipActive: {
-    backgroundColor: '#10B981',
-    borderColor: '#10B981',
+    backgroundColor: '#8BA888', // Warm sage green that complements coral theme
+    borderColor: '#8BA888', // Warm sage green that complements coral theme
   },
   filterChipText: {
     fontSize: 14,

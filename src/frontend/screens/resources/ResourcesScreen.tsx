@@ -227,7 +227,7 @@ export default function ResourcesScreen() {
             <View style={styles.milestoneContent}>
               <View style={styles.milestoneIcon}>
                 {milestone.completed ? (
-                  <CheckCircle size={24} color="#10B981" strokeWidth={2} fill="#10B981" />
+                  <CheckCircle size={24} color="#8BA888" strokeWidth={2} fill="#8BA888" />
                 ) : (
                   <Circle size={24} color="#D1D5DB" strokeWidth={2} />
                 )}
@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#10B981',
+    backgroundColor: '#8BA888', // Warm sage green that complements coral theme
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -701,7 +701,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#10B981',
+    backgroundColor: '#8BA888', // Warm sage green
     borderRadius: 4,
   },
   categoryStats: {
@@ -742,8 +742,8 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   filterChipActive: {
-    backgroundColor: '#10B981',
-    borderColor: '#10B981',
+    backgroundColor: '#8BA888', // Warm sage green
+    borderColor: '#8BA888', // Warm sage green
   },
   filterChipText: {
     fontSize: 14,
@@ -858,7 +858,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   readButton: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#8BA888', // Warm sage green
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 12,
@@ -971,7 +971,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#10B981',
+    backgroundColor: '#8BA888', // Warm sage green
     marginRight: 12,
   },
   activityText: {
