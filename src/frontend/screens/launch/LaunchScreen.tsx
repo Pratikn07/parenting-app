@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { AnalyticsService } from '../../../services';
+// TODO: Import analytics service when available
 
 const { width, height } = Dimensions.get('window');
 
@@ -18,7 +18,8 @@ export default function LaunchScreen() {
   const fadeOutAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    AnalyticsService.trackScreenView('launch');
+    // TODO: Track screen view when analytics is available
+    console.log('Launch screen viewed');
     
     // Logo animation sequence
     const logoAnimation = Animated.sequence([
@@ -63,7 +64,8 @@ export default function LaunchScreen() {
 
     logoAnimation.start(() => {
       // Navigate to auth screen after animation completes
-      AnalyticsService.track('launch_completed');
+      // TODO: Track event when analytics is available
+      console.log('Launch completed');
       router.replace('/auth');
     });
   }, []);

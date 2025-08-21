@@ -151,19 +151,6 @@ export default function ChatScreen() {
           >
             <User size={20} color="#FFFFFF" strokeWidth={2} />
           </TouchableOpacity>
-          
-          {/* Temporary logout button for testing */}
-          <TouchableOpacity
-            style={styles.logoutButton}
-            onPress={async () => {
-              const { logout } = useAuthStore.getState();
-              await logout();
-              router.replace('/launch');
-            }}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
         </View>
       </View>
 
@@ -298,17 +285,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-  },
-  logoutButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: '#EF4444',
-    borderRadius: 8,
-  },
-  logoutText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
   },
   chatContainer: {
     flex: 1,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { useAuthStore, initializeAuth } from '../src/shared/stores/authStore';
+import { useAuthStore } from '../src/shared/stores/authStore';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 
 export default function AppEntry() {
@@ -10,13 +10,8 @@ export default function AppEntry() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // TEMPORARY: Clear cached mock auth data
-        // Remove this after first successful run
-        const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-        await AsyncStorage.removeItem('auth-storage');
-        
-        // Initialize auth state by checking Supabase session
-        await checkAuthState();
+        // TODO: Initialize app state if needed
+        console.log('App initializing...');
       } catch (error) {
         console.error('App initialization error:', error);
       } finally {

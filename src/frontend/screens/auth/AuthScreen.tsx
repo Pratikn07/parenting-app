@@ -16,8 +16,6 @@ import { Apple, Mail, AlertCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 // Import from shared types and services
-import { AuthService } from '../../../services/auth/AuthService';
-import { AnalyticsService } from '../../../services/analytics/AnalyticsService';
 import { AuthFormData } from '../../../shared/types/auth.types';
 import { useAuthStore } from '../../../shared/stores/authStore';
 import { Button } from '../../components/common/Button';
@@ -25,7 +23,7 @@ import { Input } from '../../components/common/Input';
 import { SocialButton } from '../../components/auth/SocialButton';
 
 export default function AuthScreen() {
-  const { login, signup, error, isLoading, clearError } = useAuthStore();
+  const { login, signup, error, isLoading, clearError, isAuthenticated, hasCompletedOnboarding } = useAuthStore();
   const [isSignIn, setIsSignIn] = useState(false);
   const [formData, setFormData] = useState<AuthFormData>({
     name: '',
@@ -37,6 +35,18 @@ export default function AuthScreen() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
+
+  // Handle navigation after successful authentication
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      console.log('✅ User authenticated, navigating...');
+      if (hasCompletedOnboarding) {
+        router.replace('/chat');
+      } else {
+        router.replace('/onboarding');
+      }
+    }
+  }, [isAuthenticated, hasCompletedOnboarding]);
 
   // Form validation
   const validateForm = (): boolean => {
@@ -68,18 +78,18 @@ export default function AuthScreen() {
     try {
       setIsOAuthLoading('apple');
       clearError();
-      AnalyticsService.track('auth_apple_initiated');
       
-      // For now, show setup required message
+      // TODO: Implement Apple Sign In
+      console.log('Apple Sign In - Not implemented');
+      
       Alert.alert(
-        'OAuth Setup Required',
-        'Apple Sign In requires configuration in your Supabase dashboard. Please configure Apple OAuth provider in Authentication > Settings.',
+        'Coming Soon',
+        'Apple Sign In will be available when you connect to a backend service.',
         [{ text: 'OK' }]
       );
-      
-    } catch (error) {
-      console.error('Apple Sign In failed:', error);
-      Alert.alert('Sign In Failed', 'Apple Sign In is not configured. Please use email authentication or contact support.');
+    } catch (error: any) {
+      console.error('Apple OAuth error:', error);
+      Alert.alert('Error', 'Apple Sign In not available', [{ text: 'OK' }]);
     } finally {
       setIsOAuthLoading(null);
     }
@@ -89,18 +99,18 @@ export default function AuthScreen() {
     try {
       setIsOAuthLoading('google');
       clearError();
-      AnalyticsService.track('auth_google_initiated');
       
-      // For now, show setup required message
+      // TODO: Implement Google Sign In
+      console.log('Google Sign In - Not implemented');
+      
       Alert.alert(
-        'OAuth Setup Required',
-        'Google Sign In requires configuration in your Supabase dashboard. Please configure Google OAuth provider in Authentication > Settings.',
+        'Coming Soon',
+        'Google Sign In will be available when you connect to a backend service.',
         [{ text: 'OK' }]
       );
-      
-    } catch (error) {
-      console.error('Google Sign In failed:', error);
-      Alert.alert('Sign In Failed', 'Google Sign In is not configured. Please use email authentication or contact support.');
+    } catch (error: any) {
+      console.error('Google OAuth error:', error);
+      Alert.alert('Error', 'Google Sign In not available', [{ text: 'OK' }]);
     } finally {
       setIsOAuthLoading(null);
     }
@@ -112,7 +122,8 @@ export default function AuthScreen() {
     clearError();
     
     try {
-      AnalyticsService.track(isSignIn ? 'auth_email_signin' : 'auth_email_signup');
+      // TODO: Add analytics tracking
+      console.log('Email auth attempt:', isSignIn ? 'signin' : 'signup');
       
       if (isSignIn) {
         await login(formData.email, formData.password);
@@ -140,13 +151,15 @@ export default function AuthScreen() {
 
     try {
       setResetLoading(true);
-      AnalyticsService.track('auth_forgot_password');
+      // TODO: Add analytics tracking
+      console.log('Password reset attempt for:', resetEmail);
       
-      await AuthService.resetPassword(resetEmail);
+      // TODO: Implement password reset
+      console.log('Password reset - Not implemented');
       
       Alert.alert(
-        'Password Reset Sent',
-        'Check your email for password reset instructions.',
+        'Coming Soon',
+        'Password reset will be available when you connect to a backend service.',
         [{ text: 'OK', onPress: () => setShowForgotPassword(false) }]
       );
       

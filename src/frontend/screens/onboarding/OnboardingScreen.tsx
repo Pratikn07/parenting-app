@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronRight, X, Plus } from 'lucide-react-native';
 import { router } from 'expo-router';
 
-import { AnalyticsService } from '../../../services';
+// TODO: Import analytics service when available
 import { useAuthStore } from '../../../shared/stores/authStore';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
@@ -78,7 +78,8 @@ export default function OnboardingScreen() {
   };
 
   React.useEffect(() => {
-    AnalyticsService.trackScreenView('onboarding');
+    // TODO: Track screen view when analytics is available
+    console.log('Onboarding screen viewed');
   }, []);
 
   const addChild = () => {
@@ -93,7 +94,8 @@ export default function OnboardingScreen() {
       ...prev,
       children: [...prev.children, newChild],
     }));
-    AnalyticsService.track('onboarding_child_added');
+    // TODO: Track event when analytics is available
+    console.log('Child added to onboarding');
   };
 
   const updateChild = (id: string, field: keyof Child, value: string | string[]) => {
@@ -120,7 +122,8 @@ export default function OnboardingScreen() {
       ...prev,
       children: prev.children.filter(child => child.id !== id),
     }));
-    AnalyticsService.track('onboarding_child_removed');
+    // TODO: Track event when analytics is available
+    console.log('Child removed from onboarding');
   };
 
   const toggleFeedingPreference = (childId: string, preference: string) => {
@@ -140,7 +143,8 @@ export default function OnboardingScreen() {
   };
 
   const handleComplete = () => {
-    AnalyticsService.track('onboarding_completed', {
+    // TODO: Track event when analytics is available
+    console.log('Onboarding completed', {
       children_count: data.children.length,
       total_feeding_preferences: data.children.reduce((sum, child) => sum + (child.feedingPreferences?.length || 0), 0),
     });
@@ -149,7 +153,8 @@ export default function OnboardingScreen() {
   };
 
   const handleSkip = () => {
-    AnalyticsService.track('onboarding_skipped');
+    // TODO: Track event when analytics is available
+    console.log('Onboarding skipped');
     completeOnboarding();
     router.replace('/chat');
   };

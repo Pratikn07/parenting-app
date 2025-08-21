@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthService } from '../../services/auth/AuthService';
-import { supabase } from '../../services/supabase';
 
 export interface User {
   id: string;
@@ -32,7 +30,6 @@ interface AuthState {
   completeOnboarding: () => void;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
-  checkAuthState: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -50,21 +47,27 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         
         try {
-          const response = await AuthService.signIn(email, password);
+          // TODO: Implement actual authentication
+          console.log('Login attempt:', { email });
           
-          const user: User = {
-            id: response.user.id,
-            name: response.user.name,
-            email: response.user.email,
-            parentingStage: 'newborn', // Default, can be updated in onboarding
-            feedingPreference: 'breastfeeding', // Default, can be updated in onboarding
-            createdAt: response.user.createdAt.toISOString(),
-            updatedAt: response.user.updatedAt.toISOString(),
+          // Mock successful login for demo
+          const mockUser: User = {
+            id: 'demo-user-' + Date.now(),
+            name: email.split('@')[0],
+            email,
+            parentingStage: 'newborn',
+            feedingPreference: 'breastfeeding',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           };
 
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
           set({
-            user,
+            user: mockUser,
             isAuthenticated: true,
+            hasCompletedOnboarding: true, // Auto-complete onboarding for demo login
             isLoading: false,
             error: null,
           });
@@ -81,20 +84,25 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         
         try {
-          const response = await AuthService.signUp(name, email, password);
+          // TODO: Implement actual registration
+          console.log('Signup attempt:', { name, email });
           
-          const user: User = {
-            id: response.user.id,
-            name: response.user.name,
-            email: response.user.email,
-            parentingStage: 'expecting', // Default for new users
-            feedingPreference: 'breastfeeding', // Default
-            createdAt: response.user.createdAt.toISOString(),
-            updatedAt: response.user.updatedAt.toISOString(),
+          // Mock successful signup for demo
+          const mockUser: User = {
+            id: 'demo-user-' + Date.now(),
+            name,
+            email,
+            parentingStage: 'expecting',
+            feedingPreference: 'breastfeeding',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           };
 
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
           set({
-            user,
+            user: mockUser,
             isAuthenticated: true,
             isLoading: false,
             error: null,
@@ -110,7 +118,9 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          await AuthService.signOut();
+          // TODO: Implement actual logout
+          console.log('Logout');
+          
           set({
             user: null,
             isAuthenticated: false,
@@ -152,47 +162,6 @@ export const useAuthStore = create<AuthState>()(
       setLoading: (loading: boolean) => {
         set({ isLoading: loading });
       },
-
-      checkAuthState: async () => {
-        set({ isLoading: true });
-        
-        try {
-          const currentUser = await AuthService.getCurrentUser();
-          
-          if (currentUser) {
-            const user: User = {
-              id: currentUser.id,
-              name: currentUser.name,
-              email: currentUser.email,
-              parentingStage: 'newborn', // Would be loaded from user profile
-              feedingPreference: 'breastfeeding', // Would be loaded from user profile
-              createdAt: currentUser.createdAt.toISOString(),
-              updatedAt: currentUser.updatedAt.toISOString(),
-            };
-
-            set({
-              user,
-              isAuthenticated: true,
-              isLoading: false,
-            });
-          } else {
-            set({
-              user: null,
-              isAuthenticated: false,
-              hasCompletedOnboarding: false,
-              isLoading: false,
-            });
-          }
-        } catch (error) {
-          console.error('Auth state check error:', error);
-          set({
-            user: null,
-            isAuthenticated: false,
-            hasCompletedOnboarding: false,
-            isLoading: false,
-          });
-        }
-      },
     }),
     {
       name: 'auth-storage',
@@ -205,9 +174,3 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
-
-// Initialize auth state check on app start
-export const initializeAuth = async () => {
-  const store = useAuthStore.getState();
-  await store.checkAuthState();
-};
