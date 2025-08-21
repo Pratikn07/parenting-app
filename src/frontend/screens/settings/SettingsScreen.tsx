@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Switch,
   TextInput,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { X, User, Bell, Heart, Globe, ChevronDown, Search } from 'lucide-react-native';
+import { X, User, Bell, Heart, Globe, ChevronDown, Search, LogOut, AlertTriangle } from 'lucide-react-native';
+import { useAuthStore } from '../../../shared/stores/authStore';
 
 export default function SettingsScreen() {
+  const { logout, user } = useAuthStore();
   const [activeTab, setActiveTab] = useState('profile');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [dailyTipsEnabled, setDailyTipsEnabled] = useState(true);
@@ -23,6 +26,37 @@ export default function SettingsScreen() {
   const [selectedFeeding, setSelectedFeeding] = useState('breastfeeding');
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out? You will need to sign in again to access your account.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await logout();
+              // Navigate to auth screen
+              router.replace('/auth');
+            } catch (error) {
+              console.error('Logout error:', error);
+              Alert.alert(
+                'Error',
+                'Failed to sign out. Please try again.',
+                [{ text: 'OK' }]
+              );
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
@@ -69,7 +103,7 @@ export default function SettingsScreen() {
           <TextInput
             style={styles.textInput}
             placeholder="Your name"
-            defaultValue="Sarah Johnson"
+            defaultValue={user?.name || ''}
           />
         </View>
         <View style={styles.inputGroup}>
@@ -77,8 +111,10 @@ export default function SettingsScreen() {
           <TextInput
             style={styles.textInput}
             placeholder="your.email@example.com"
-            defaultValue="sarah@example.com"
+            defaultValue={user?.email || ''}
             keyboardType="email-address"
+            editable={false}
+            style={[styles.textInput, styles.disabledInput]}
           />
         </View>
       </View>
@@ -148,6 +184,25 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           ))}
         </View>
+      </View>
+
+      {/* Account Actions Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Account</Text>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
+          activeOpacity={0.8}
+        >
+          <View style={styles.logoutButtonContent}>
+            <LogOut size={20} color="#EF4444" strokeWidth={2} />
+            <Text style={styles.logoutButtonText}>Sign Out</Text>
+          </View>
+          <AlertTriangle size={16} color="#EF4444" strokeWidth={2} />
+        </TouchableOpacity>
+        <Text style={styles.logoutHelpText}>
+          You'll need to sign in again to access your account and data.
+        </Text>
       </View>
     </ScrollView>
   );
@@ -743,5 +798,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  disabledInput: {
+    backgroundColor: '#F9FAFB',
+    color: '#6B7280',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    marginBottom: 8,
+  },
+  logoutButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#EF4444',
+    marginLeft: 12,
+  },
+  logoutHelpText: {
+    fontSize: 14,
+    color: '#6B7280',
+    lineHeight: 20,
+    fontStyle: 'italic',
   },
 });
