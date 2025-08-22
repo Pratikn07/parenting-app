@@ -8,9 +8,12 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  avatar?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+  feeding_preference: 'breastfeeding' | 'formula' | 'mixed';
+  has_completed_onboarding: boolean;
+  avatar_url?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AuthState {

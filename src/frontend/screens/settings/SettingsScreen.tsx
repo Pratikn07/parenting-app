@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { X, User, Bell, Heart, Globe, ChevronDown, Search, LogOut, AlertTriangle } from 'lucide-react-native';
 import { useAuthStore } from '../../../shared/stores/authStore';
+import { supabase } from '../../../lib/supabase';
 
 export default function SettingsScreen() {
   const { logout, user } = useAuthStore();
@@ -26,6 +27,32 @@ export default function SettingsScreen() {
   const [selectedFeeding, setSelectedFeeding] = useState('breastfeeding');
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  // Baby info sourced from database (latest record)
+  const [babyName, setBabyName] = useState('');
+  const [babyDob, setBabyDob] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBaby = async () => {
+      try {
+        if (!user?.id) return;
+        const { data, error } = await supabase
+          .from('babies')
+          .select('name,date_of_birth')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (!error && data) {
+          setBabyName(data.name || '');
+          setBabyDob(data.date_of_birth || null);
+        }
+      } catch (e) {
+        console.log('Fetch baby error:', e);
+      }
+    };
+    fetchBaby();
+  }, [user?.id]);
 
   const handleLogout = () => {
     Alert.alert(
@@ -126,13 +153,16 @@ export default function SettingsScreen() {
           <TextInput
             style={styles.textInput}
             placeholder="Baby's name"
-            defaultValue="Emma"
+            value={babyName}
+            editable={false}
           />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Birth Date / Due Date</Text>
           <TouchableOpacity style={styles.dateInput}>
-            <Text style={styles.dateInputText}>March 15, 2024</Text>
+            <Text style={styles.dateInputText}>
+              {babyDob ? new Date(babyDob).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not set'}
+            </Text>
             <ChevronDown size={20} color="#6B7280" strokeWidth={2} />
           </TouchableOpacity>
         </View>

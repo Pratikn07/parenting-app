@@ -30,6 +30,7 @@ interface AuthState {
   completeOnboarding: () => void;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
+  checkAuthState: (url?: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -161,6 +162,60 @@ export const useAuthStore = create<AuthState>()(
 
       setLoading: (loading: boolean) => {
         set({ isLoading: loading });
+      },
+
+      checkAuthState: async (url?: string) => {
+        try {
+          const { AuthService } = await import('../../services/auth/AuthService');
+          
+          console.log('🔍 Auth state check started...');
+          
+          // Handle OAuth callback if URL is provided
+          if (url) {
+            console.log('🔗 Processing OAuth callback URL:', url);
+            await AuthService.handleOAuthCallback(url);
+          }
+          
+          // Check current session
+          console.log('🔑 Getting current session...');
+          const session = await AuthService.getSession();
+          console.log('📋 Session result:', session ? 'Found session' : 'No session');
+          
+          console.log('👤 Getting current user...');
+          const currentUser = await AuthService.getCurrentUser();
+          console.log('📋 User result:', currentUser ? `Found user: ${currentUser.email}` : 'No user');
+          
+          if (session && currentUser) {
+            set({
+              user: {
+                id: currentUser.id,
+                name: currentUser.name || 'Unknown',
+                email: currentUser.email || '',
+                parentingStage: currentUser.parenting_stage || 'expecting',
+                feedingPreference: currentUser.feeding_preference || 'breastfeeding',
+                createdAt: currentUser.created_at,
+                updatedAt: currentUser.updated_at,
+              },
+              isAuthenticated: true,
+              hasCompletedOnboarding: currentUser.has_completed_onboarding,
+              error: null,
+            });
+          } else {
+            set({
+              user: null,
+              isAuthenticated: false,
+              hasCompletedOnboarding: false,
+            });
+          }
+        } catch (error) {
+          console.error('Check auth state error:', error);
+          set({
+            user: null,
+            isAuthenticated: false,
+            hasCompletedOnboarding: false,
+            error: error instanceof Error ? error.message : 'Authentication check failed',
+          });
+        }
       },
     }),
     {

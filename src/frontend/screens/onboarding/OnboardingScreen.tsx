@@ -5,10 +5,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronRight, X, Plus } from 'lucide-react-native';
+import { ChevronRight, X, Plus, ChevronLeft } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { supabase } from '../../../lib/supabase';
 
 // TODO: Import analytics service when available
 import { useAuthStore } from '../../../shared/stores/authStore';
@@ -32,6 +34,14 @@ export default function OnboardingScreen() {
   const { completeOnboarding } = useAuthStore();
   const [data, setData] = useState<OnboardingData>({
     children: [],
+  });
+  const [showDatePicker, setShowDatePicker] = useState<{childId: string | null, show: boolean}>({
+    childId: null,
+    show: false
+  });
+  const [calendarState, setCalendarState] = useState({
+    month: new Date().getMonth(),
+    year: new Date().getFullYear()
   });
 
   const stages = [
@@ -66,15 +76,32 @@ export default function OnboardingScreen() {
 
   const calculateAgeInMonths = (birthDate: string): number => {
     if (!birthDate) return 0;
-    try {
-      const birth = new Date(birthDate);
-      const now = new Date();
-      const diffTime = Math.abs(now.getTime() - birth.getTime());
-      const diffMonths = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30.44));
-      return diffMonths;
-    } catch {
-      return 0;
+    // Robust parse for MM/DD/YYYY (also supports M/D/YYYY)
+    const match = birthDate.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    let birth: Date | null = null;
+    if (match) {
+      const month = parseInt(match[1], 10) - 1;
+      const day = parseInt(match[2], 10);
+      const year = parseInt(match[3], 10);
+      const d = new Date(year, month, day);
+      // Validate constructed date
+      if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
+        birth = d;
+      }
+    } else {
+      // Fallback to Date parser (handles locale-selected values)
+      const d = new Date(birthDate);
+      if (!isNaN(d.getTime())) birth = d;
     }
+
+    if (!birth) return 0;
+
+    const now = new Date();
+    let months = (now.getFullYear() - birth.getFullYear()) * 12;
+    months += now.getMonth() - birth.getMonth();
+    if (now.getDate() < birth.getDate()) months--;
+    if (months < 0) months = 0;
+    return months;
   };
 
   React.useEffect(() => {
@@ -142,14 +169,176 @@ export default function OnboardingScreen() {
     }));
   };
 
-  const handleComplete = () => {
-    // TODO: Track event when analytics is available
-    console.log('Onboarding completed', {
-      children_count: data.children.length,
-      total_feeding_preferences: data.children.reduce((sum, child) => sum + (child.feedingPreferences?.length || 0), 0),
+  // Modern Calendar Functions
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (month: number, year: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const handleDateSelect = (childId: string, day: number) => {
+    const formattedDate = new Date(calendarState.year, calendarState.month, day).toLocaleDateString('en-US');
+    updateChild(childId, 'birthDate', formattedDate);
+    setShowDatePicker({childId: null, show: false});
+  };
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCalendarState(prev => {
+      if (direction === 'prev') {
+        if (prev.month === 0) {
+          return { month: 11, year: prev.year - 1 };
+        }
+        return { month: prev.month - 1, year: prev.year };
+      } else {
+        if (prev.month === 11) {
+          return { month: 0, year: prev.year + 1 };
+        }
+        return { month: prev.month + 1, year: prev.year };
+      }
     });
-    completeOnboarding();
-    router.replace('/chat');
+  };
+
+  const navigateYear = (direction: 'prev' | 'next') => {
+    setCalendarState(prev => ({
+      ...prev,
+      year: direction === 'prev' ? prev.year - 1 : prev.year + 1
+    }));
+  };
+
+  // Dynamic Age-Based Messaging Functions
+  const getStageEmoji = (ageInMonths: number): string => {
+    if (ageInMonths < 0) return '⚠️';
+    if (ageInMonths <= 3) return '👶';
+    if (ageInMonths <= 12) return '🍼';
+    if (ageInMonths <= 36) return '🧸';
+    if (ageInMonths <= 60) return '🎨';
+    if (ageInMonths <= 156) return '🧒'; // 13y
+    return '⚠️';
+  };
+
+  const getStageTitle = (ageInMonths: number): string => {
+    if (ageInMonths < 0) return 'Invalid Date';
+    if (ageInMonths <= 3) return 'Newborn';
+    if (ageInMonths <= 12) return 'Infant';
+    if (ageInMonths <= 36) return 'Toddler';
+    if (ageInMonths <= 60) return 'Preschool';
+    if (ageInMonths <= 96) return 'Early School';
+    if (ageInMonths <= 156) return 'Tween';
+    return 'Outside Supported Range';
+  };
+
+  const getAgeDisplay = (ageInMonths: number): string => {
+    if (ageInMonths < 12) {
+      return `${ageInMonths} month${ageInMonths !== 1 ? 's' : ''} old`;
+    } else {
+      const years = Math.floor(ageInMonths / 12);
+      const remainingMonths = ageInMonths % 12;
+      if (remainingMonths === 0) {
+        return `${years} year${years !== 1 ? 's' : ''} old`;
+      }
+      return `${years}y ${remainingMonths}m old`;
+    }
+  };
+
+  const getStageMessage = (ageInMonths: number): string => {
+    if (ageInMonths < 0) {
+      return 'Please enter a valid birthdate in the past.';
+    }
+    if (ageInMonths > 156) {
+      return "This looks like an older child's date. Our guidance currently covers 0–13 years.";
+    }
+    if (ageInMonths <= 3) {
+      return "Focus on sleep schedules, feeding patterns, and bonding. Every day brings new developments!";
+    }
+    if (ageInMonths <= 6) {
+      return "Time for first foods and exploring textures. Watch for those precious first smiles and giggles!";
+    }
+    if (ageInMonths <= 12) {
+      return "Crawling, babbling, and maybe first steps! This is an exciting time of rapid development.";
+    }
+    if (ageInMonths <= 24) {
+      return "Language explosion and independence emerging. Toddler adventures are just beginning!";
+    }
+    if (ageInMonths <= 36) {
+      return "Curiosity peaks and social skills develop. Perfect time for interactive learning and play.";
+    }
+    if (ageInMonths <= 60) {
+      return "Preschool readiness and creative expression. Learning through play becomes more structured.";
+    }
+    if (ageInMonths <= 96) {
+      return 'Early literacy, routines, and social development—build consistency and healthy habits.';
+    }
+    return 'Curiosity and independence grow—support confidence, friendships, and problem-solving.';
+  };
+
+  const handleComplete = async () => {
+    try {
+      // TODO: Track event when analytics is available
+      console.log('Onboarding completed', {
+        children_count: data.children.length,
+        total_feeding_preferences: data.children.reduce((sum, child) => sum + (child.feedingPreferences?.length || 0), 0),
+      });
+      
+      // Save children data to database
+      if (data.children.length > 0) {
+        console.log('💾 Saving children data to database...', data.children);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          // Upsert children into babies table
+          const childrenPayload = data.children.map((c) => ({
+            user_id: user.id,
+            name: c.name || null,
+            date_of_birth: (() => {
+              if (!c.birthDate) return null;
+              const m = c.birthDate.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+              if (m) {
+                const month = parseInt(m[1], 10) - 1;
+                const day = parseInt(m[2], 10);
+                const year = parseInt(m[3], 10);
+                const d = new Date(year, month, day);
+                if (!isNaN(d.getTime())) return d.toISOString().slice(0,10);
+                return null;
+              }
+              const d = new Date(c.birthDate);
+              return isNaN(d.getTime()) ? null : d.toISOString().slice(0,10);
+            })(),
+            created_at: new Date().toISOString(),
+          }));
+          if (childrenPayload.length > 0) {
+            const { error: babiesError } = await supabase
+              .from('babies')
+              .insert(childrenPayload);
+            if (babiesError) {
+              console.error('Failed to save children:', babiesError.message);
+            }
+          }
+
+          // Mark onboarding complete on user profile
+          const { error: userError } = await supabase
+            .from('users')
+            .update({ has_completed_onboarding: true })
+            .eq('id', user.id);
+          if (userError) {
+            console.error('Failed to mark onboarding complete:', userError.message);
+          }
+        }
+      }
+      
+      completeOnboarding();
+      router.replace('/chat');
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+      // Still proceed even if saving fails
+      completeOnboarding();
+      router.replace('/chat');
+    }
   };
 
   const handleSkip = () => {
@@ -191,35 +380,133 @@ export default function OnboardingScreen() {
               onChangeText={(text) => updateChild(child.id, 'name', text)}
             />
 
-            <Input
-              label="Birthdate (or Due date)"
-              placeholder="MM/DD/YYYY"
-              value={child.birthDate}
-              onChangeText={(text) => updateChild(child.id, 'birthDate', text)}
-              helperText="We'll auto-calculate age in months/years"
-            />
-
-            <Text style={styles.inputLabel}>Stage (if no date)</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.stageScroll}>
-              {stages.map((stage) => (
+            <View>
+              <Text style={styles.inputLabel}>Birthdate (or Due date)</Text>
+              <View style={styles.modernDateInputWrapper}>
+                <Input
+                  placeholder="MM/DD/YYYY or tap calendar"
+                  value={child.birthDate}
+                  onChangeText={(text) => updateChild(child.id, 'birthDate', text)}
+                  style={styles.modernDateInput}
+                />
                 <TouchableOpacity
-                  key={stage}
-                  style={[
-                    styles.stageChip,
-                    child.stage === stage && styles.stageChipSelected,
-                  ]}
-                  onPress={() => updateChild(child.id, 'stage', stage)}
-                  activeOpacity={0.7}
+                  style={styles.embeddedCalendarIcon}
+                  onPress={() => setShowDatePicker({childId: child.id, show: !showDatePicker.show})}
                 >
-                  <Text style={[
-                    styles.stageChipText,
-                    child.stage === stage && styles.stageChipTextSelected,
-                  ]}>
-                    {stage}
-                  </Text>
+                  <Text style={styles.embeddedCalendarText}>📅</Text>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
+              </View>
+              
+              {/* Modern Pure JS Calendar - No Native Dependencies */}
+              {showDatePicker.show && showDatePicker.childId === child.id && (
+                <View style={styles.modernCalendarCard}>
+                  {/* Header */}
+                  <View style={styles.calendarHeader}>
+                    <TouchableOpacity onPress={() => navigateMonth('prev')} style={styles.navButton}>
+                      <ChevronLeft size={20} color="#6B7280" />
+                    </TouchableOpacity>
+                    
+                    <View style={styles.monthYearContainer}>
+                      <Text style={styles.monthText}>{months[calendarState.month]}</Text>
+                      <View style={styles.yearControls}>
+                        <TouchableOpacity onPress={() => navigateYear('prev')} style={styles.yearButton}>
+                          <ChevronLeft size={14} color="#9CA3AF" />
+                        </TouchableOpacity>
+                        <Text style={styles.yearText}>{calendarState.year}</Text>
+                        <TouchableOpacity onPress={() => navigateYear('next')} style={styles.yearButton}>
+                          <ChevronRight size={14} color="#9CA3AF" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    
+                    <TouchableOpacity onPress={() => navigateMonth('next')} style={styles.navButton}>
+                      <ChevronRight size={20} color="#6B7280" />
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Days of Week */}
+                  <View style={styles.daysOfWeekContainer}>
+                    {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                      <Text key={day} style={styles.dayOfWeekText}>{day}</Text>
+                    ))}
+                  </View>
+
+                  {/* Calendar Grid */}
+                  <View style={styles.calendarGrid}>
+                    {(() => {
+                      const daysInMonth = getDaysInMonth(calendarState.month, calendarState.year);
+                      const firstDay = getFirstDayOfMonth(calendarState.month, calendarState.year);
+                      const days = [];
+                      
+                      // Empty cells for days before first day
+                      for (let i = 0; i < firstDay; i++) {
+                        days.push(<View key={`empty-${i}`} style={styles.emptyDay} />);
+                      }
+                      
+                      // Days of the month
+                      for (let day = 1; day <= daysInMonth; day++) {
+                        const date = new Date(calendarState.year, calendarState.month, day);
+                        const isToday = date.toDateString() === new Date().toDateString();
+                        const isSelected = child.birthDate === date.toLocaleDateString('en-US');
+                        const isFuture = date > new Date();
+                        
+                        days.push(
+                          <TouchableOpacity
+                            key={day}
+                            style={[
+                              styles.dayButton,
+                              isSelected && styles.dayButtonSelected,
+                              isToday && !isSelected && styles.dayButtonToday,
+                              isFuture && styles.dayButtonDisabled
+                            ]}
+                            onPress={() => !isFuture && handleDateSelect(child.id, day)}
+                            disabled={isFuture}
+                          >
+                            <Text style={[
+                              styles.dayText,
+                              isSelected && styles.dayTextSelected,
+                              isToday && !isSelected && styles.dayTextToday,
+                              isFuture && styles.dayTextDisabled
+                            ]}>
+                              {day}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }
+                      
+                      return days;
+                    })()}
+                  </View>
+
+                  {/* Footer */}
+                  <View style={styles.calendarFooter}>
+                    <Text style={styles.calendarHint}>💡 You can also type the date manually above</Text>
+                    <TouchableOpacity
+                      style={styles.calendarCloseButton}
+                      onPress={() => setShowDatePicker({childId: null, show: false})}
+                    >
+                      <Text style={styles.calendarCloseText}>Done</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+              
+              <Text style={styles.helperText}>We'll auto-calculate age in months/years</Text>
+            </View>
+
+            {/* Dynamic Age-Based Card */}
+            {child.birthDate && child.ageInMonths !== undefined && (
+              <View style={styles.ageInsightCard}>
+                <View style={styles.ageInsightHeader}>
+                  <Text style={styles.ageInsightEmoji}>{getStageEmoji(child.ageInMonths)}</Text>
+                  <View style={styles.ageInsightText}>
+                    <Text style={styles.ageInsightTitle}>{getStageTitle(child.ageInMonths)}</Text>
+                    <Text style={styles.ageInsightAge}>{getAgeDisplay(child.ageInMonths)}</Text>
+                  </View>
+                </View>
+                <Text style={styles.ageInsightMessage}>{getStageMessage(child.ageInMonths)}</Text>
+              </View>
+            )}
 
             {/* Feeding Preferences */}
             <Text style={styles.sectionTitle}>Feeding & Nutrition Interests</Text>
@@ -318,7 +605,7 @@ export default function OnboardingScreen() {
         />
 
         <Button
-          title="Start Chat"
+          title="Save & Start Chat"
           onPress={handleComplete}
           variant="primary"
           icon={<ChevronRight size={20} color="#FFFFFF" strokeWidth={2} />}
@@ -507,5 +794,220 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#F3F4F6',
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#FFFFFF',
+    minHeight: 48,
+    justifyContent: 'center',
+  },
+  dateInputText: {
+    fontSize: 16,
+    color: '#9CA3AF',
+  },
+  dateInputTextFilled: {
+    color: '#1F2937',
+  },
+  helperText: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 4,
+    fontStyle: 'italic',
+  },
+  modernDateInputWrapper: {
+    position: 'relative',
+  },
+  modernDateInput: {
+    paddingRight: 48, // Space for embedded icon
+  },
+  embeddedCalendarIcon: {
+    position: 'absolute',
+    right: 12,
+    top: '50%',
+    marginTop: -12, // Half of icon height for perfect centering
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  embeddedCalendarText: {
+    fontSize: 18,
+    opacity: 0.6,
+  },
+  modernCalendarCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginTop: 8,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  calendarHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  navButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#F9FAFB',
+  },
+  monthYearContainer: {
+    alignItems: 'center',
+  },
+  monthText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  yearControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  yearButton: {
+    padding: 2,
+  },
+  yearText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6B7280',
+    minWidth: 40,
+    textAlign: 'center',
+  },
+  daysOfWeekContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 12,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  dayOfWeekText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#9CA3AF',
+    width: 32,
+    textAlign: 'center',
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  emptyDay: {
+    width: 32,
+    height: 32,
+    margin: 2,
+  },
+  dayButton: {
+    width: 32,
+    height: 32,
+    margin: 2,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  dayButtonSelected: {
+    backgroundColor: '#D4635A',
+  },
+  dayButtonToday: {
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#D4635A',
+  },
+  dayButtonDisabled: {
+    opacity: 0.3,
+  },
+  dayText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#374151',
+  },
+  dayTextSelected: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  dayTextToday: {
+    color: '#D4635A',
+    fontWeight: '600',
+  },
+  dayTextDisabled: {
+    color: '#9CA3AF',
+  },
+  calendarFooter: {
+    alignItems: 'center',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    gap: 12,
+  },
+  calendarHint: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+  calendarCloseButton: {
+    backgroundColor: '#D4635A',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  calendarCloseText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  ageInsightCard: {
+    backgroundColor: '#FDF7F3',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#D4635A',
+  },
+  ageInsightHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  ageInsightEmoji: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  ageInsightText: {
+    flex: 1,
+  },
+  ageInsightTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 2,
+  },
+  ageInsightAge: {
+    fontSize: 14,
+    color: '#D4635A',
+    fontWeight: '500',
+  },
+  ageInsightMessage: {
+    fontSize: 14,
+    color: '#6B7280',
+    lineHeight: 20,
+    fontStyle: 'italic',
   },
 });

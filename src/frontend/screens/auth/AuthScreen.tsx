@@ -48,6 +48,18 @@ export default function AuthScreen() {
     }
   }, [isAuthenticated, hasCompletedOnboarding]);
 
+  // Auto-check auth state when component mounts (for OAuth return)
+  React.useEffect(() => {
+    const checkAuthOnFocus = async () => {
+      console.log('🔍 Checking auth state...');
+      const { checkAuthState } = useAuthStore.getState();
+      await checkAuthState();
+    };
+    
+    // Check immediately and then every time app comes into focus
+    checkAuthOnFocus();
+  }, []);
+
   // Form validation
   const validateForm = (): boolean => {
     const errors: Partial<AuthFormData> = {};
@@ -100,19 +112,37 @@ export default function AuthScreen() {
       setIsOAuthLoading('google');
       clearError();
       
-      // TODO: Implement Google Sign In
-      console.log('Google Sign In - Not implemented');
+      console.log('Initiating Google Sign In...');
       
-      Alert.alert(
-        'Coming Soon',
-        'Google Sign In will be available when you connect to a backend service.',
-        [{ text: 'OK' }]
-      );
+      // Import AuthService dynamically to avoid import issues
+      const { AuthService } = await import('../../../services/auth/AuthService');
+      
+      // Initiate Google OAuth flow
+      await AuthService.signInWithGoogle();
+      
+      // No more alert needed - OAuth handles everything
+      console.log('OAuth initiated - processing automatically...');
+      
     } catch (error: any) {
       console.error('Google OAuth error:', error);
-      Alert.alert('Error', 'Google Sign In not available', [{ text: 'OK' }]);
-    } finally {
-      setIsOAuthLoading(null);
+      
+      if (error.message?.includes('OAuth completed but session not found')) {
+        Alert.alert(
+          'Authentication In Progress', 
+          'OAuth completed. Please wait a moment for authentication to finalize.',
+          [{ text: 'OK' }]
+        );
+        // Keep loading state - might still succeed
+      } else if (!error.message?.includes('cancelled by user')) {
+        Alert.alert(
+          'Authentication Error', 
+          error.message || 'Google Sign In failed. Please try again.',
+          [{ text: 'OK' }]
+        );
+        setIsOAuthLoading(null);
+      } else {
+        setIsOAuthLoading(null);
+      }
     }
   };
 
@@ -399,6 +429,19 @@ export default function AuthScreen() {
                   {isSignIn ? 'Sign in' : 'Create account'}
                 </Text>
               )}
+            </TouchableOpacity>
+
+            {/* Debug: Manual Auth Check Button */}
+            <TouchableOpacity
+              style={[styles.emailButton, { backgroundColor: '#6B7280', marginTop: 12 }]}
+              onPress={async () => {
+                console.log('🔍 Manual auth check triggered');
+                const { checkAuthState } = useAuthStore.getState();
+                await checkAuthState();
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.emailButtonText}>🔍 Check Auth Status</Text>
             </TouchableOpacity>
           </View>
 

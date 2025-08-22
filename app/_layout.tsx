@@ -69,8 +69,8 @@ export default function RootLayout() {
       <Stack 
         screenOptions={{ 
           headerShown: false,
-          presentation: 'modal',
-          animation: 'slide_from_right'
+          presentation: 'card',
+          animation: 'default'
         }}
       >
         <Stack.Screen name="index" />

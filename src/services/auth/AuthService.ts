@@ -1,42 +1,54 @@
-import { MockAuthService } from './MockAuthService';
+import { SupabaseAuth } from './SupabaseAuthService';
 import { AuthResponse, SignInCredentials, SignUpCredentials } from '../../shared/types/auth.types';
 
-// Frontend-only authentication service
+// Production authentication service using Supabase
 class AuthServiceClass {
   async signInWithEmail(credentials: SignInCredentials): Promise<AuthResponse> {
-    return MockAuthService.signInWithEmail(credentials);
+    return SupabaseAuth.signInWithEmail(credentials);
   }
 
   async signUpWithEmail(credentials: SignUpCredentials): Promise<AuthResponse> {
-    return MockAuthService.signUpWithEmail(credentials);
+    return SupabaseAuth.signUpWithEmail(credentials);
   }
 
   async signInWithGoogle(): Promise<AuthResponse> {
-    return MockAuthService.signInWithGoogle();
+    return SupabaseAuth.signInWithGoogle();
   }
 
   async signInWithApple(): Promise<AuthResponse> {
-    return MockAuthService.signInWithApple();
+    return SupabaseAuth.signInWithApple();
   }
 
   async signOut(): Promise<void> {
-    return MockAuthService.signOut();
+    return SupabaseAuth.signOut();
   }
 
   async getCurrentUser(): Promise<any> {
-    return MockAuthService.getCurrentUser();
+    return SupabaseAuth.getCurrentUser();
   }
 
   async getSession(): Promise<any> {
-    return MockAuthService.getSession();
+    return SupabaseAuth.getSession();
   }
 
   isLoggedIn(): boolean {
-    return MockAuthService.isLoggedIn();
+    return SupabaseAuth.isLoggedIn();
   }
 
   async handleOAuthCallback(url: string): Promise<void> {
-    return MockAuthService.handleOAuthCallback(url);
+    return SupabaseAuth.handleOAuthCallback(url);
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    return SupabaseAuth.resetPassword(email);
+  }
+
+  async updatePassword(newPassword: string): Promise<void> {
+    return SupabaseAuth.updatePassword(newPassword);
+  }
+
+  onAuthStateChange(callback: (event: string, session: any) => void) {
+    return SupabaseAuth.onAuthStateChange(callback);
   }
 }
 

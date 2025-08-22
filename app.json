@@ -17,11 +17,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.parentingapp",
+      "bundleIdentifier": "com.pratikn07.mycuratedhaven",
       "buildNumber": "1"
     },
     "android": {
-      "package": "com.example.parentingapp",
+      "package": "com.pratikn07.mycuratedhaven",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
