@@ -181,11 +181,20 @@ export const useAuthStore = create<AuthState>()(
           const session = await AuthService.getSession();
           console.log('📋 Session result:', session ? 'Found session' : 'No session');
           
+          if (!session) {
+            set({
+              user: null,
+              isAuthenticated: false,
+              hasCompletedOnboarding: false,
+            });
+            return;
+          }
+
           console.log('👤 Getting current user...');
           const currentUser = await AuthService.getCurrentUser();
           console.log('📋 User result:', currentUser ? `Found user: ${currentUser.email}` : 'No user');
-          
-          if (session && currentUser) {
+
+          if (currentUser) {
             set({
               user: {
                 id: currentUser.id,

@@ -117,8 +117,7 @@ class SupabaseAuthService {
           redirectTo: redirectUri,
           queryParams: {
             access_type: 'offline',
-            // Force Google to show the account selector even if already signed-in
-            // Keeps consent behavior for first time
+            // Always show Google account chooser and consent screen
             prompt: 'select_account consent',
           },
         },
@@ -202,11 +201,8 @@ class SupabaseAuthService {
       if (error) {
         throw new Error(error.message);
       }
-      // Best-effort: also clear Google session in the system browser
-      try {
-        const WebBrowser = await import('expo-web-browser');
-        await WebBrowser.openBrowserAsync('https://accounts.google.com/Logout');
-      } catch {}
+      // Note: We don't clear Google's browser session as it causes
+      // unwanted deep link redirects that auto-trigger sign-in
     } catch (error) {
       console.error('Sign out error:', error);
       throw error;
