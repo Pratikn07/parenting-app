@@ -47,6 +47,14 @@ export default function RootLayout() {
           }
         }
         
+        // Dismiss any open browser windows when OAuth callback is received
+        try {
+          const WebBrowser = await import('expo-web-browser');
+          await WebBrowser.dismissBrowser();
+        } catch (error) {
+          // Ignore errors if no browser is open
+        }
+        
         setTimeout(async () => {
           await checkAuthState(url);
           const { isAuthenticated: authed } = useAuthStore.getState();

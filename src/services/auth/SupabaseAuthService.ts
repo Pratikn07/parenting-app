@@ -135,15 +135,25 @@ class SupabaseAuthService {
           showTitle: true,
           toolbarColor: '#D4635A',
           controlsColor: '#FFFFFF',
+          dismissButtonStyle: 'done',
         });
         
         console.log('WebBrowser result:', result);
 
-        // Don't rely on WebBrowser result - it always returns 'cancel' in Expo Go
-        console.log('OAuth process completed, checking for session...');
+        // Handle different result types
+        if (result.type === 'success') {
+          // Browser was closed via deep link redirect - this is what we want
+          console.log('OAuth redirect successful, checking for session...');
+        } else if (result.type === 'cancel') {
+          // User manually closed browser or OAuth was cancelled
+          console.log('OAuth was cancelled by user');
+          throw new Error('Google sign-in was cancelled');
+        } else {
+          console.log('OAuth completed, checking for session...');
+        }
         
-        // Wait a moment for OAuth to complete
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Give a moment for the session to be established
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
 
       // Check for session after OAuth completion
