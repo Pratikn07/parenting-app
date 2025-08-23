@@ -37,7 +37,7 @@ export default function SettingsScreen() {
       try {
         if (!user?.id) return;
         const { data, error } = await supabase
-          .from('babies')
+          .from('children')
           .select('name,date_of_birth')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })

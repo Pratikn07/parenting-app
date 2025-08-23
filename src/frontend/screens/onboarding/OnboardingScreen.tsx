@@ -291,7 +291,7 @@ export default function OnboardingScreen() {
         console.log('💾 Saving children data to database...', data.children);
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          // Upsert children into babies table
+          // Upsert children into children table
           const childrenPayload = data.children.map((c) => ({
             user_id: user.id,
             name: c.name || null,
@@ -312,11 +312,11 @@ export default function OnboardingScreen() {
             created_at: new Date().toISOString(),
           }));
           if (childrenPayload.length > 0) {
-            const { error: babiesError } = await supabase
-              .from('babies')
+            const { error: childrenError } = await supabase
+              .from('children')
               .insert(childrenPayload);
-            if (babiesError) {
-              console.error('Failed to save children:', babiesError.message);
+            if (childrenError) {
+              console.error('Failed to save children:', childrenError.message);
             }
           }
 
