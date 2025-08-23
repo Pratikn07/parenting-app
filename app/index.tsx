@@ -10,8 +10,9 @@ export default function AppEntry() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // TODO: Initialize app state if needed
         console.log('App initializing...');
+        // Check authentication state on app startup
+        await checkAuthState();
       } catch (error) {
         console.error('App initialization error:', error);
       } finally {
@@ -20,20 +21,30 @@ export default function AppEntry() {
     };
 
     initializeApp();
-  }, []);
+  }, [checkAuthState]);
 
   useEffect(() => {
     // Only navigate after initialization is complete
     if (!isInitializing && !isLoading) {
       const timer = setTimeout(() => {
+        console.log('🚀 Navigation decision:', { 
+          isAuthenticated, 
+          hasCompletedOnboarding, 
+          isInitializing, 
+          isLoading 
+        });
+        
         if (isAuthenticated && hasCompletedOnboarding) {
           // User is authenticated and has completed onboarding - go to chat
+          console.log('📱 Navigating to chat (authenticated + onboarded)');
           router.replace('/chat');
         } else if (isAuthenticated && !hasCompletedOnboarding) {
           // User is authenticated but hasn't completed onboarding
+          console.log('📝 Navigating to onboarding (authenticated but not onboarded)');
           router.replace('/onboarding');
         } else {
           // User is not authenticated - show launch screen first
+          console.log('🚪 Navigating to launch (not authenticated)');
           router.replace('/launch');
         }
       }, 100);
