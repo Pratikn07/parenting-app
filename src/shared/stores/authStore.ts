@@ -119,9 +119,13 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          // TODO: Implement actual logout
           console.log('Logout');
           
+          // Actually sign out from Supabase to clear session
+          const { AuthService } = await import('../../services/auth/AuthService');
+          await AuthService.signOut();
+          
+          // Clear local state
           set({
             user: null,
             isAuthenticated: false,
