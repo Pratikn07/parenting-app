@@ -28,32 +28,53 @@ COMMENT ON COLUMN public.users.created_at IS 'Timestamp when the user record was
 COMMENT ON COLUMN public.users.updated_at IS 'Timestamp when the user record was last updated';
 
 -- =====================================================
--- CHILDREN TABLE DESCRIPTIONS (0-13 years)
+-- BABIES TABLE DESCRIPTIONS (will rename to children later)
 -- =====================================================
 
-COMMENT ON TABLE public.children IS 'Information about children (0-13 years) belonging to each parent user';
-COMMENT ON COLUMN public.children.id IS 'Primary key, auto-generated UUID';
-COMMENT ON COLUMN public.children.user_id IS 'Foreign key referencing the parent''s user ID from auth.users';
-COMMENT ON COLUMN public.children.name IS 'Child''s name (1-100 characters)';
-COMMENT ON COLUMN public.children.date_of_birth IS 'Child''s date of birth, used for age calculations and stage-based content (0-13 years supported)';
-COMMENT ON COLUMN public.children.gender IS 'Child''s gender: male, female, or other';
-COMMENT ON COLUMN public.children.notes IS 'Additional notes or information about the child';
-COMMENT ON COLUMN public.children.created_at IS 'Timestamp when the child record was created';
-COMMENT ON COLUMN public.children.updated_at IS 'Timestamp when the child record was last updated';
+COMMENT ON TABLE public.babies IS 'Information about children/babies (0-13 years) belonging to each parent user';
+COMMENT ON COLUMN public.babies.id IS 'Primary key, auto-generated UUID';
+COMMENT ON COLUMN public.babies.user_id IS 'Foreign key referencing the parent''s user ID from auth.users';
+COMMENT ON COLUMN public.babies.name IS 'Child''s name';
+COMMENT ON COLUMN public.babies.date_of_birth IS 'Child''s date of birth, used for age calculations and stage-based content (0-13 years supported)';
+COMMENT ON COLUMN public.babies.created_at IS 'Timestamp when the record was created';
+COMMENT ON COLUMN public.babies.updated_at IS 'Timestamp when the record was last updated';
 
 -- =====================================================
--- MILESTONES TABLE DESCRIPTIONS
+-- ALL TABLE DESCRIPTIONS
 -- =====================================================
 
+-- Articles table
+COMMENT ON TABLE public.articles IS 'Educational articles and content for parents';
+
+-- Chat messages table  
+COMMENT ON TABLE public.chat_messages IS 'Chat conversation history between users and the AI parenting assistant';
+
+-- Chat sessions table
+COMMENT ON TABLE public.chat_sessions IS 'Chat session management for organizing conversations';
+
+-- Checklist items table
+COMMENT ON TABLE public.checklist_items IS 'Individual items within parenting checklists';
+
+-- Checklists table
+COMMENT ON TABLE public.checklists IS 'Parenting checklists and task lists for users';
+
+-- Devices table
+COMMENT ON TABLE public.devices IS 'User device information for push notifications and app management';
+
+-- Embeddings table
+COMMENT ON TABLE public.embeddings IS 'Vector embeddings for AI-powered content recommendations and search';
+
+-- Growth measurements table
+COMMENT ON TABLE public.growth_measurements IS 'Physical growth tracking data for children (height, weight, etc.)';
+
+-- Milestones table
 COMMENT ON TABLE public.milestones IS 'Developmental milestones achieved by children, categorized by type';
-COMMENT ON COLUMN public.milestones.id IS 'Primary key, auto-generated UUID';
-COMMENT ON COLUMN public.milestones.child_id IS 'Foreign key referencing the child who achieved this milestone';
-COMMENT ON COLUMN public.milestones.title IS 'Brief title of the milestone (1-100 characters)';
-COMMENT ON COLUMN public.milestones.description IS 'Detailed description of the milestone achievement';
-COMMENT ON COLUMN public.milestones.achieved_at IS 'Timestamp when the milestone was achieved';
-COMMENT ON COLUMN public.milestones.milestone_type IS 'Category of milestone: physical, cognitive, social, or emotional';
-COMMENT ON COLUMN public.milestones.created_at IS 'Timestamp when the milestone record was created';
-COMMENT ON COLUMN public.milestones.updated_at IS 'Timestamp when the milestone record was last updated';
+
+-- Onboarding responses table
+COMMENT ON TABLE public.onboarding_responses IS 'User responses collected during the onboarding process';
+
+-- Reminders table
+COMMENT ON TABLE public.reminders IS 'Scheduled reminders and notifications for parents';
 
 -- =====================================================
 -- CHAT MESSAGES TABLE DESCRIPTIONS
