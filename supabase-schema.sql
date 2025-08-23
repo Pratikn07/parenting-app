@@ -1,4 +1,39 @@
--- Parenting App Database Schema
+-- =====================================================
+-- PARENTING APP DATABASE SCHEMA
+-- =====================================================
+-- 
+-- This comprehensive database schema supports a parenting app with the following features:
+-- 
+-- 🔐 USER MANAGEMENT
+--   - User profiles with parenting-specific information
+--   - OAuth integration with Supabase Auth
+--   - Onboarding flow tracking
+-- 
+-- 👶 CHILD TRACKING  
+--   - Multiple children per parent
+--   - Birth date tracking for age-based features
+--   - Gender information for personalized content
+-- 
+-- 📈 MILESTONE TRACKING
+--   - Developmental milestones by category
+--   - Achievement timestamps
+--   - Physical, cognitive, social, and emotional development
+-- 
+-- 💬 AI CHAT ASSISTANT
+--   - Conversation history storage
+--   - User questions and AI responses
+--   - Contextual parenting advice
+-- 
+-- 📚 EDUCATIONAL RESOURCES
+--   - Curated parenting content
+--   - Stage-specific resources
+--   - Categorized and tagged content
+-- 
+-- 🔒 SECURITY
+--   - Row Level Security (RLS) policies
+--   - User data isolation
+--   - Secure API access
+-- 
 -- This script creates all necessary tables, indexes, and RLS policies
 
 -- Enable required extensions
@@ -6,6 +41,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =====================================================
 -- ENUMS
+-- Custom data types for consistent categorization
 -- =====================================================
 
 CREATE TYPE parenting_stage AS ENUM ('expecting', 'newborn', 'infant', 'toddler');
@@ -13,8 +49,15 @@ CREATE TYPE feeding_preference AS ENUM ('breastfeeding', 'formula', 'mixed');
 CREATE TYPE milestone_type AS ENUM ('physical', 'cognitive', 'social', 'emotional');
 CREATE TYPE gender AS ENUM ('male', 'female', 'other');
 
+-- Add descriptions for ENUM types
+COMMENT ON TYPE parenting_stage IS 'Stages of parenting journey: expecting (pregnancy), newborn (0-3 months), infant (3-12 months), toddler (1-3 years)';
+COMMENT ON TYPE feeding_preference IS 'Feeding methods: breastfeeding (exclusively breast milk), formula (exclusively formula), mixed (combination)';
+COMMENT ON TYPE milestone_type IS 'Categories of child development milestones: physical (motor skills), cognitive (thinking/learning), social (interaction), emotional (feelings/behavior)';
+COMMENT ON TYPE gender IS 'Gender options: male, female, or other for inclusive representation';
+
 -- =====================================================
 -- PROFILES TABLE (extends auth.users)
+-- Stores user profile information for parents using the app
 -- =====================================================
 
 CREATE TABLE public.profiles (
@@ -29,8 +72,21 @@ CREATE TABLE public.profiles (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Add table and column descriptions
+COMMENT ON TABLE public.profiles IS 'User profiles for parents, extending Supabase auth.users with parenting-specific information';
+COMMENT ON COLUMN public.profiles.id IS 'Primary key referencing auth.users.id';
+COMMENT ON COLUMN public.profiles.name IS 'Full name of the parent (2-50 characters)';
+COMMENT ON COLUMN public.profiles.email IS 'Email address, must be unique across all users';
+COMMENT ON COLUMN public.profiles.parenting_stage IS 'Current parenting stage: expecting, newborn, infant, or toddler';
+COMMENT ON COLUMN public.profiles.feeding_preference IS 'Preferred feeding method: breastfeeding, formula, or mixed';
+COMMENT ON COLUMN public.profiles.has_completed_onboarding IS 'Whether the user has completed the initial onboarding flow';
+COMMENT ON COLUMN public.profiles.avatar_url IS 'URL to the user''s profile picture';
+COMMENT ON COLUMN public.profiles.created_at IS 'Timestamp when the profile was created';
+COMMENT ON COLUMN public.profiles.updated_at IS 'Timestamp when the profile was last updated';
+
 -- =====================================================
 -- CHILDREN TABLE
+-- Stores information about children/babies for each parent
 -- =====================================================
 
 CREATE TABLE public.children (
@@ -43,8 +99,19 @@ CREATE TABLE public.children (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Add table and column descriptions
+COMMENT ON TABLE public.children IS 'Information about children/babies belonging to each parent user';
+COMMENT ON COLUMN public.children.id IS 'Primary key, auto-generated UUID';
+COMMENT ON COLUMN public.children.parent_id IS 'Foreign key referencing the parent''s profile ID';
+COMMENT ON COLUMN public.children.name IS 'Child''s name (1-50 characters)';
+COMMENT ON COLUMN public.children.birth_date IS 'Child''s date of birth, used for age calculations and milestone tracking';
+COMMENT ON COLUMN public.children.gender IS 'Child''s gender: male, female, or other';
+COMMENT ON COLUMN public.children.created_at IS 'Timestamp when the child record was created';
+COMMENT ON COLUMN public.children.updated_at IS 'Timestamp when the child record was last updated';
+
 -- =====================================================
 -- MILESTONES TABLE
+-- Tracks developmental milestones achieved by children
 -- =====================================================
 
 CREATE TABLE public.milestones (
@@ -58,8 +125,20 @@ CREATE TABLE public.milestones (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Add table and column descriptions
+COMMENT ON TABLE public.milestones IS 'Developmental milestones achieved by children, categorized by type';
+COMMENT ON COLUMN public.milestones.id IS 'Primary key, auto-generated UUID';
+COMMENT ON COLUMN public.milestones.child_id IS 'Foreign key referencing the child who achieved this milestone';
+COMMENT ON COLUMN public.milestones.title IS 'Brief title of the milestone (1-100 characters)';
+COMMENT ON COLUMN public.milestones.description IS 'Detailed description of the milestone achievement';
+COMMENT ON COLUMN public.milestones.achieved_at IS 'Timestamp when the milestone was achieved';
+COMMENT ON COLUMN public.milestones.milestone_type IS 'Category of milestone: physical, cognitive, social, or emotional';
+COMMENT ON COLUMN public.milestones.created_at IS 'Timestamp when the milestone record was created';
+COMMENT ON COLUMN public.milestones.updated_at IS 'Timestamp when the milestone record was last updated';
+
 -- =====================================================
 -- CHAT MESSAGES TABLE (for AI chat history)
+-- Stores conversation history between users and the AI assistant
 -- =====================================================
 
 CREATE TABLE public.chat_messages (
@@ -71,8 +150,18 @@ CREATE TABLE public.chat_messages (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Add table and column descriptions
+COMMENT ON TABLE public.chat_messages IS 'Chat conversation history between users and the AI parenting assistant';
+COMMENT ON COLUMN public.chat_messages.id IS 'Primary key, auto-generated UUID';
+COMMENT ON COLUMN public.chat_messages.user_id IS 'Foreign key referencing the user who sent/received the message';
+COMMENT ON COLUMN public.chat_messages.message IS 'The message content (user question or AI response)';
+COMMENT ON COLUMN public.chat_messages.response IS 'AI response to user message (deprecated, use is_from_user instead)';
+COMMENT ON COLUMN public.chat_messages.is_from_user IS 'True if message is from user, false if from AI assistant';
+COMMENT ON COLUMN public.chat_messages.created_at IS 'Timestamp when the message was sent/received';
+
 -- =====================================================
 -- RESOURCES TABLE (for parenting content)
+-- Stores educational content and resources for parents
 -- =====================================================
 
 CREATE TABLE public.resources (
@@ -88,6 +177,20 @@ CREATE TABLE public.resources (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Add table and column descriptions
+COMMENT ON TABLE public.resources IS 'Educational content and resources for parents, organized by category and parenting stage';
+COMMENT ON COLUMN public.resources.id IS 'Primary key, auto-generated UUID';
+COMMENT ON COLUMN public.resources.title IS 'Title of the resource article or content';
+COMMENT ON COLUMN public.resources.description IS 'Brief description or summary of the resource';
+COMMENT ON COLUMN public.resources.content IS 'Full content of the resource (markdown or HTML)';
+COMMENT ON COLUMN public.resources.category IS 'Category of the resource (e.g., Sleep, Feeding, Development)';
+COMMENT ON COLUMN public.resources.parenting_stages IS 'Array of parenting stages this resource applies to';
+COMMENT ON COLUMN public.resources.tags IS 'Array of tags for categorization and search';
+COMMENT ON COLUMN public.resources.image_url IS 'URL to the resource''s featured image';
+COMMENT ON COLUMN public.resources.is_featured IS 'Whether this resource should be featured prominently';
+COMMENT ON COLUMN public.resources.created_at IS 'Timestamp when the resource was created';
+COMMENT ON COLUMN public.resources.updated_at IS 'Timestamp when the resource was last updated';
 
 -- =====================================================
 -- INDEXES FOR PERFORMANCE
