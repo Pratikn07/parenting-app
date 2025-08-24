@@ -31,5 +31,8 @@ yarn-error.*
 .env*.local
 .env
 
+# MCP configuration with sensitive tokens
+.vscode/mcp.json
+
 # typescript
 *.tsbuildinfo
