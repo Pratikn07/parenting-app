@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,20 +6,78 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { X, Search, Bookmark, Share, Clock, Sparkles, TrendingUp, BookOpen, BarChart3, MessageCircle, Calendar, Heart, CheckCircle, Circle } from 'lucide-react-native';
+import { useAuthStore } from '../../../shared/stores';
+import { recommendationsService, RecommendedArticle, ActionItem, PersonalizedContent } from '../../../services';
 
 export default function ResourcesScreen() {
-  const [activeTab, setActiveTab] = useState('today');
+  const [activeTab, setActiveTab] = useState('nextsteps');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // Dynamic data state
+  const [personalizedContent, setPersonalizedContent] = useState<PersonalizedContent | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Get current user
+  const { user } = useAuthStore();
+
+  // Load personalized content when component mounts
+  useEffect(() => {
+    if (user?.id && activeTab === 'nextsteps') {
+      loadPersonalizedContent();
+    }
+  }, [user?.id, activeTab]);
+
+  const loadPersonalizedContent = async () => {
+    if (!user?.id) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const content = await recommendationsService.getPersonalizedContent(user.id);
+      setPersonalizedContent(content);
+    } catch (err) {
+      console.error('Error loading personalized content:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load content');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCompleteTip = async () => {
+    if (!user?.id || !personalizedContent?.dailyTip) return;
+    
+    try {
+      await recommendationsService.completeTip(user.id, personalizedContent.dailyTip.id);
+      await loadPersonalizedContent();
+    } catch (err) {
+      console.error('Error completing tip:', err);
+      setError('Failed to complete tip');
+    }
+  };
+
+  const handleSkipTip = async () => {
+    if (!user?.id || !personalizedContent?.dailyTip) return;
+    
+    try {
+      await recommendationsService.skipTip(user.id, personalizedContent.dailyTip.id);
+      await loadPersonalizedContent();
+    } catch (err) {
+      console.error('Error skipping tip:', err);
+      setError('Failed to skip tip');
+    }
+  };
 
   const tabs = [
-    { id: 'today', label: 'Today', icon: Sparkles },
-    { id: 'milestones', label: 'Milestones', icon: TrendingUp },
-    { id: 'library', label: 'Library', icon: BookOpen },
+    { id: 'nextsteps', label: 'Next Steps', icon: Sparkles },
     { id: 'progress', label: 'Progress', icon: BarChart3 },
+    { id: 'milestones', label: 'Milestones', icon: TrendingUp },
   ];
 
   const categories = ['All', 'Sleep', 'Feeding', 'Health', 'Activities', 'Well-being', 'Daily Care'];
@@ -377,18 +435,227 @@ export default function ResourcesScreen() {
     </ScrollView>
   );
 
+  const renderNextStepsTab = () => {
+    const dailyTip = personalizedContent?.dailyTip;
+    const recommendedArticles = personalizedContent?.recommendedArticles || [];
+    const actionItems = personalizedContent?.actionItems || [];
+
+    return (
+      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.tabHeader}>
+          <Text style={styles.tabTitle}>Your Next Steps</Text>
+          <Text style={styles.tabSubtitle}>Personalized guidance and resources for today</Text>
+        </View>
+
+        {/* Daily Tip Section */}
+        {isLoading ? (
+          <View style={styles.tipLoadingCard}>
+            <ActivityIndicator size="small" color="#8BA888" />
+            <Text style={styles.tipLoadingText}>Loading your daily tip...</Text>
+          </View>
+        ) : error ? (
+          <View style={styles.tipErrorCard}>
+            <Text style={styles.tipErrorText}>Unable to load today's tip</Text>
+            <TouchableOpacity 
+              style={styles.smallRetryButton} 
+              onPress={loadPersonalizedContent} 
+              activeOpacity={0.7}
+            >
+              <Text style={styles.smallRetryButtonText}>Try Again</Text>
+            </TouchableOpacity>
+          </View>
+        ) : dailyTip ? (
+          <View style={styles.tipCard}>
+            <View style={styles.tipCardHeader}>
+              <View style={styles.tipBadges}>
+                <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(dailyTip.category) }]}>
+                  <Text style={styles.categoryPillText}>{dailyTip.category}</Text>
+                </View>
+                <View style={styles.agePill}>
+                  <Text style={styles.agePillText}>
+                    {dailyTip.child_age_months ? `${dailyTip.child_age_months} months` : dailyTip.parenting_stage}
+                  </Text>
+                </View>
+                <View style={styles.readTimePill}>
+                  <Clock size={12} color="#6B7280" strokeWidth={2} />
+                  <Text style={styles.readTimePillText}>2 min read</Text>
+                </View>
+              </View>
+              <View style={styles.tipActions}>
+                <TouchableOpacity style={styles.tipActionButton} activeOpacity={0.7}>
+                  <Bookmark size={20} color="#6B7280" strokeWidth={2} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.tipActionButton} activeOpacity={0.7}>
+                  <Share size={20} color="#6B7280" strokeWidth={2} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <Text style={styles.tipTitle}>{dailyTip.title}</Text>
+            <Text style={styles.tipDescription}>{dailyTip.description}</Text>
+
+            {dailyTip.quick_tips && dailyTip.quick_tips.length > 0 && (
+              <View style={styles.quickTips}>
+                <Text style={styles.quickTipsTitle}>QUICK TIPS</Text>
+                <View style={styles.tipsList}>
+                  {dailyTip.quick_tips.map((tip, index) => (
+                    <Text key={index} style={styles.tipItem}>• {tip}</Text>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Enhanced Tip Actions */}
+            <View style={styles.tipFooter}>
+              <TouchableOpacity 
+                style={styles.primaryActionButton} 
+                onPress={handleCompleteTip}
+                activeOpacity={0.7}
+              >
+                <CheckCircle size={16} color="#FFFFFF" strokeWidth={2} />
+                <Text style={styles.primaryActionText}>Mark as Complete</Text>
+              </TouchableOpacity>
+              <View style={styles.secondaryActions}>
+                <TouchableOpacity 
+                  style={styles.secondaryActionButton} 
+                  onPress={handleSkipTip}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.secondaryActionText}>Skip for now</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.relatedLinkButton} activeOpacity={0.7}>
+                  <BookOpen size={14} color="#8BA888" strokeWidth={2} />
+                  <Text style={styles.relatedLinkText}>Related articles</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        ) : null}
+
+        {/* Recommended Articles Section */}
+        {recommendedArticles.length > 0 && (
+          <View style={styles.recommendedSection}>
+            <Text style={styles.sectionTitle}>Recommended for You</Text>
+            <Text style={styles.sectionSubtitle}>Articles related to your current focus</Text>
+            
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              style={styles.recommendedScroll}
+              contentContainerStyle={styles.recommendedContent}
+            >
+              {recommendedArticles.map((article) => (
+                <View key={article.id} style={styles.compactArticleCard}>
+                  <View style={styles.compactArticleHeader}>
+                    <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(article.category) }]}>
+                      <Text style={styles.categoryPillText}>{article.category}</Text>
+                    </View>
+                    <View style={styles.readTimePill}>
+                      <Clock size={10} color="#6B7280" strokeWidth={2} />
+                      <Text style={styles.readTimePillText}>{article.readTime}m</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.compactArticleTitle}>{article.title}</Text>
+                  <Text style={styles.compactArticleSummary} numberOfLines={2}>
+                    {article.recommendationReason}
+                  </Text>
+                  <TouchableOpacity style={styles.compactReadButton} activeOpacity={0.7}>
+                    <Text style={styles.compactReadButtonText}>Read</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Action Items Section */}
+        {actionItems.length > 0 && (
+          <View style={styles.actionItemsSection}>
+            <Text style={styles.sectionTitle}>Your Action Items</Text>
+            <Text style={styles.sectionSubtitle}>Things to focus on this week</Text>
+            
+            <View style={styles.actionItemsList}>
+              {actionItems.map((item) => (
+                <View key={item.id} style={styles.actionItem}>
+                  <View style={[styles.actionItemIcon, { backgroundColor: `${item.color}20` }]}>
+                    {item.icon === 'TrendingUp' && <TrendingUp size={16} color={item.color} strokeWidth={2} />}
+                    {item.icon === 'Calendar' && <Calendar size={16} color={item.color} strokeWidth={2} />}
+                    {item.icon === 'CheckCircle' && <CheckCircle size={16} color={item.color} strokeWidth={2} />}
+                  </View>
+                  <View style={styles.actionItemContent}>
+                    <Text style={styles.actionItemTitle}>{item.title}</Text>
+                    <Text style={styles.actionItemSubtitle}>{item.subtitle}</Text>
+                  </View>
+                  <TouchableOpacity style={styles.actionItemButton} activeOpacity={0.7}>
+                    <Text style={styles.actionItemButtonText}>{item.actionText}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Quick Library Access */}
+        <View style={styles.quickLibrarySection}>
+          <View style={styles.quickLibraryHeader}>
+            <Text style={styles.sectionTitle}>Quick Library Access</Text>
+            <TouchableOpacity activeOpacity={0.7}>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.searchContainer}>
+            <View style={styles.searchBar}>
+              <Search size={20} color="#6B7280" strokeWidth={2} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search articles..."
+                placeholderTextColor="#9CA3AF"
+              />
+            </View>
+          </View>
+
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.filterContainer}
+            contentContainerStyle={styles.filterContent}
+          >
+            {categories.slice(0, 5).map((category) => (
+              <TouchableOpacity
+                key={category}
+                style={[
+                  styles.filterChip,
+                  selectedCategory === category && styles.filterChipActive
+                ]}
+                onPress={() => setSelectedCategory(category)}
+                activeOpacity={0.7}
+              >
+                <Text style={[
+                  styles.filterChipText,
+                  selectedCategory === category && styles.filterChipTextActive
+                ]}>
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
+    );
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'today':
-        return renderTodayTab();
+      case 'nextsteps':
+        return renderNextStepsTab();
       case 'milestones':
         return renderMilestonesTab();
-      case 'library':
-        return renderLibraryTab();
       case 'progress':
         return renderProgressTab();
       default:
-        return renderTodayTab();
+        return renderNextStepsTab();
     }
   };
 
@@ -978,5 +1245,226 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#4B5563',
     flex: 1,
+  },
+  // Next Steps styles
+  tipFooter: {
+    marginTop: 16,
+    gap: 12,
+  },
+  primaryActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#8BA888',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    justifyContent: 'center',
+  },
+  primaryActionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginLeft: 6,
+  },
+  secondaryActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  secondaryActionButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  secondaryActionText: {
+    fontSize: 14,
+    color: '#6B7280',
+    textDecorationLine: 'underline',
+  },
+  relatedLinkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  relatedLinkText: {
+    fontSize: 14,
+    color: '#8BA888',
+    marginLeft: 4,
+    textDecorationLine: 'underline',
+  },
+  recommendedSection: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
+  sectionSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 16,
+  },
+  recommendedScroll: {
+    marginHorizontal: -20,
+  },
+  recommendedContent: {
+    paddingHorizontal: 20,
+  },
+  compactArticleCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 12,
+    width: 280,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  compactArticleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  compactArticleTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 6,
+    lineHeight: 20,
+  },
+  compactArticleSummary: {
+    fontSize: 13,
+    color: '#6B7280',
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+  compactReadButton: {
+    backgroundColor: '#8BA888',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+  },
+  compactReadButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  actionItemsSection: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
+  actionItemsList: {
+    gap: 12,
+  },
+  actionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  actionItemIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  actionItemContent: {
+    flex: 1,
+  },
+  actionItemTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 2,
+  },
+  actionItemSubtitle: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  actionItemButton: {
+    backgroundColor: '#F3F4F6',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  actionItemButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#4B5563',
+  },
+  quickLibrarySection: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  quickLibraryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  seeAllText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#8BA888',
+  },
+  tipLoadingCard: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 20,
+    borderRadius: 16,
+    padding: 40,
+    marginBottom: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  tipLoadingText: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 12,
+    textAlign: 'center',
+  },
+  tipErrorCard: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 20,
+    borderRadius: 16,
+    padding: 30,
+    marginBottom: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  tipErrorText: {
+    fontSize: 14,
+    color: '#EF4444',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  smallRetryButton: {
+    backgroundColor: '#8BA888',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  smallRetryButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
