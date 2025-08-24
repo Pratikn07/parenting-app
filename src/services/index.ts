@@ -1,7 +1,16 @@
-// Services placeholder - connect to your backend API here
+// Export all services
+export * from './auth/AuthService';
+export * from './auth/SupabaseAuthService';
+export * from './resources/ResourcesService';
+export * from './progress/ProgressService';
+export * from './milestones/MilestonesService';
+export * from './tips/DailyTipsService';
+export * from './recommendations/RecommendationsService';
+
+// Legacy placeholder exports for backward compatibility
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://your-api.com';
 
-// Placeholder service functions
+// Legacy placeholder service functions (deprecated - use individual services instead)
 export const authService = {
   signIn: async (email: string, password: string) => {
     // TODO: Implement authentication
