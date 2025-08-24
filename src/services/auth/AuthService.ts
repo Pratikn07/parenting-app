@@ -15,10 +15,6 @@ class AuthServiceClass {
     return SupabaseAuth.signInWithGoogle();
   }
 
-  async signInWithApple(): Promise<AuthResponse> {
-    return SupabaseAuth.signInWithApple();
-  }
-
   async signOut(): Promise<void> {
     return SupabaseAuth.signOut();
   }

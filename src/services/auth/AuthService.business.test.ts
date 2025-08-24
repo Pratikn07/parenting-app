@@ -9,7 +9,6 @@ vi.mock('./SupabaseAuthService', () => ({
     signInWithEmail: vi.fn(),
     signUpWithEmail: vi.fn(),
     signInWithGoogle: vi.fn(),
-    signInWithApple: vi.fn(),
     signOut: vi.fn(),
     getCurrentUser: vi.fn(),
     getSession: vi.fn(),
@@ -102,19 +101,6 @@ describe('AuthService Business Logic', () => {
 
       expect(result.success).toBe(true);
       expect(mockSupabaseAuth.signInWithGoogle).toHaveBeenCalled();
-    });
-
-    it('should handle Apple sign in', async () => {
-      mockSupabaseAuth.signInWithApple.mockResolvedValue({
-        success: true,
-        user: { id: 'apple-user-123', email: 'test@icloud.com' },
-        error: null
-      });
-
-      const result = await AuthService.signInWithApple();
-
-      expect(result.success).toBe(true);
-      expect(mockSupabaseAuth.signInWithApple).toHaveBeenCalled();
     });
 
     it('should handle OAuth callback', async () => {
