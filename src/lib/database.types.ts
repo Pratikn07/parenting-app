@@ -4,92 +4,210 @@
 export interface Database {
   public: {
     Tables: {
-      profiles: {
+      users: {
         Row: {
-          id: string; // UUID, references auth.users(id)
-          name: string;
-          email: string;
-          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
-          feeding_preference: 'breastfeeding' | 'formula' | 'mixed';
-          has_completed_onboarding: boolean;
-          avatar_url?: string;
+          id: string;
+          email: string | null;
+          locale: string;
+          timezone: string | null;
           created_at: string;
-          updated_at: string;
+          name: string | null;
+          parenting_stage: string | null;
+          feeding_preference: string | null;
+          has_completed_onboarding: boolean | null;
+          avatar_url: string | null;
+          updated_at: string | null;
         };
         Insert: {
           id: string;
-          name: string;
-          email: string;
-          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler';
-          feeding_preference?: 'breastfeeding' | 'formula' | 'mixed';
-          has_completed_onboarding?: boolean;
-          avatar_url?: string;
+          email?: string | null;
+          locale?: string;
+          timezone?: string | null;
           created_at?: string;
-          updated_at?: string;
+          name?: string | null;
+          parenting_stage?: string | null;
+          feeding_preference?: string | null;
+          has_completed_onboarding?: boolean | null;
+          avatar_url?: string | null;
+          updated_at?: string | null;
         };
         Update: {
-          name?: string;
-          email?: string;
-          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler';
-          feeding_preference?: 'breastfeeding' | 'formula' | 'mixed';
-          has_completed_onboarding?: boolean;
-          avatar_url?: string;
-          updated_at?: string;
+          email?: string | null;
+          locale?: string;
+          timezone?: string | null;
+          name?: string | null;
+          parenting_stage?: string | null;
+          feeding_preference?: string | null;
+          has_completed_onboarding?: boolean | null;
+          avatar_url?: string | null;
+          updated_at?: string | null;
         };
       };
       children: {
         Row: {
-          id: string; // UUID
-          parent_id: string; // references profiles(id)
-          name: string;
-          birth_date?: string;
-          gender?: 'male' | 'female' | 'other';
+          id: string;
+          user_id: string;
+          name: string | null;
+          date_of_birth: string;
+          sex: string | null;
+          gestational_age_weeks: number | null;
+          allergies: string[] | null;
+          diet_notes: string | null;
+          pediatrician_contact: any | null;
           created_at: string;
-          updated_at: string;
+          updated_at: string | null;
         };
         Insert: {
           id?: string;
-          parent_id: string;
-          name: string;
-          birth_date?: string;
-          gender?: 'male' | 'female' | 'other';
+          user_id: string;
+          name?: string | null;
+          date_of_birth: string;
+          sex?: string | null;
+          gestational_age_weeks?: number | null;
+          allergies?: string[] | null;
+          diet_notes?: string | null;
+          pediatrician_contact?: any | null;
           created_at?: string;
-          updated_at?: string;
+          updated_at?: string | null;
         };
         Update: {
-          name?: string;
-          birth_date?: string;
-          gender?: 'male' | 'female' | 'other';
-          updated_at?: string;
+          name?: string | null;
+          date_of_birth?: string;
+          sex?: string | null;
+          gestational_age_weeks?: number | null;
+          allergies?: string[] | null;
+          diet_notes?: string | null;
+          pediatrician_contact?: any | null;
+          updated_at?: string | null;
         };
       };
-      milestones: {
+      articles: {
         Row: {
-          id: string; // UUID
-          child_id: string; // references children(id)
+          id: string;
+          slug: string | null;
           title: string;
-          description?: string;
-          achieved_at?: string;
-          milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
-          created_at: string;
-          updated_at: string;
+          body_md: string;
+          age_min_days: number | null;
+          age_max_days: number | null;
+          locale: string;
+          tags: string[] | null;
+          last_reviewed_at: string | null;
+          reviewer: string | null;
         };
         Insert: {
           id?: string;
-          child_id: string;
+          slug?: string | null;
           title: string;
-          description?: string;
-          achieved_at?: string;
-          milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
-          created_at?: string;
-          updated_at?: string;
+          body_md: string;
+          age_min_days?: number | null;
+          age_max_days?: number | null;
+          locale?: string;
+          tags?: string[] | null;
+          last_reviewed_at?: string | null;
+          reviewer?: string | null;
+        };
+        Update: {
+          slug?: string | null;
+          title?: string;
+          body_md?: string;
+          age_min_days?: number | null;
+          age_max_days?: number | null;
+          locale?: string;
+          tags?: string[] | null;
+          last_reviewed_at?: string | null;
+          reviewer?: string | null;
+        };
+      };
+      daily_tips: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          tip_date: string;
+          title: string;
+          description: string;
+          category: string;
+          parenting_stage: string;
+          child_age_months: number | null;
+          quick_tips: string[] | null;
+          is_viewed: boolean | null;
+          viewed_at: string | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          tip_date: string;
+          title: string;
+          description: string;
+          category: string;
+          parenting_stage: string;
+          child_age_months?: number | null;
+          quick_tips?: string[] | null;
+          is_viewed?: boolean | null;
+          viewed_at?: string | null;
+          created_at?: string | null;
         };
         Update: {
           title?: string;
           description?: string;
-          achieved_at?: string;
-          milestone_type?: 'physical' | 'cognitive' | 'social' | 'emotional';
-          updated_at?: string;
+          category?: string;
+          parenting_stage?: string;
+          child_age_months?: number | null;
+          quick_tips?: string[] | null;
+          is_viewed?: boolean | null;
+          viewed_at?: string | null;
+        };
+      };
+      user_activity_log: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          activity_type: 'resource_viewed' | 'resource_saved' | 'resource_shared' | 'milestone_completed' | 'milestone_uncompleted' | 'question_asked' | 'tip_viewed' | 'search_performed' | 'category_filtered';
+          resource_id: string | null;
+          milestone_id: string | null;
+          metadata: any | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          activity_type: 'resource_viewed' | 'resource_saved' | 'resource_shared' | 'milestone_completed' | 'milestone_uncompleted' | 'question_asked' | 'tip_viewed' | 'search_performed' | 'category_filtered';
+          resource_id?: string | null;
+          milestone_id?: string | null;
+          metadata?: any | null;
+          created_at?: string | null;
+        };
+        Update: {
+          metadata?: any | null;
+        };
+      };
+      milestones: {
+        Row: {
+          id: string;
+          child_id: string | null;
+          title: string;
+          description: string | null;
+          achieved_at: string | null;
+          milestone_type: string;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          child_id?: string | null;
+          title: string;
+          description?: string | null;
+          achieved_at?: string | null;
+          milestone_type: string;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          title?: string;
+          description?: string | null;
+          achieved_at?: string | null;
+          milestone_type?: string;
+          updated_at?: string | null;
         };
       };
     };
@@ -104,21 +222,38 @@ export interface Database {
       feeding_preference: 'breastfeeding' | 'formula' | 'mixed';
       milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
       gender: 'male' | 'female' | 'other';
+      activity_type: 'resource_viewed' | 'resource_saved' | 'resource_shared' | 'milestone_completed' | 'milestone_uncompleted' | 'question_asked' | 'tip_viewed' | 'search_performed' | 'category_filtered';
     };
   };
 }
 
 // Helper types for easier use
-export type Profile = Database['public']['Tables']['profiles']['Row'];
+export type User = Database['public']['Tables']['users']['Row'];
 export type Child = Database['public']['Tables']['children']['Row'];
 export type Milestone = Database['public']['Tables']['milestones']['Row'];
+export type Article = Database['public']['Tables']['articles']['Row'];
+export type DailyTip = Database['public']['Tables']['daily_tips']['Row'];
+export type UserActivityLog = Database['public']['Tables']['user_activity_log']['Row'];
 
 // Insert types
-export type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
+export type UserInsert = Database['public']['Tables']['users']['Insert'];
 export type ChildInsert = Database['public']['Tables']['children']['Insert'];
 export type MilestoneInsert = Database['public']['Tables']['milestones']['Insert'];
+export type ArticleInsert = Database['public']['Tables']['articles']['Insert'];
+export type DailyTipInsert = Database['public']['Tables']['daily_tips']['Insert'];
+export type UserActivityLogInsert = Database['public']['Tables']['user_activity_log']['Insert'];
 
 // Update types  
-export type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
+export type UserUpdate = Database['public']['Tables']['users']['Update'];
 export type ChildUpdate = Database['public']['Tables']['children']['Update'];
 export type MilestoneUpdate = Database['public']['Tables']['milestones']['Update'];
+export type ArticleUpdate = Database['public']['Tables']['articles']['Update'];
+export type DailyTipUpdate = Database['public']['Tables']['daily_tips']['Update'];
+export type UserActivityLogUpdate = Database['public']['Tables']['user_activity_log']['Update'];
+
+// Enum types
+export type ParentingStage = Database['public']['Enums']['parenting_stage'];
+export type FeedingPreference = Database['public']['Enums']['feeding_preference'];
+export type MilestoneType = Database['public']['Enums']['milestone_type'];
+export type Gender = Database['public']['Enums']['gender'];
+export type ActivityType = Database['public']['Enums']['activity_type'];
