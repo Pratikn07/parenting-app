@@ -178,31 +178,6 @@ class SupabaseAuthService {
 
 
   /**
-   * Sign in with Apple OAuth
-   */
-  async signInWithApple(): Promise<AuthResponse> {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'apple',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      // For OAuth, we need to handle the redirect flow
-      // This will return immediately, and the actual auth happens in the callback
-      throw new Error('OAuth flow initiated - redirect to Apple');
-    } catch (error) {
-      console.error('Apple sign in error:', error);
-      throw error;
-    }
-  }
-
-  /**
    * Sign out the current user
    */
   async signOut(): Promise<void> {
@@ -285,7 +260,7 @@ class SupabaseAuthService {
   }
 
   /**
-   * Handle OAuth callback (for Google/Apple sign-in)
+   * Handle OAuth callback (for Google sign-in)
    */
   async handleOAuthCallback(url: string): Promise<void> {
     try {

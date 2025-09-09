@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 interface SocialButtonProps {
-  provider: 'apple' | 'google';
+  provider: 'google';
   onPress: () => void;
   text: string;
   icon?: React.ReactNode;
@@ -19,13 +19,11 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
   text,
   icon,
 }) => {
-  const isApple = provider === 'apple';
-  
   return (
     <TouchableOpacity
       style={[
         styles.socialButton,
-        isApple ? styles.appleButton : styles.googleButton,
+        styles.googleButton,
       ]}
       onPress={onPress}
       activeOpacity={0.7}
@@ -33,13 +31,13 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
       {icon || (
         <View style={styles.defaultIcon}>
           <Text style={styles.defaultIconText}>
-            {isApple ? '🍎' : 'G'}
+            G
           </Text>
         </View>
       )}
       <Text style={[
         styles.socialButtonText,
-        isApple ? styles.appleButtonText : styles.googleButtonText,
+        styles.googleButtonText,
       ]}>
         {text}
       </Text>
@@ -56,9 +54,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     gap: 12,
-  },
-  appleButton: {
-    backgroundColor: '#000000',
   },
   googleButton: {
     backgroundColor: '#FFFFFF',
@@ -79,9 +74,6 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: 16,
     fontWeight: '600',
-  },
-  appleButtonText: {
-    color: '#FFFFFF',
   },
   googleButtonText: {
     color: '#1F2937',
