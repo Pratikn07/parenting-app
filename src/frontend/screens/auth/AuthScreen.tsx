@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Apple, Mail, AlertCircle } from 'lucide-react-native';
+import { Mail, AlertCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 // Import from shared types and services
@@ -20,7 +20,6 @@ import { AuthFormData } from '../../../shared/types/auth.types';
 import { useAuthStore } from '../../../shared/stores/authStore';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
-import { SocialButton } from '../../components/auth/SocialButton';
 
 export default function AuthScreen() {
   const { login, signup, error, isLoading, clearError, isAuthenticated, hasCompletedOnboarding } = useAuthStore();
@@ -31,7 +30,7 @@ export default function AuthScreen() {
     password: '',
   });
   const [formErrors, setFormErrors] = useState<Partial<AuthFormData>>({});
-  const [isOAuthLoading, setIsOAuthLoading] = useState<'apple' | 'google' | null>(null);
+  const [isOAuthLoading, setIsOAuthLoading] = useState<'google' | null>(null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
@@ -84,27 +83,6 @@ export default function AuthScreen() {
     
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
-  };
-
-  const handleContinueWithApple = async () => {
-    try {
-      setIsOAuthLoading('apple');
-      clearError();
-      
-      // TODO: Implement Apple Sign In
-      console.log('Apple Sign In - Not implemented');
-      
-      Alert.alert(
-        'Coming Soon',
-        'Apple Sign In will be available when you connect to a backend service.',
-        [{ text: 'OK' }]
-      );
-    } catch (error: any) {
-      console.error('Apple OAuth error:', error);
-      Alert.alert('Error', 'Apple Sign In not available', [{ text: 'OK' }]);
-    } finally {
-      setIsOAuthLoading(null);
-    }
   };
 
   const handleContinueWithGoogle = async () => {
@@ -309,22 +287,6 @@ export default function AuthScreen() {
 
           {/* Social Sign In */}
           <View style={styles.socialContainer}>
-            <TouchableOpacity
-              style={[styles.socialButton, styles.appleButton]}
-              onPress={handleContinueWithApple}
-              disabled={isLoading || isOAuthLoading !== null}
-              activeOpacity={0.7}
-            >
-              {isOAuthLoading === 'apple' ? (
-                <ActivityIndicator size="small" color="#FFFFFF" />
-              ) : (
-                <>
-                  <Apple size={20} color="#FFFFFF" strokeWidth={2} fill="#FFFFFF" />
-                  <Text style={styles.appleButtonText}>Continue with Apple</Text>
-                </>
-              )}
-            </TouchableOpacity>
-
             <TouchableOpacity
               style={[styles.socialButton, styles.googleButton]}
               onPress={handleContinueWithGoogle}
@@ -569,14 +531,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 12,
     gap: 12,
-  },
-  appleButton: {
-    backgroundColor: '#000000',
-  },
-  appleButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
   },
   googleButton: {
     backgroundColor: '#FFFFFF',

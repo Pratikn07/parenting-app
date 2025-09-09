@@ -34,7 +34,7 @@ export interface SignUpCredentials {
   password: string;
 }
 
-export type AuthProvider = 'apple' | 'google' | 'email';
+export type AuthProvider = 'google' | 'email';
 
 export interface AuthResponse {
   user: User;
