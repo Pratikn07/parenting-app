@@ -316,6 +316,64 @@ export interface Database {
           updated_at?: string;
         };
       };
+      chat_messages: {
+        Row: {
+          id: string;
+          user_id: string;
+          message: string;
+          is_from_user: boolean;
+          created_at: string;
+          session_id: string | null;
+          child_id: string | null;
+          image_url: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          message: string;
+          is_from_user?: boolean;
+          created_at?: string;
+          session_id?: string | null;
+          child_id?: string | null;
+          image_url?: string | null;
+        };
+        Update: {
+          message?: string;
+          is_from_user?: boolean;
+          session_id?: string | null;
+          child_id?: string | null;
+          image_url?: string | null;
+        };
+      };
+      chat_sessions: {
+        Row: {
+          id: string;
+          user_id: string;
+          child_id: string | null;
+          title: string | null;
+          started_at: string;
+          last_message_at: string | null;
+          message_count: number;
+          is_archived: boolean;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          child_id?: string | null;
+          title?: string | null;
+          started_at?: string;
+          last_message_at?: string | null;
+          message_count?: number;
+          is_archived?: boolean;
+        };
+        Update: {
+          child_id?: string | null;
+          title?: string | null;
+          last_message_at?: string | null;
+          message_count?: number;
+          is_archived?: boolean;
+        };
+      };
     };
     Views: {
       // Add views if needed later
@@ -344,6 +402,8 @@ export type UserProgressStats = Database['public']['Tables']['user_progress_stat
 export type DailyTip = Database['public']['Tables']['daily_tips']['Row'];
 export type MilestoneTemplate = Database['public']['Tables']['milestone_templates']['Row'];
 export type UserMilestoneProgress = Database['public']['Tables']['user_milestone_progress']['Row'];
+export type ChatMessage = Database['public']['Tables']['chat_messages']['Row'];
+export type ChatSession = Database['public']['Tables']['chat_sessions']['Row'];
 
 // Insert types
 export type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];

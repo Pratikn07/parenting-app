@@ -6,6 +6,8 @@ export * from './progress/ProgressService';
 export * from './milestones/MilestonesService';
 export * from './tips/DailyTipsService';
 export * from './recommendations/RecommendationsService';
+export * from './chat/ChatService';
+export * from './images/ImageService';
 
 // Legacy placeholder exports for backward compatibility
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://your-api.com';
