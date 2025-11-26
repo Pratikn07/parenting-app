@@ -1,2 +1,2 @@
-// Re-export the new OnboardingScreen from the proper location
-export { default } from '../src/frontend/screens/onboarding/OnboardingScreen';
+// Re-export the new WizardScreen as the default Onboarding screen
+export { default } from '../src/frontend/screens/wizard/WizardScreen';

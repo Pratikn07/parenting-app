@@ -2,6 +2,10 @@
 export * from './auth/AuthService';
 export * from './auth/SupabaseAuthService';
 export * from './recommendations/RecommendationsService';
+export * from './milestones/MilestoneService';
+export * from './progress/ProgressService';
+export * from './chat/ChatService';
+export * from './images/ImageService';
 
 // Legacy placeholder exports for backward compatibility
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://your-api.com';
@@ -31,18 +35,7 @@ export const authService = {
   }
 };
 
-export const chatService = {
-  sendMessage: async (message: string) => {
-    // TODO: Implement chat functionality
-    console.log('Chat: Send message', { message });
-    throw new Error('Chat not implemented');
-  },
-  
-  getHistory: async () => {
-    // TODO: Get chat history
-    return [];
-  }
-};
+// chatService is now exported from './chat/ChatService'
 
 export const resourceService = {
   getResources: async () => {
