@@ -21,6 +21,7 @@ interface AuthState {
   hasCompletedOnboarding: boolean;
   isLoading: boolean;
   error: string | null;
+  guestData?: any;
   
   // Actions
   login: (email: string, password: string) => Promise<void>;
@@ -31,6 +32,8 @@ interface AuthState {
   clearError: () => void;
   setLoading: (loading: boolean) => void;
   checkAuthState: (url?: string) => Promise<void>;
+  // Guest Actions
+  setGuestData: (data: any) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -42,6 +45,11 @@ export const useAuthStore = create<AuthState>()(
       hasCompletedOnboarding: false,
       isLoading: false,
       error: null,
+      guestData: null,
+
+      setGuestData: (data: any) => {
+        set({ guestData: data, hasCompletedOnboarding: true });
+      },
 
       // Actions
       login: async (email: string, password: string) => {

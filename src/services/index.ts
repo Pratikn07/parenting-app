@@ -37,18 +37,7 @@ export const authService = {
   }
 };
 
-export const chatService = {
-  sendMessage: async (message: string) => {
-    // TODO: Implement chat functionality
-    console.log('Chat: Send message', { message });
-    throw new Error('Chat not implemented');
-  },
-  
-  getHistory: async () => {
-    // TODO: Get chat history
-    return [];
-  }
-};
+// chatService is now exported from './chat/ChatService'
 
 export const resourceService = {
   getResources: async () => {

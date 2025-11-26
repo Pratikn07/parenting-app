@@ -1,150 +1,161 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  Dimensions,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
-// TODO: Import analytics service when available
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ModernButton } from '@/src/frontend/components/common/ModernButton';
+import { THEME } from '@/src/lib/constants';
+import { Video, ResizeMode } from 'expo-av';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
 export default function LaunchScreen() {
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-  const fadeOutAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    // TODO: Track screen view when analytics is available
-    console.log('Launch screen viewed');
-    
-    // Logo animation sequence
-    const logoAnimation = Animated.sequence([
-      // Fade in and scale up
-      Animated.parallel([
-        Animated.timing(opacityAnim, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          tension: 50,
-          friction: 8,
-          useNativeDriver: true,
-        }),
-      ]),
-      // Hold for a moment
-      Animated.delay(600),
-      // Gentle pulse
-      Animated.sequence([
-        Animated.timing(scaleAnim, {
-          toValue: 1.05,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]),
-      // Hold again
-      Animated.delay(300),
-      // Fade out
-      Animated.timing(fadeOutAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]);
-
-    logoAnimation.start(() => {
-      // Navigate to auth screen after animation completes
-      // TODO: Track event when analytics is available
-      console.log('Launch completed');
-      router.replace('/auth');
-    });
-  }, []);
+  // Placeholder gradient background if video is not available
+  const VideoPlaceholder = () => (
+    <LinearGradient
+      colors={['#E07A5F', '#3D405B']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={StyleSheet.absoluteFill}
+    />
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.View 
-        style={[
-          styles.logoContainer,
-          {
-            opacity: fadeOutAnim,
-            transform: [
-              { scale: scaleAnim },
-            ],
-          },
-        ]}
-      >
-        <Animated.View 
-          style={[
-            styles.logoMark,
-            {
-              opacity: opacityAnim,
-            },
-          ]}
-        >
-          {/* Logo placeholder - replace with actual logo */}
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoText}>MC</Text>
+    <View style={styles.container}>
+      {/* Background Layer */}
+      <View style={styles.backgroundContainer}>
+        {/* Using placeholder gradient for now until video asset is added */}
+        <VideoPlaceholder />
+        
+        {/* 
+          Uncomment below when video asset is available
+          <Video
+            source={require('@/assets/videos/welcome.mp4')}
+            style={StyleSheet.absoluteFill}
+            resizeMode={ResizeMode.COVER}
+            isLooping
+            shouldPlay
+            isMuted={true}
+          />
+        */}
+        
+        {/* Dark Overlay for text readability */}
+        <View style={styles.overlay} />
+      </View>
+
+      <SafeAreaView style={styles.content}>
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <Text style={styles.logoText}>P</Text>
           </View>
-          <Text style={styles.appName}>My Curated Haven</Text>
-        </Animated.View>
-      </Animated.View>
-    </SafeAreaView>
+          <Text style={styles.title}>Parenting, Simplified.</Text>
+          <Text style={styles.subtitle}>Your AI companion for every milestone.</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <ModernButton
+            title="Start My Journey"
+            onPress={() => router.push('/onboarding')}
+            style={styles.button}
+            variant="primary"
+            textStyle={styles.buttonText}
+          />
+          
+          <TouchableOpacity 
+            onPress={() => router.push('/auth')}
+            style={styles.loginLink}
+          >
+            <Text style={styles.loginText}>
+              Already have an account? <Text style={styles.loginTextBold}>Log In</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF7F3', // Soft blush background
-    justifyContent: 'center',
+    backgroundColor: '#000',
+  },
+  backgroundContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
+    padding: 24,
+  },
+  header: {
     alignItems: 'center',
+    marginTop: 60,
   },
   logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  logoMark: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#D4635A',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     marginBottom: 24,
-    shadowColor: '#D4635A',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   logoText: {
-    fontSize: 36,
-    fontWeight: '700',
+    fontSize: 40,
+    fontFamily: THEME.fonts.header,
     color: '#FFFFFF',
-    letterSpacing: 2,
   },
-  appName: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#1F2937',
+  title: {
+    fontSize: 36,
+    fontFamily: THEME.fonts.header,
+    color: '#FFFFFF',
     textAlign: 'center',
-    letterSpacing: 0.5,
+    marginBottom: 12,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontFamily: THEME.fonts.body,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    lineHeight: 28,
+  },
+  footer: {
+    gap: 24,
+    marginBottom: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    height: 56,
+  },
+  buttonText: {
+    color: '#3D405B',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  loginLink: {
+    padding: 8,
+  },
+  loginText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: THEME.fonts.body,
+    opacity: 0.9,
+  },
+  loginTextBold: {
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
 });

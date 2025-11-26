@@ -100,7 +100,7 @@ class SupabaseAuthService {
     try {
       const { makeRedirectUri } = await import('expo-auth-session');
       const WebBrowser = await import('expo-web-browser');
-      
+
       console.log('Starting Google OAuth with proper redirect handling...');
 
       // Create proper redirect URI for development build
@@ -108,7 +108,7 @@ class SupabaseAuthService {
         scheme: 'com.pratikn07.mycuratedhaven',
         path: 'auth/callback'
       });
-      
+
       console.log('Using redirect URI:', redirectUri);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -130,14 +130,14 @@ class SupabaseAuthService {
       // Open OAuth URL in browser
       if (data?.url) {
         console.log('Opening Google OAuth URL:', data.url);
-        
+
         const result = await WebBrowser.openBrowserAsync(data.url, {
           showTitle: true,
           toolbarColor: '#D4635A',
           controlsColor: '#FFFFFF',
           dismissButtonStyle: 'done',
         });
-        
+
         console.log('WebBrowser result:', result);
 
         // Handle different result types
@@ -151,7 +151,7 @@ class SupabaseAuthService {
         } else {
           console.log('OAuth completed, checking for session...');
         }
-        
+
         // Give a moment for the session to be established
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
@@ -200,7 +200,7 @@ class SupabaseAuthService {
   async getCurrentUser(): Promise<Profile | null> {
     try {
       const { data: { user }, error } = await supabase.auth.getUser();
-      
+
       if (error) {
         throw new Error(error.message);
       }
@@ -238,13 +238,18 @@ class SupabaseAuthService {
    */
   async getSession() {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
+      const { data, error } = await supabase.auth.getSession();
+
       if (error) {
+        // If it's a network error, just return null instead of throwing
+        if (error.message.includes('Network request failed')) {
+          console.log('Network error checking session, assuming offline/logged out');
+          return null;
+        }
         throw new Error(error.message);
       }
 
-      return session;
+      return data.session;
     } catch (error) {
       console.error('Get session error:', error);
       return null;
@@ -265,12 +270,12 @@ class SupabaseAuthService {
   async handleOAuthCallback(url: string): Promise<void> {
     try {
       console.log('🔗 Processing OAuth callback URL:', url);
-      
+
       // Parse URL hash parameters
       const urlObj = new URL(url.replace('#', '?'));
       const accessToken = urlObj.searchParams.get('access_token');
       const refreshToken = urlObj.searchParams.get('refresh_token');
-      
+
       if (!accessToken) {
         throw new Error('No access token found in callback URL');
       }
@@ -334,7 +339,7 @@ class SupabaseAuthService {
   async updateProfile(updates: Partial<Profile>): Promise<Profile> {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         throw new Error('No authenticated user');
       }
@@ -376,16 +381,16 @@ class SupabaseAuthService {
       // If no user found, create a new profile record
       if (error?.code === 'PGRST116' || error?.message?.includes('No rows')) {
         console.log('📝 No user profile found, creating new one');
-        
+
         // Get user info from auth
         const { data: authUser, error: authError } = await supabase.auth.getUser();
-        
+
         if (authError || !authUser?.user) {
           throw new Error('Could not get auth user info');
         }
 
         const userData = authUser.user;
-        
+
         // Create new user profile
         const newProfile = {
           id: userId,
