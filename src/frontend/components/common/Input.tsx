@@ -8,6 +8,7 @@ import {
   TextStyle,
   KeyboardTypeOptions,
 } from 'react-native';
+import { THEME } from '@/src/lib/constants';
 
 interface InputProps {
   label?: string;
@@ -64,7 +65,7 @@ export const Input: React.FC<InputProps> = ({
           inputStyle,
         ]}
         placeholder={placeholder}
-        placeholderTextColor="#9CA3AF"
+        placeholderTextColor={THEME.colors.text.secondary}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
@@ -93,22 +94,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
+    fontFamily: THEME.fonts.bodyMedium,
+    color: THEME.colors.text.primary,
     marginBottom: 8,
   },
   required: {
-    color: '#EF4444',
+    color: THEME.colors.status.error,
   },
   input: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: THEME.colors.ui.white,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
+    borderColor: THEME.colors.ui.border,
+    borderRadius: THEME.layout.borderRadius.sm,
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    color: '#1F2937',
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.text.primary,
     minHeight: 56,
   },
   multilineInput: {
@@ -117,22 +119,23 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   inputError: {
-    borderColor: '#EF4444',
+    borderColor: THEME.colors.status.error,
     backgroundColor: '#FEF2F2',
   },
   inputDisabled: {
-    backgroundColor: '#F9FAFB',
-    color: '#9CA3AF',
+    backgroundColor: THEME.colors.ui.inputBg,
+    color: THEME.colors.text.secondary,
   },
   errorText: {
     fontSize: 12,
-    color: '#EF4444',
+    color: THEME.colors.status.error,
     marginTop: 4,
-    fontWeight: '500',
+    fontFamily: THEME.fonts.bodyMedium,
   },
   helperText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: THEME.colors.text.secondary,
     marginTop: 4,
+    fontFamily: THEME.fonts.body,
   },
 });

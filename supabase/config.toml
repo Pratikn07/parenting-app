@@ -1,0 +1,18 @@
+# Supabase CLI configuration
+# Reference: https://supabase.com/docs/guides/cli/config
+
+[api]
+enabled = true
+port = 54321
+
+[db]
+port = 54322
+
+[studio]
+enabled = true
+port = 54323
+
+[functions]
+# Edge Functions configuration
+verify_jwt = true
+

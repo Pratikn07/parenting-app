@@ -1,44 +1,222 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   ActivityIndicator,
+  Dimensions,
+  Platform,
+  Modal,
+  TextInput,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { X, Search, Bookmark, Share, Clock, Sparkles, TrendingUp, BookOpen, BarChart3, MessageCircle, Calendar, Heart, CheckCircle, Circle } from 'lucide-react-native';
+import {
+  ChevronRight,
+  ChevronDown,
+  TrendingUp,
+  CheckCircle,
+  Clock,
+  Star,
+  MessageCircle,
+  Heart,
+  Sparkles,
+  BarChart3,
+  Calendar,
+  Bookmark,
+  BookOpen,
+  Lightbulb,
+  Search,
+  X,
+  PlayCircle,
+  Award,
+  ArrowRight,
+  Plus,
+  Baby,
+  Circle,
+} from 'lucide-react-native';
 import { useAuthStore } from '../../../shared/stores';
-import { recommendationsService, RecommendedArticle, ActionItem, PersonalizedContent } from '../../../services';
+import { 
+  recommendationsService, 
+  PersonalizedContent,
+  MilestoneService,
+  MilestonesBySection,
+  MilestoneProgress,
+  MilestoneTemplateWithStatus,
+  ProgressService,
+  ProgressStats,
+  DateRange,
+  DatePreset,
+} from '../../../services';
+import { ScreenBackground } from '../../components/common/ScreenBackground';
+import { ModernCard } from '../../components/common/ModernCard';
+import { DateRangeFilter } from '../../components/common/DateRangeFilter';
+import { THEME } from '../../../lib/constants';
+import { Child, MilestoneType } from '../../../lib/database.types';
+
+const { width } = Dimensions.get('window');
+
+// Category filter type that includes 'All'
+type CategoryFilter = 'All' | 'Physical' | 'Cognitive' | 'Social' | 'Communication';
 
 export default function ResourcesScreen() {
   const [activeTab, setActiveTab] = useState('nextsteps');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  
-  // Dynamic data state
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
+
+  // Personalized content state
   const [personalizedContent, setPersonalizedContent] = useState<PersonalizedContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Get current user
+
+  // Milestone state
+  const [children, setChildren] = useState<Child[]>([]);
+  const [selectedChild, setSelectedChild] = useState<Child | null>(null);
+  const [milestoneData, setMilestoneData] = useState<MilestonesBySection | null>(null);
+  const [milestoneProgress, setMilestoneProgress] = useState<MilestoneProgress | null>(null);
+  const [milestonesLoading, setMilestonesLoading] = useState(false);
+  const [milestonesError, setMilestonesError] = useState<string | null>(null);
+  const [showChildPicker, setShowChildPicker] = useState(false);
+  const [expandedSection, setExpandedSection] = useState<'past' | 'current' | 'upcoming'>('current');
+
+  // Custom milestone modal state
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  const [customMilestone, setCustomMilestone] = useState({
+    title: '',
+    description: '',
+    category: 'physical' as MilestoneType,
+  });
+
+  // Progress tab state
+  const [progressStats, setProgressStats] = useState<ProgressStats | null>(null);
+  const [progressLoading, setProgressLoading] = useState(false);
+  const [datePreset, setDatePreset] = useState<DatePreset>('week');
+  const [customDateRange, setCustomDateRange] = useState<DateRange | undefined>(undefined);
+
+  // Saved articles state
+  const [savedArticleIds, setSavedArticleIds] = useState<Set<string>>(new Set());
+
   const { user } = useAuthStore();
 
-  // Load personalized content when component mounts
+  // Load children on mount
+  useEffect(() => {
+    if (user?.id) {
+      loadChildren();
+    }
+  }, [user?.id]);
+
+  // Load personalized content when nextsteps tab is active
   useEffect(() => {
     if (user?.id && activeTab === 'nextsteps') {
       loadPersonalizedContent();
     }
   }, [user?.id, activeTab]);
 
+  // Load milestones when milestones tab is active and child is selected
+  useEffect(() => {
+    if (activeTab === 'milestones' && selectedChild?.id) {
+      loadMilestones();
+    }
+  }, [activeTab, selectedChild?.id]);
+
+  // Load progress stats when progress tab is active
+  useEffect(() => {
+    if (user?.id && activeTab === 'progress') {
+      loadProgressStats();
+    }
+  }, [user?.id, activeTab, datePreset, customDateRange]);
+
+  const loadProgressStats = async () => {
+    if (!user?.id) return;
+    setProgressLoading(true);
+    try {
+      // Get date range based on preset or custom range
+      const dateRange = datePreset === 'custom' 
+        ? customDateRange 
+        : ProgressService.getDateRangeFromPreset(datePreset);
+      
+      const stats = await ProgressService.getProgressStats(user.id, dateRange);
+      setProgressStats(stats);
+    } catch (err) {
+      console.error('Error loading progress stats:', err);
+    } finally {
+      setProgressLoading(false);
+    }
+  };
+
+  const handleDatePresetChange = (preset: DatePreset) => {
+    setDatePreset(preset);
+  };
+
+  const handleCustomDateRangeChange = (range: DateRange) => {
+    setCustomDateRange(range);
+  };
+
+  // Load saved articles status when personalized content loads
+  useEffect(() => {
+    if (user?.id && personalizedContent?.recommendedArticles) {
+      loadSavedArticlesStatus();
+    }
+  }, [user?.id, personalizedContent?.recommendedArticles]);
+
+  const loadSavedArticlesStatus = async () => {
+    if (!user?.id || !personalizedContent?.recommendedArticles) return;
+    try {
+      const articleIds = personalizedContent.recommendedArticles.map(a => a.id);
+      const savedStatus = await ProgressService.getArticlesSavedStatus(user.id, articleIds);
+      const savedIds = new Set(
+        Object.entries(savedStatus)
+          .filter(([_, isSaved]) => isSaved)
+          .map(([id]) => id)
+      );
+      setSavedArticleIds(savedIds);
+    } catch (err) {
+      console.error('Error loading saved articles status:', err);
+    }
+  };
+
+  const handleToggleSaveArticle = async (articleId: string) => {
+    if (!user?.id) return;
+    try {
+      const result = await ProgressService.toggleSaveArticle(user.id, articleId);
+      setSavedArticleIds(prev => {
+        const newSet = new Set(prev);
+        if (result.saved) {
+          newSet.add(articleId);
+        } else {
+          newSet.delete(articleId);
+        }
+        return newSet;
+      });
+      // Refresh progress stats if on progress tab
+      if (activeTab === 'progress') {
+        loadProgressStats();
+      }
+    } catch (err) {
+      console.error('Error toggling save article:', err);
+      Alert.alert('Error', 'Failed to save article');
+    }
+  };
+
+  const loadChildren = async () => {
+    if (!user?.id) return;
+    try {
+      const childrenData = await MilestoneService.getChildrenForUser(user.id);
+      setChildren(childrenData);
+      if (childrenData.length > 0 && !selectedChild) {
+        setSelectedChild(childrenData[0]);
+      }
+    } catch (err) {
+      console.error('Error loading children:', err);
+    }
+  };
+
   const loadPersonalizedContent = async () => {
     if (!user?.id) return;
-    
     setIsLoading(true);
     setError(null);
-    
     try {
       const content = await recommendationsService.getPersonalizedContent(user.id);
       setPersonalizedContent(content);
@@ -50,9 +228,27 @@ export default function ResourcesScreen() {
     }
   };
 
+  const loadMilestones = async () => {
+    if (!selectedChild?.id) return;
+    setMilestonesLoading(true);
+    setMilestonesError(null);
+    try {
+      const [sections, progress] = await Promise.all([
+        MilestoneService.getMilestonesBySection(selectedChild.id),
+        MilestoneService.getMilestoneProgress(selectedChild.id),
+      ]);
+      setMilestoneData(sections);
+      setMilestoneProgress(progress);
+    } catch (err) {
+      console.error('Error loading milestones:', err);
+      setMilestonesError(err instanceof Error ? err.message : 'Failed to load milestones');
+    } finally {
+      setMilestonesLoading(false);
+    }
+  };
+
   const handleCompleteTip = async () => {
     if (!user?.id || !personalizedContent?.dailyTip) return;
-    
     try {
       await recommendationsService.completeTip(user.id, personalizedContent.dailyTip.id);
       await loadPersonalizedContent();
@@ -64,7 +260,6 @@ export default function ResourcesScreen() {
 
   const handleSkipTip = async () => {
     if (!user?.id || !personalizedContent?.dailyTip) return;
-    
     try {
       await recommendationsService.skipTip(user.id, personalizedContent.dailyTip.id);
       await loadPersonalizedContent();
@@ -74,975 +269,1208 @@ export default function ResourcesScreen() {
     }
   };
 
-  const tabs = [
-    { id: 'nextsteps', label: 'Next Steps', icon: Sparkles },
-    { id: 'progress', label: 'Progress', icon: BarChart3 },
-    { id: 'milestones', label: 'Milestones', icon: TrendingUp },
-  ];
-
-  const categories = ['All', 'Sleep', 'Feeding', 'Health', 'Activities', 'Well-being', 'Daily Care'];
-  const milestoneCategories = ['All', 'Physical', 'Cognitive', 'Social', 'Communication'];
-
-  const featuredArticles = [
-    {
-      id: '1',
-      category: 'sleep',
-      readTime: 5,
-      title: 'Understanding Your Baby\'s Sleep Patterns',
-      summary: 'Learn about newborn sleep cycles and how to establish healthy sleep habits from the start.',
-    },
-    {
-      id: '2',
-      category: 'feeding',
-      readTime: 8,
-      title: 'Breastfeeding: The First Few Weeks',
-      summary: 'A comprehensive guide to getting started with breastfeeding, including common challenges and solutions.',
-    },
-    {
-      id: '3',
-      category: 'emotional',
-      readTime: 6,
-      title: 'Postpartum Self-Care for New Moms',
-      summary: 'Taking care of yourself while caring for your newborn - practical tips for new mothers.',
-    },
-  ];
-
-  const milestones = [
-    {
-      id: '1',
-      title: 'Holds head up briefly',
-      description: 'Can lift and hold head up for short periods during tummy time',
-      category: 'Physical',
-      completed: true,
-    },
-    {
-      id: '2',
-      title: 'Follows objects with eyes',
-      description: 'Tracks moving objects and faces with their gaze',
-      category: 'Cognitive',
-      completed: true,
-    },
-    {
-      id: '3',
-      title: 'Responds to familiar voices',
-      description: 'Shows recognition and response to parent voices',
-      category: 'Social',
-      completed: false,
-    },
-    {
-      id: '4',
-      title: 'Makes cooing sounds',
-      description: 'Begins to make soft vowel sounds and coos',
-      category: 'Communication',
-      completed: false,
-    },
-  ];
-
-  const weeklyStats = [
-    { label: 'Questions Asked', value: 12, icon: MessageCircle },
-    { label: 'Tips Received', value: 7, icon: Calendar },
-    { label: 'Content Saved', value: 5, icon: Heart },
-    { label: 'Milestones', value: 2, icon: TrendingUp },
-  ];
-
-  const getCategoryColor = (category: string) => {
-    const colors = {
-      sleep: '#F0E6FF',
-      feeding: '#FFE5D9',
-      health: '#E8F5E8',
-      activities: '#FEF3E2',
-      emotional: '#EBF8FF',
-      'well-being': '#FDF2F8',
-      'daily care': '#F3F4F6',
-    };
-    return colors[category.toLowerCase() as keyof typeof colors] || '#F3F4F6';
+  const handleToggleMilestone = async (milestone: MilestoneTemplateWithStatus) => {
+    if (!selectedChild?.id) return;
+    
+    try {
+      if (milestone.isCompleted && milestone.milestoneId) {
+        // Unmark milestone
+        await MilestoneService.unmarkMilestone(milestone.milestoneId);
+      } else {
+        // Mark milestone complete
+        await MilestoneService.markMilestoneComplete(selectedChild.id, milestone.id);
+      }
+      // Reload milestones
+      await loadMilestones();
+    } catch (err) {
+      console.error('Error toggling milestone:', err);
+      Alert.alert('Error', 'Failed to update milestone');
+    }
   };
 
-  const renderTodayTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Your Daily Tip</Text>
-        <Text style={styles.tabSubtitle}>Personalized guidance for your parenting journey</Text>
+  const handleAddCustomMilestone = async () => {
+    if (!selectedChild?.id || !customMilestone.title.trim()) return;
+    
+    try {
+      await MilestoneService.addCustomMilestone(selectedChild.id, {
+        title: customMilestone.title,
+        description: customMilestone.description || undefined,
+        milestone_type: customMilestone.category,
+        achieved_at: new Date().toISOString(),
+      });
+      setShowCustomModal(false);
+      setCustomMilestone({ title: '', description: '', category: 'physical' });
+      await loadMilestones();
+    } catch (err) {
+      console.error('Error adding custom milestone:', err);
+      Alert.alert('Error', 'Failed to add milestone');
+    }
+  };
+
+  // Map category filter to milestone type
+  const getCategoryType = (filter: CategoryFilter): MilestoneType | null => {
+    const mapping: Record<CategoryFilter, MilestoneType | null> = {
+      'All': null,
+      'Physical': 'physical',
+      'Cognitive': 'cognitive',
+      'Social': 'social',
+      'Communication': 'emotional',
+    };
+    return mapping[filter];
+  };
+
+  // Filter milestones by category
+  const filterByCategory = (milestones: MilestoneTemplateWithStatus[]): MilestoneTemplateWithStatus[] => {
+    if (selectedCategory === 'All') return milestones;
+    const categoryType = getCategoryType(selectedCategory);
+    return milestones.filter(m => m.category === categoryType);
+  };
+
+  const tabs = [
+    { id: 'nextsteps', label: 'For You', icon: Sparkles },
+    { id: 'milestones', label: 'Milestones', icon: TrendingUp },
+    { id: 'progress', label: 'Progress', icon: BarChart3 },
+  ];
+
+  const milestoneCategories: CategoryFilter[] = ['All', 'Physical', 'Cognitive', 'Social', 'Communication'];
+
+  // Dynamic progress stats with 5 categories
+  const dynamicProgressStats = [
+    { label: 'Questions', value: progressStats?.questionsAsked || 0, icon: MessageCircle, color: '#E07A5F' },
+    { label: 'Articles', value: progressStats?.articlesRead || 0, icon: BookOpen, color: '#3D405B' },
+    { label: 'Tips', value: progressStats?.tipsViewed || 0, icon: Lightbulb, color: '#81B29A' },
+    { label: 'Saved', value: progressStats?.savedArticles || 0, icon: Bookmark, color: '#F2CC8F' },
+    { label: 'Milestones', value: progressStats?.milestonesCompleted || 0, icon: Award, color: '#8BA888' },
+  ];
+
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.headerTop}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <X size={24} color="#1F2937" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Resources</Text>
+        <TouchableOpacity style={styles.searchButton}>
+          <Search size={24} color="#1F2937" />
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.tipCard}>
-        <View style={styles.tipCardHeader}>
-          <View style={styles.tipBadges}>
-            <View style={[styles.categoryPill, { backgroundColor: getCategoryColor('sleep') }]}>
-              <Text style={styles.categoryPillText}>sleep</Text>
-            </View>
-            <View style={styles.agePill}>
-              <Text style={styles.agePillText}>0-3 months</Text>
-            </View>
-            <View style={styles.readTimePill}>
-              <Clock size={12} color="#6B7280" strokeWidth={2} />
-              <Text style={styles.readTimePillText}>2 min read</Text>
-            </View>
-          </View>
-          <View style={styles.tipActions}>
-            <TouchableOpacity style={styles.tipActionButton} activeOpacity={0.7}>
-              <Bookmark size={20} color="#6B7280" strokeWidth={2} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.tipActionButton} activeOpacity={0.7}>
-              <Share size={20} color="#6B7280" strokeWidth={2} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <Text style={styles.tipTitle}>Gentle Sleep Routine</Text>
-        <Text style={styles.tipDescription}>
-          At 2 months, your baby is starting to develop more predictable sleep patterns. Try establishing a simple bedtime routine: dim the lights, give a warm bath, and feed in a quiet environment.
-        </Text>
-
-        <View style={styles.quickTips}>
-          <Text style={styles.quickTipsTitle}>QUICK TIPS</Text>
-          <View style={styles.tipsList}>
-            <Text style={styles.tipItem}>• Start the routine 30 minutes before desired bedtime</Text>
-            <Text style={styles.tipItem}>• Keep the room temperature comfortable (68-70°F)</Text>
-            <Text style={styles.tipItem}>• Use soft, soothing sounds or white noise</Text>
-            <Text style={styles.tipItem}>• Be consistent with timing each night</Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
-  );
-
-  const renderMilestonesTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Milestone Tracker</Text>
-        <Text style={styles.tabSubtitle}>Track your baby's developmental progress</Text>
-      </View>
-
-      <View style={styles.progressCard}>
-        <Text style={styles.progressCardTitle}>Overall Progress</Text>
-        <Text style={styles.progressCardSubtitle}>Your baby's milestone achievements</Text>
-        
-        <View style={styles.completedMilestones}>
-          <Text style={styles.completedLabel}>Completed Milestones</Text>
-          <Text style={styles.completedFraction}>3 of 6</Text>
-        </View>
-        
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: '50%' }]} />
-        </View>
-
-        <View style={styles.categoryStats}>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Physical</Text>
-            <Text style={styles.categoryStatCount}>1/2</Text>
-          </View>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Cognitive</Text>
-            <Text style={styles.categoryStatCount}>1/1</Text>
-          </View>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Social</Text>
-            <Text style={styles.categoryStatCount}>1/2</Text>
-          </View>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Communication</Text>
-            <Text style={styles.categoryStatCount}>0/1</Text>
-          </View>
-        </View>
-      </View>
-
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {milestoneCategories.map((category) => (
+      <View style={styles.tabContainer}>
+        {tabs.map((tab) => (
           <TouchableOpacity
-            key={category}
-            style={[
-              styles.filterChip,
-              selectedCategory === category && styles.filterChipActive
-            ]}
-            onPress={() => setSelectedCategory(category)}
-            activeOpacity={0.7}
+            key={tab.id}
+            onPress={() => setActiveTab(tab.id)}
+            style={[styles.tab, activeTab === tab.id && styles.tabActive]}
           >
-            <Text style={[
-              styles.filterChipText,
-              selectedCategory === category && styles.filterChipTextActive
-            ]}>
-              {category}
+            <tab.icon
+              size={16}
+              color={activeTab === tab.id ? "#FFFFFF" : "#1F2937"}
+              style={{ opacity: activeTab === tab.id ? 1 : 0.6 }}
+            />
+            <Text style={[styles.tabText, activeTab === tab.id && styles.tabTextActive]}>
+              {tab.label}
             </Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
-
-      <View style={styles.milestonesList}>
-        {milestones
-          .filter(milestone => selectedCategory === 'All' || milestone.category === selectedCategory)
-          .map((milestone) => (
-          <View key={milestone.id} style={styles.milestoneCard}>
-            <View style={styles.milestoneContent}>
-              <View style={styles.milestoneIcon}>
-                {milestone.completed ? (
-                  <CheckCircle size={24} color="#8BA888" strokeWidth={2} fill="#8BA888" />
-                ) : (
-                  <Circle size={24} color="#D1D5DB" strokeWidth={2} />
-                )}
-              </View>
-              <View style={styles.milestoneText}>
-                <Text style={[
-                  styles.milestoneTitle,
-                  milestone.completed && styles.milestoneTitleCompleted
-                ]}>
-                  {milestone.title}
-                </Text>
-                <Text style={styles.milestoneDescription}>{milestone.description}</Text>
-              </View>
-            </View>
-          </View>
-        ))}
       </View>
-    </ScrollView>
-  );
-
-  const renderLibraryTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Educational Library</Text>
-        <Text style={styles.tabSubtitle}>Expert articles and guides for your parenting journey</Text>
-      </View>
-
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Search size={20} color="#6B7280" strokeWidth={2} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search articles..."
-            placeholderTextColor="#9CA3AF"
-          />
-        </View>
-      </View>
-
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {categories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.filterChip,
-              selectedCategory === category && styles.filterChipActive
-            ]}
-            onPress={() => setSelectedCategory(category)}
-            activeOpacity={0.7}
-          >
-            <Text style={[
-              styles.filterChipText,
-              selectedCategory === category && styles.filterChipTextActive
-            ]}>
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <View style={styles.articlesSection}>
-        <Text style={styles.sectionTitle}>Featured Articles</Text>
-        <View style={styles.articlesList}>
-          {featuredArticles.map((article) => (
-            <View key={article.id} style={styles.articleCard}>
-              <View style={styles.articleHeader}>
-                <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(article.category) }]}>
-                  <Text style={styles.categoryPillText}>{article.category}</Text>
-                </View>
-                <View style={styles.readTimePill}>
-                  <Clock size={12} color="#6B7280" strokeWidth={2} />
-                  <Text style={styles.readTimePillText}>{article.readTime} min read</Text>
-                </View>
-              </View>
-              <Text style={styles.articleTitle}>{article.title}</Text>
-              <Text style={styles.articleSummary}>{article.summary}</Text>
-              <TouchableOpacity style={styles.readButton} activeOpacity={0.7}>
-                <Text style={styles.readButtonText}>Read Article</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-      </View>
-    </ScrollView>
-  );
-
-  const renderProgressTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Weekly Progress</Text>
-        <Text style={styles.tabSubtitle}>Your parenting journey this week</Text>
-      </View>
-
-      <View style={styles.statsGrid}>
-        {weeklyStats.map((stat, index) => (
-          <View key={index} style={styles.statCard}>
-            <View style={styles.statIcon}>
-              <stat.icon size={20} color="#6B7280" strokeWidth={2} />
-            </View>
-            <Text style={styles.statValue}>{stat.value}</Text>
-            <Text style={styles.statLabel}>{stat.label}</Text>
-          </View>
-        ))}
-      </View>
-
-      <View style={styles.engagementCard}>
-        <Text style={styles.engagementTitle}>Weekly Engagement</Text>
-        <Text style={styles.engagementSubtitle}>Your learning and interaction progress</Text>
-        
-        <View style={styles.engagementProgress}>
-          <Text style={styles.engagementLabel}>Questions & Interactions</Text>
-          <Text style={styles.engagementCount}>12 of 15</Text>
-        </View>
-        
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: '80%' }]} />
-        </View>
-        
-        <Text style={styles.engagementMessage}>
-          Great job staying engaged! Keep asking questions and exploring resources.
-        </Text>
-      </View>
-
-      <View style={styles.recentActivity}>
-        <Text style={styles.sectionTitle}>Recent Activity</Text>
-        <Text style={styles.activitySubtitle}>Your parenting journey highlights this week</Text>
-        
-        <View style={styles.activityList}>
-          <View style={styles.activityItem}>
-            <View style={styles.activityDot} />
-            <Text style={styles.activityText}>Completed milestone: Holds head up briefly</Text>
-          </View>
-          <View style={styles.activityItem}>
-            <View style={styles.activityDot} />
-            <Text style={styles.activityText}>Saved 3 new sleep tips to your collection</Text>
-          </View>
-          <View style={styles.activityItem}>
-            <View style={styles.activityDot} />
-            <Text style={styles.activityText}>Asked 5 questions about feeding schedules</Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+    </View>
   );
 
   const renderNextStepsTab = () => {
     const dailyTip = personalizedContent?.dailyTip;
     const recommendedArticles = personalizedContent?.recommendedArticles || [];
-    const actionItems = personalizedContent?.actionItems || [];
 
     return (
-      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.tabHeader}>
-          <Text style={styles.tabTitle}>Your Next Steps</Text>
-          <Text style={styles.tabSubtitle}>Personalized guidance and resources for today</Text>
+      <ScrollView
+        style={styles.contentContainer}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.sectionHeader}>
+          <Text style={styles.greeting}>Today's Focus</Text>
+          <Text style={styles.subGreeting}>Personalized just for you</Text>
         </View>
 
-        {/* Daily Tip Section */}
         {isLoading ? (
-          <View style={styles.tipLoadingCard}>
-            <ActivityIndicator size="small" color="#8BA888" />
-            <Text style={styles.tipLoadingText}>Loading your daily tip...</Text>
-          </View>
+          <ModernCard style={styles.loadingCard}>
+            <ActivityIndicator size="large" color="#E07A5F" />
+            <Text style={styles.loadingText}>Curating your content...</Text>
+          </ModernCard>
         ) : error ? (
-          <View style={styles.tipErrorCard}>
-            <Text style={styles.tipErrorText}>Unable to load today's tip</Text>
-            <TouchableOpacity 
-              style={styles.smallRetryButton} 
-              onPress={loadPersonalizedContent} 
-              activeOpacity={0.7}
-            >
-              <Text style={styles.smallRetryButtonText}>Try Again</Text>
+          <ModernCard style={styles.errorCard}>
+            <Text style={styles.errorText}>Unable to load content</Text>
+            <TouchableOpacity onPress={loadPersonalizedContent} style={styles.retryButton}>
+              <Text style={styles.retryText}>Try Again</Text>
             </TouchableOpacity>
-          </View>
+          </ModernCard>
         ) : dailyTip ? (
-          <View style={styles.tipCard}>
-            <View style={styles.tipCardHeader}>
-              <View style={styles.tipBadges}>
-                <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(dailyTip.category) }]}>
-                  <Text style={styles.categoryPillText}>{dailyTip.category}</Text>
-                </View>
-                <View style={styles.agePill}>
-                  <Text style={styles.agePillText}>
-                    {dailyTip.child_age_months ? `${dailyTip.child_age_months} months` : dailyTip.parenting_stage}
-                  </Text>
-                </View>
-                <View style={styles.readTimePill}>
-                  <Clock size={12} color="#6B7280" strokeWidth={2} />
-                  <Text style={styles.readTimePillText}>2 min read</Text>
-                </View>
+          <ModernCard style={styles.featuredCard}>
+            <View style={styles.featuredHeader}>
+              <View style={styles.categoryTag}>
+                <Text style={styles.categoryText}>{dailyTip.category}</Text>
               </View>
-              <View style={styles.tipActions}>
-                <TouchableOpacity style={styles.tipActionButton} activeOpacity={0.7}>
-                  <Bookmark size={20} color="#6B7280" strokeWidth={2} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tipActionButton} activeOpacity={0.7}>
-                  <Share size={20} color="#6B7280" strokeWidth={2} />
-                </TouchableOpacity>
+              <View style={styles.timeTag}>
+                <Clock size={12} color="#666" />
+                <Text style={styles.timeText}>2 min read</Text>
               </View>
             </View>
 
-            <Text style={styles.tipTitle}>{dailyTip.title}</Text>
-            <Text style={styles.tipDescription}>{dailyTip.description}</Text>
+            <Text style={styles.featuredTitle}>{dailyTip.title}</Text>
+            <Text style={styles.featuredDescription}>{dailyTip.description}</Text>
 
-            {dailyTip.quick_tips && dailyTip.quick_tips.length > 0 && (
-              <View style={styles.quickTips}>
-                <Text style={styles.quickTipsTitle}>QUICK TIPS</Text>
-                <View style={styles.tipsList}>
-                  {dailyTip.quick_tips.map((tip, index) => (
-                    <Text key={index} style={styles.tipItem}>• {tip}</Text>
+            {dailyTip.quick_tips && (
+              <View style={styles.quickTipsContainer}>
+                {dailyTip.quick_tips.map((tip, index) => (
+                  <View key={index} style={styles.quickTipRow}>
+                    <View style={styles.bulletPoint} />
+                    <Text style={styles.quickTipText}>{tip}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <View style={styles.featuredFooter}>
+              <TouchableOpacity
+                style={styles.primaryButton}
+                onPress={handleCompleteTip}
+              >
+                <CheckCircle size={18} color="#FFF" />
+                <Text style={styles.primaryButtonText}>Complete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.secondaryButton}
+                onPress={handleSkipTip}
+              >
+                <Text style={styles.secondaryButtonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
+          </ModernCard>
+        ) : null}
+
+        {recommendedArticles.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.sectionTitleRow}>
+              <Text style={styles.sectionTitle}>Recommended</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeAllText}>See All</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalList}
+            >
+              {recommendedArticles.map((article) => {
+                const isSaved = savedArticleIds.has(article.id);
+                return (
+                  <TouchableOpacity key={article.id} activeOpacity={0.9}>
+                    <ModernCard style={styles.articleCard}>
+                      <View style={styles.articleImagePlaceholder}>
+                        <PlayCircle size={32} color="#E07A5F" />
+                        {/* Bookmark Button */}
+                        <TouchableOpacity
+                          style={styles.bookmarkButton}
+                          onPress={() => handleToggleSaveArticle(article.id)}
+                          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                        >
+                          <Bookmark
+                            size={20}
+                            color={isSaved ? '#E07A5F' : '#FFFFFF'}
+                            fill={isSaved ? '#E07A5F' : 'transparent'}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.articleContent}>
+                        <Text style={styles.articleCategory}>{article.category}</Text>
+                        <Text style={styles.articleTitle} numberOfLines={2}>{article.title}</Text>
+                        <View style={styles.articleFooter}>
+                          <Text style={styles.articleReason} numberOfLines={1}>
+                            {article.recommendationReason}
+                          </Text>
+                        </View>
+                      </View>
+                    </ModernCard>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
+      </ScrollView>
+    );
+  };
+
+  const renderMilestoneSection = (
+    title: string,
+    sectionKey: 'past' | 'current' | 'upcoming',
+    milestones: MilestoneTemplateWithStatus[],
+    color: string
+  ) => {
+    const filtered = filterByCategory(milestones);
+    const isExpanded = expandedSection === sectionKey;
+    const completedCount = filtered.filter(m => m.isCompleted).length;
+
+    if (filtered.length === 0) return null;
+
+    return (
+      <View style={styles.milestoneSection}>
+        <TouchableOpacity
+          style={styles.sectionHeaderRow}
+          onPress={() => setExpandedSection(isExpanded ? 'current' : sectionKey)}
+        >
+          <View style={[styles.sectionIndicator, { backgroundColor: color }]} />
+          <Text style={styles.sectionHeaderText}>{title}</Text>
+          <Text style={styles.sectionCount}>
+            {completedCount}/{filtered.length}
+          </Text>
+          <ChevronDown
+            size={20}
+            color="#6B7280"
+            style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}
+          />
+        </TouchableOpacity>
+
+        {isExpanded && (
+          <View style={styles.milestoneList}>
+            {filtered.map((milestone) => (
+              <ModernCard key={milestone.id} style={styles.milestoneItem}>
+                <TouchableOpacity
+                  style={styles.milestoneRow}
+                  onPress={() => handleToggleMilestone(milestone)}
+                >
+                  <View style={[
+                    styles.checkbox,
+                    milestone.isCompleted && styles.checkboxChecked
+                  ]}>
+                    {milestone.isCompleted && <CheckCircle size={16} color="#FFF" />}
+                  </View>
+                  <View style={styles.milestoneContent}>
+                    <Text style={[
+                      styles.milestoneTitle,
+                      milestone.isCompleted && styles.milestoneTitleCompleted
+                    ]}>{milestone.title}</Text>
+                    <Text style={styles.milestoneDesc}>{milestone.description}</Text>
+                    <View style={styles.milestoneMetaRow}>
+                      <View style={[
+                        styles.categoryBadge,
+                        { backgroundColor: `${MilestoneService.getCategoryColor(milestone.category)}20` }
+                      ]}>
+                        <Text style={[
+                          styles.categoryBadgeText,
+                          { color: MilestoneService.getCategoryColor(milestone.category) }
+                        ]}>
+                          {MilestoneService.getCategoryDisplayName(milestone.category)}
+                        </Text>
+                      </View>
+                      <Text style={styles.ageRange}>
+                        {MilestoneService.getAgeRangeDisplay(milestone.age_min_months, milestone.age_max_months)}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </ModernCard>
+            ))}
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const renderMilestonesTab = () => {
+    if (children.length === 0) {
+      return (
+        <ScrollView
+          style={styles.contentContainer}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <ModernCard style={styles.emptyStateCard}>
+            <Baby size={48} color="#E07A5F" />
+            <Text style={styles.emptyStateTitle}>No Children Added</Text>
+            <Text style={styles.emptyStateText}>
+              Add a child in your profile to start tracking developmental milestones.
+            </Text>
+            <TouchableOpacity
+              style={styles.emptyStateButton}
+              onPress={() => router.push('/settings')}
+            >
+              <Text style={styles.emptyStateButtonText}>Go to Settings</Text>
+            </TouchableOpacity>
+          </ModernCard>
+        </ScrollView>
+      );
+    }
+
+    return (
+      <ScrollView
+        style={styles.contentContainer}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Child Picker */}
+        {children.length > 1 && (
+          <TouchableOpacity
+            style={styles.childPicker}
+            onPress={() => setShowChildPicker(true)}
+          >
+            <Baby size={20} color="#E07A5F" />
+            <Text style={styles.childPickerText}>
+              {selectedChild?.name || 'Select Child'}
+            </Text>
+            <ChevronDown size={16} color="#6B7280" />
+          </TouchableOpacity>
+        )}
+
+        {/* Progress Overview Card */}
+        <ModernCard style={styles.progressOverviewCard}>
+          <View style={styles.progressCircleContainer}>
+            <View style={styles.progressCircle}>
+              <Text style={styles.progressPercentage}>
+                {milestoneProgress?.percentage || 0}%
+              </Text>
+            </View>
+            <View style={styles.progressInfo}>
+              <Text style={styles.progressTitle}>Development Tracker</Text>
+              <Text style={styles.progressSubtitle}>
+                {milestoneProgress?.completed || 0} of {milestoneProgress?.total || 0} milestones achieved
+              </Text>
+            </View>
+          </View>
+          <View style={styles.progressBarBg}>
+            <View style={[styles.progressBarFill, { width: `${milestoneProgress?.percentage || 0}%` }]} />
+          </View>
+        </ModernCard>
+
+        {/* Category Filter */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoryScroll}
+          contentContainerStyle={styles.categoryScrollContent}
+        >
+          {milestoneCategories.map((category) => (
+            <TouchableOpacity
+              key={category}
+              onPress={() => setSelectedCategory(category)}
+              style={[
+                styles.categoryChip,
+                selectedCategory === category && styles.categoryChipActive
+              ]}
+            >
+              <Text style={[
+                styles.categoryChipText,
+                selectedCategory === category && styles.categoryChipTextActive
+              ]}>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {milestonesLoading ? (
+          <ModernCard style={styles.loadingCard}>
+            <ActivityIndicator size="large" color="#E07A5F" />
+            <Text style={styles.loadingText}>Loading milestones...</Text>
+          </ModernCard>
+        ) : milestonesError ? (
+          <ModernCard style={styles.errorCard}>
+            <Text style={styles.errorText}>{milestonesError}</Text>
+            <TouchableOpacity onPress={loadMilestones} style={styles.retryButton}>
+              <Text style={styles.retryText}>Try Again</Text>
+            </TouchableOpacity>
+          </ModernCard>
+        ) : milestoneData ? (
+          <>
+            {/* Milestone Sections */}
+            {renderMilestoneSection('Current Age', 'current', milestoneData.current, '#81B29A')}
+            {renderMilestoneSection('Past Milestones', 'past', milestoneData.past, '#6B7280')}
+            {renderMilestoneSection('Coming Up', 'upcoming', milestoneData.upcoming, '#F2CC8F')}
+
+            {/* Custom Milestones */}
+            {milestoneData.custom.length > 0 && (
+              <View style={styles.milestoneSection}>
+                <View style={styles.sectionHeaderRow}>
+                  <View style={[styles.sectionIndicator, { backgroundColor: '#E07A5F' }]} />
+                  <Text style={styles.sectionHeaderText}>Custom Milestones</Text>
+                  <Text style={styles.sectionCount}>{milestoneData.custom.length}</Text>
+                </View>
+                <View style={styles.milestoneList}>
+                  {milestoneData.custom.map((milestone) => (
+                    <ModernCard key={milestone.id} style={styles.milestoneItem}>
+                      <View style={styles.milestoneRow}>
+                        <View style={[styles.checkbox, styles.checkboxChecked]}>
+                          <CheckCircle size={16} color="#FFF" />
+                        </View>
+                        <View style={styles.milestoneContent}>
+                          <Text style={styles.milestoneTitle}>{milestone.title}</Text>
+                          {milestone.description && (
+                            <Text style={styles.milestoneDesc}>{milestone.description}</Text>
+                          )}
+                        </View>
+                      </View>
+                    </ModernCard>
                   ))}
                 </View>
               </View>
             )}
 
-            {/* Enhanced Tip Actions */}
-            <View style={styles.tipFooter}>
-              <TouchableOpacity 
-                style={styles.primaryActionButton} 
-                onPress={handleCompleteTip}
-                activeOpacity={0.7}
-              >
-                <CheckCircle size={16} color="#FFFFFF" strokeWidth={2} />
-                <Text style={styles.primaryActionText}>Mark as Complete</Text>
-              </TouchableOpacity>
-              <View style={styles.secondaryActions}>
-                <TouchableOpacity 
-                  style={styles.secondaryActionButton} 
-                  onPress={handleSkipTip}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.secondaryActionText}>Skip for now</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.relatedLinkButton} activeOpacity={0.7}>
-                  <BookOpen size={14} color="#8BA888" strokeWidth={2} />
-                  <Text style={styles.relatedLinkText}>Related articles</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ) : null}
-
-        {/* Recommended Articles Section */}
-        {recommendedArticles.length > 0 && (
-          <View style={styles.recommendedSection}>
-            <Text style={styles.sectionTitle}>Recommended for You</Text>
-            <Text style={styles.sectionSubtitle}>Articles related to your current focus</Text>
-            
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              style={styles.recommendedScroll}
-              contentContainerStyle={styles.recommendedContent}
+            {/* Add Custom Milestone Button */}
+            <TouchableOpacity
+              style={styles.addCustomButton}
+              onPress={() => setShowCustomModal(true)}
             >
-              {recommendedArticles.map((article) => (
-                <View key={article.id} style={styles.compactArticleCard}>
-                  <View style={styles.compactArticleHeader}>
-                    <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(article.category) }]}>
-                      <Text style={styles.categoryPillText}>{article.category}</Text>
-                    </View>
-                    <View style={styles.readTimePill}>
-                      <Clock size={10} color="#6B7280" strokeWidth={2} />
-                      <Text style={styles.readTimePillText}>{article.readTime}m</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.compactArticleTitle}>{article.title}</Text>
-                  <Text style={styles.compactArticleSummary} numberOfLines={2}>
-                    {article.recommendationReason}
-                  </Text>
-                  <TouchableOpacity style={styles.compactReadButton} activeOpacity={0.7}>
-                    <Text style={styles.compactReadButtonText}>Read</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-
-        {/* Action Items Section */}
-        {actionItems.length > 0 && (
-          <View style={styles.actionItemsSection}>
-            <Text style={styles.sectionTitle}>Your Action Items</Text>
-            <Text style={styles.sectionSubtitle}>Things to focus on this week</Text>
-            
-            <View style={styles.actionItemsList}>
-              {actionItems.map((item) => (
-                <View key={item.id} style={styles.actionItem}>
-                  <View style={[styles.actionItemIcon, { backgroundColor: `${item.color}20` }]}>
-                    {item.icon === 'TrendingUp' && <TrendingUp size={16} color={item.color} strokeWidth={2} />}
-                    {item.icon === 'Calendar' && <Calendar size={16} color={item.color} strokeWidth={2} />}
-                    {item.icon === 'CheckCircle' && <CheckCircle size={16} color={item.color} strokeWidth={2} />}
-                  </View>
-                  <View style={styles.actionItemContent}>
-                    <Text style={styles.actionItemTitle}>{item.title}</Text>
-                    <Text style={styles.actionItemSubtitle}>{item.subtitle}</Text>
-                  </View>
-                  <TouchableOpacity style={styles.actionItemButton} activeOpacity={0.7}>
-                    <Text style={styles.actionItemButtonText}>{item.actionText}</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {/* Quick Library Access */}
-        <View style={styles.quickLibrarySection}>
-          <View style={styles.quickLibraryHeader}>
-            <Text style={styles.sectionTitle}>Quick Library Access</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Text style={styles.seeAllText}>See All</Text>
+              <Plus size={20} color="#E07A5F" />
+              <Text style={styles.addCustomButtonText}>Add Custom Milestone</Text>
             </TouchableOpacity>
-          </View>
-          
-          <View style={styles.searchContainer}>
-            <View style={styles.searchBar}>
-              <Search size={20} color="#6B7280" strokeWidth={2} />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search articles..."
-                placeholderTextColor="#9CA3AF"
-              />
-            </View>
-          </View>
-
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.filterContainer}
-            contentContainerStyle={styles.filterContent}
-          >
-            {categories.slice(0, 5).map((category) => (
-              <TouchableOpacity
-                key={category}
-                style={[
-                  styles.filterChip,
-                  selectedCategory === category && styles.filterChipActive
-                ]}
-                onPress={() => setSelectedCategory(category)}
-                activeOpacity={0.7}
-              >
-                <Text style={[
-                  styles.filterChipText,
-                  selectedCategory === category && styles.filterChipTextActive
-                ]}>
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+          </>
+        ) : null}
       </ScrollView>
     );
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'nextsteps':
-        return renderNextStepsTab();
-      case 'milestones':
-        return renderMilestonesTab();
-      case 'progress':
-        return renderProgressTab();
-      default:
-        return renderNextStepsTab();
-    }
+  const renderProgressTab = () => {
+    const getDateRangeLabel = (): string => {
+      if (datePreset === 'custom' && customDateRange) {
+        return ProgressService.formatDateRange(customDateRange);
+      }
+      return ProgressService.getPresetLabel(datePreset);
+    };
+
+    const getTotalActivity = (): number => {
+      if (!progressStats) return 0;
+      return (
+        progressStats.questionsAsked +
+        progressStats.articlesRead +
+        progressStats.tipsViewed +
+        progressStats.savedArticles +
+        progressStats.milestonesCompleted
+      );
+    };
+
+    return (
+      <ScrollView
+        style={styles.contentContainer}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.sectionHeader}>
+          <Text style={styles.greeting}>Your Progress</Text>
+          <Text style={styles.subGreeting}>
+            {progressLoading 
+              ? 'Loading stats...' 
+              : getTotalActivity() > 0
+                ? "You're doing great, keep it up!"
+                : "Start exploring to track your progress!"}
+          </Text>
+        </View>
+
+        {/* Date Range Filter */}
+        <DateRangeFilter
+          selectedPreset={datePreset}
+          customRange={customDateRange}
+          onPresetChange={handleDatePresetChange}
+          onCustomRangeChange={handleCustomDateRangeChange}
+        />
+
+        {/* Loading State */}
+        {progressLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={THEME.colors.primary} />
+            <Text style={styles.loadingText}>Loading your progress...</Text>
+          </View>
+        ) : (
+          <>
+            {/* Stats Grid - 5 items */}
+            <View style={styles.statsGrid}>
+              {dynamicProgressStats.map((stat, index) => (
+                <ModernCard key={index} style={styles.statItem}>
+                  <View style={[styles.statIconContainer, { backgroundColor: `${stat.color}20` }]}>
+                    <stat.icon size={24} color={stat.color} />
+                  </View>
+                  <Text style={styles.statValue}>{stat.value}</Text>
+                  <Text style={styles.statLabel}>{stat.label}</Text>
+                </ModernCard>
+              ))}
+            </View>
+
+            {/* Category Progress */}
+            {milestoneProgress && (
+              <ModernCard style={styles.categoryProgressCard}>
+                <Text style={styles.categoryProgressTitle}>Milestone Progress by Category</Text>
+                {Object.entries(milestoneProgress.byCategory).map(([category, data]) => (
+                  <View key={category} style={styles.categoryProgressRow}>
+                    <View style={styles.categoryProgressLabel}>
+                      <View style={[
+                        styles.categoryDot,
+                        { backgroundColor: MilestoneService.getCategoryColor(category as MilestoneType) }
+                      ]} />
+                      <Text style={styles.categoryProgressText}>
+                        {MilestoneService.getCategoryDisplayName(category as MilestoneType)}
+                      </Text>
+                    </View>
+                    <View style={styles.categoryProgressBar}>
+                      <View 
+                        style={[
+                          styles.categoryProgressFill,
+                          { 
+                            width: data.total > 0 ? `${(data.completed / data.total) * 100}%` : '0%',
+                            backgroundColor: MilestoneService.getCategoryColor(category as MilestoneType) 
+                          }
+                        ]} 
+                      />
+                    </View>
+                    <Text style={styles.categoryProgressValue}>
+                      {data.completed}/{data.total}
+                    </Text>
+                  </View>
+                ))}
+              </ModernCard>
+            )}
+
+            {/* Insight Card */}
+            <ModernCard style={styles.insightCard}>
+              <View style={styles.insightHeader}>
+                <Sparkles size={20} color="#E07A5F" />
+                <Text style={styles.insightTitle}>
+                  {datePreset === 'all' ? 'Overall Insight' : `${getDateRangeLabel()} Insight`}
+                </Text>
+              </View>
+              <Text style={styles.insightText}>
+                {getTotalActivity() > 0
+                  ? `Great job! You've had ${getTotalActivity()} interactions${datePreset !== 'all' ? ` in the ${getDateRangeLabel().toLowerCase()}` : ''}. ${
+                      progressStats && progressStats.questionsAsked > 0 
+                        ? `You asked ${progressStats.questionsAsked} question${progressStats.questionsAsked !== 1 ? 's' : ''} - keep learning!`
+                        : progressStats && progressStats.milestonesCompleted > 0
+                          ? `You tracked ${progressStats.milestonesCompleted} milestone${progressStats.milestonesCompleted !== 1 ? 's' : ''} - celebrate those moments!`
+                          : 'Keep exploring and tracking your parenting journey!'
+                    }`
+                  : "Start exploring resources and tracking milestones to see personalized insights here."}
+              </Text>
+              <TouchableOpacity style={styles.insightAction} onPress={() => setActiveTab('milestones')}>
+                <Text style={styles.insightActionText}>View Milestones</Text>
+                <ArrowRight size={16} color="#E07A5F" />
+              </TouchableOpacity>
+            </ModernCard>
+          </>
+        )}
+      </ScrollView>
+    );
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-        >
-          <X size={24} color="#6B7280" strokeWidth={2} />
-        </TouchableOpacity>
-        <View style={styles.headerContent}>
-          <View style={styles.headerIcon}>
-            <Heart size={20} color="#FFFFFF" strokeWidth={2} fill="#FFFFFF" />
+  // Custom Milestone Modal
+  const renderCustomMilestoneModal = () => (
+    <Modal
+      visible={showCustomModal}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => setShowCustomModal(false)}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Add Custom Milestone</Text>
+            <TouchableOpacity onPress={() => setShowCustomModal(false)}>
+              <X size={24} color="#6B7280" />
+            </TouchableOpacity>
           </View>
-          <View>
-            <Text style={styles.headerTitle}>Resources & Tips</Text>
-            <Text style={styles.headerSubtitle}>Your personalized parenting guidance</Text>
+
+          <View style={styles.modalBody}>
+            <Text style={styles.inputLabel}>Title *</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g., First word - 'mama'"
+              placeholderTextColor="#9CA3AF"
+              value={customMilestone.title}
+              onChangeText={(text) => setCustomMilestone(prev => ({ ...prev, title: text }))}
+            />
+
+            <Text style={styles.inputLabel}>Description (optional)</Text>
+            <TextInput
+              style={[styles.modalInput, styles.modalTextArea]}
+              placeholder="Add details about this milestone..."
+              placeholderTextColor="#9CA3AF"
+              multiline
+              numberOfLines={3}
+              value={customMilestone.description}
+              onChangeText={(text) => setCustomMilestone(prev => ({ ...prev, description: text }))}
+            />
+
+            <Text style={styles.inputLabel}>Category</Text>
+            <View style={styles.categorySelectRow}>
+              {(['physical', 'cognitive', 'social', 'emotional'] as MilestoneType[]).map((cat) => (
+                <TouchableOpacity
+                  key={cat}
+                  style={[
+                    styles.categorySelectChip,
+                    customMilestone.category === cat && styles.categorySelectChipActive,
+                    customMilestone.category === cat && { borderColor: MilestoneService.getCategoryColor(cat) }
+                  ]}
+                  onPress={() => setCustomMilestone(prev => ({ ...prev, category: cat }))}
+                >
+                  <Text style={[
+                    styles.categorySelectText,
+                    customMilestone.category === cat && { color: MilestoneService.getCategoryColor(cat) }
+                  ]}>
+                    {MilestoneService.getCategoryDisplayName(cat)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.modalFooter}>
+            <TouchableOpacity
+              style={styles.modalCancelButton}
+              onPress={() => setShowCustomModal(false)}
+            >
+              <Text style={styles.modalCancelText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.modalSaveButton,
+                !customMilestone.title.trim() && styles.modalSaveButtonDisabled
+              ]}
+              onPress={handleAddCustomMilestone}
+              disabled={!customMilestone.title.trim()}
+            >
+              <Text style={styles.modalSaveText}>Add Milestone</Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.headerSpacer} />
       </View>
+    </Modal>
+  );
 
-      <View style={styles.tabsContainer}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.tabsContent}
-        >
-          {tabs.map((tab) => (
+  // Child Picker Modal
+  const renderChildPickerModal = () => (
+    <Modal
+      visible={showChildPicker}
+      animationType="fade"
+      transparent={true}
+      onRequestClose={() => setShowChildPicker(false)}
+    >
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPress={() => setShowChildPicker(false)}
+      >
+        <View style={styles.childPickerModal}>
+          <Text style={styles.childPickerTitle}>Select Child</Text>
+          {children.map((child) => (
             <TouchableOpacity
-              key={tab.id}
+              key={child.id}
               style={[
-                styles.tab,
-                activeTab === tab.id && styles.tabActive
+                styles.childPickerItem,
+                selectedChild?.id === child.id && styles.childPickerItemActive
               ]}
-              onPress={() => setActiveTab(tab.id)}
-              activeOpacity={0.7}
+              onPress={() => {
+                setSelectedChild(child);
+                setShowChildPicker(false);
+              }}
             >
-              <tab.icon 
-                size={16} 
-                color={activeTab === tab.id ? "#FFFFFF" : "#6B7280"} 
-                strokeWidth={2} 
-              />
+              <Baby size={20} color={selectedChild?.id === child.id ? '#E07A5F' : '#6B7280'} />
               <Text style={[
-                styles.tabText,
-                activeTab === tab.id && styles.tabTextActive
+                styles.childPickerItemText,
+                selectedChild?.id === child.id && styles.childPickerItemTextActive
               ]}>
-                {tab.label}
+                {child.name || 'Unnamed Child'}
               </Text>
+              {selectedChild?.id === child.id && (
+                <CheckCircle size={20} color="#E07A5F" />
+              )}
             </TouchableOpacity>
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
 
-      {renderTabContent()}
-    </SafeAreaView>
+  return (
+    <View style={styles.container}>
+      <ScreenBackground />
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        {renderHeader()}
+        <View style={styles.mainContent}>
+          {activeTab === 'nextsteps' && renderNextStepsTab()}
+          {activeTab === 'milestones' && renderMilestonesTab()}
+          {activeTab === 'progress' && renderProgressTab()}
+        </View>
+      </SafeAreaView>
+      {renderCustomMilestoneModal()}
+      {renderChildPickerModal()}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF7F3',
+  },
+  safeArea: {
+    flex: 1,
   },
   header: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    backgroundColor: 'transparent',
+  },
+  headerTop: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    height: 44,
   },
-  closeButton: {
+  backButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#FFF',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  headerContent: {
+  searchButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1F2937',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderRadius: 25,
+    padding: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  tab: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 16,
-  },
-  headerIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#8BA888', // Warm sage green that complements coral theme
     justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  headerSpacer: {
-    width: 40,
-  },
-  tabsContainer: {
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  tabsContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  tab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#F9FAFB',
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderRadius: 21,
+    gap: 6,
   },
   tabActive: {
-    backgroundColor: '#D4635A',
-    borderColor: '#D4635A',
+    backgroundColor: '#8BA888',
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
-    marginLeft: 6,
+    fontWeight: '600',
+    color: '#1F2937',
+    opacity: 0.6,
   },
   tabTextActive: {
     color: '#FFFFFF',
+    opacity: 1,
   },
-  tabContent: {
+  mainContent: {
     flex: 1,
   },
-  tabHeader: {
-    paddingHorizontal: 20,
-    paddingVertical: 24,
-    alignItems: 'center',
+  contentContainer: {
+    flex: 1,
   },
-  tabTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1F2937',
-    marginBottom: 8,
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 40,
   },
-  tabSubtitle: {
+  sectionHeader: {
+    marginBottom: 20,
+  },
+  greeting: {
+    fontSize: 28,
+    fontFamily: THEME.fonts.header,
+    color: THEME.colors.text.primary,
+    marginBottom: 4,
+  },
+  subGreeting: {
     fontSize: 16,
-    color: '#6B7280',
+    color: '#1F2937',
+    opacity: 0.7,
+  },
+  loadingCard: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    color: '#1F2937',
+    opacity: 0.7,
+    fontSize: 16,
+  },
+  errorCard: {
+    padding: 30,
+    alignItems: 'center',
+    gap: 16,
+  },
+  errorText: {
+    color: '#EF4444',
+    fontSize: 16,
     textAlign: 'center',
   },
-  tipCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+  retryButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#FEF2F2',
+    borderRadius: 20,
   },
-  tipCardHeader: {
+  retryText: {
+    color: '#EF4444',
+    fontWeight: '600',
+  },
+  featuredCard: {
+    padding: 20,
+    marginBottom: 30,
+    borderLeftWidth: 4,
+    borderLeftColor: '#E07A5F',
+  },
+  featuredHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 16,
   },
-  tipBadges: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    flex: 1,
-  },
-  categoryPill: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+  categoryTag: {
+    backgroundColor: '#FDF2F0',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 12,
-    marginRight: 8,
-    marginBottom: 4,
   },
-  categoryPillText: {
+  categoryText: {
+    color: '#E07A5F',
     fontSize: 12,
-    fontWeight: '500',
-    color: '#6B7280',
+    fontWeight: '700',
+    textTransform: 'uppercase',
   },
-  agePill: {
-    backgroundColor: '#E5E7EB',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 8,
-    marginBottom: 4,
-  },
-  agePillText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#6B7280',
-  },
-  readTimePill: {
+  timeTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginBottom: 4,
+    gap: 4,
   },
-  readTimePillText: {
+  timeText: {
+    color: '#666',
     fontSize: 12,
-    color: '#6B7280',
-    marginLeft: 4,
   },
-  tipActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  tipActionButton: {
-    padding: 4,
-    marginLeft: 8,
-  },
-  tipTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+  featuredTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
     color: '#1F2937',
     marginBottom: 12,
+    lineHeight: 30,
   },
-  tipDescription: {
+  featuredDescription: {
     fontSize: 16,
-    color: '#4B5563',
+    color: '#1F2937',
+    opacity: 0.8,
     lineHeight: 24,
     marginBottom: 20,
   },
-  quickTips: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
+  quickTipsContainer: {
+    backgroundColor: '#F8F9FA',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+  },
+  quickTipRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+    gap: 10,
+  },
+  bulletPoint: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#E07A5F',
+    marginTop: 8,
+  },
+  quickTipText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1F2937',
+    lineHeight: 22,
+  },
+  featuredFooter: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  primaryButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#8BA888',
+    borderRadius: 16,
+    paddingVertical: 14,
+    gap: 8,
+    shadowColor: '#8BA888',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  primaryButtonText: {
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  secondaryButton: {
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+  },
+  secondaryButtonText: {
+    color: '#1F2937',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontFamily: THEME.fonts.header,
+    color: THEME.colors.text.primary,
+  },
+  seeAllText: {
+    color: '#E07A5F',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  horizontalList: {
+    paddingRight: 20,
+    paddingBottom: 20,
+  },
+  articleCard: {
+    width: 200,
+    marginRight: 16,
+    padding: 0,
+    overflow: 'hidden',
+  },
+  articleImagePlaceholder: {
+    height: 100,
+    backgroundColor: '#FDF2F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  bookmarkButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  articleContent: {
     padding: 16,
   },
-  quickTipsTitle: {
+  articleCategory: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
-    letterSpacing: 0.5,
-    marginBottom: 12,
+    color: '#E07A5F',
+    fontWeight: '700',
+    marginBottom: 6,
+    textTransform: 'uppercase',
   },
-  tipsList: {
-    gap: 8,
+  articleTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 8,
+    lineHeight: 22,
   },
-  tipItem: {
-    fontSize: 14,
-    color: '#4B5563',
-    lineHeight: 20,
+  articleFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  progressCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
+  articleReason: {
+    fontSize: 12,
+    color: '#999',
+  },
+  // Child Picker
+  childPicker: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
+    marginBottom: 16,
+    gap: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
-    elevation: 3,
-  },
-  progressCardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  progressCardSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 20,
-  },
-  completedMilestones: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  completedLabel: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  completedFraction: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  progressBar: {
-    height: 8,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 4,
-    marginBottom: 20,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#8BA888', // Warm sage green
-    borderRadius: 4,
-  },
-  categoryStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  categoryStat: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  categoryStatLabel: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
-    marginBottom: 2,
-  },
-  categoryStatCount: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  filterContainer: {
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  filterContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F9FAFB',
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  filterChipActive: {
-    backgroundColor: '#8BA888', // Warm sage green
-    borderColor: '#8BA888', // Warm sage green
-  },
-  filterChipText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
-  },
-  filterChipTextActive: {
-    color: '#FFFFFF',
-  },
-  milestonesList: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  milestoneCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
     elevation: 2,
   },
-  milestoneContent: {
+  childPickerText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  // Progress Overview
+  progressOverviewCard: {
+    padding: 24,
+    marginBottom: 24,
+    backgroundColor: '#8BA888',
+  },
+  progressCircleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
+    gap: 16,
   },
-  milestoneIcon: {
-    marginRight: 16,
+  progressCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 4,
+    borderColor: '#E07A5F',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  milestoneText: {
+  progressPercentage: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  progressInfo: {
+    flex: 1,
+  },
+  progressTitle: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  progressSubtitle: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: 14,
+  },
+  progressBarBg: {
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 3,
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#E07A5F',
+    borderRadius: 3,
+  },
+  categoryScroll: {
+    marginBottom: 20,
+  },
+  categoryScrollContent: {
+    paddingRight: 20,
+  },
+  categoryChip: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: '#FFF',
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+  },
+  categoryChipActive: {
+    backgroundColor: '#E07A5F',
+    borderColor: '#E07A5F',
+  },
+  categoryChipText: {
+    color: '#1F2937',
+    fontWeight: '600',
+  },
+  categoryChipTextActive: {
+    color: '#FFF',
+  },
+  // Milestone Sections
+  milestoneSection: {
+    marginBottom: 16,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+    gap: 10,
+  },
+  sectionIndicator: {
+    width: 4,
+    height: 20,
+    borderRadius: 2,
+  },
+  sectionHeaderText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
+  },
+  sectionCount: {
+    fontSize: 14,
+    color: '#6B7280',
+    fontWeight: '600',
+  },
+  milestoneList: {
+    gap: 12,
+  },
+  milestoneItem: {
+    padding: 16,
+  },
+  milestoneRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 16,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  checkboxChecked: {
+    backgroundColor: '#81B29A',
+    borderColor: '#81B29A',
+  },
+  milestoneContent: {
     flex: 1,
   },
   milestoneTitle: {
@@ -1053,418 +1481,332 @@ const styles = StyleSheet.create({
   },
   milestoneTitleCompleted: {
     textDecorationLine: 'line-through',
-    color: '#6B7280',
+    opacity: 0.6,
   },
-  milestoneDescription: {
+  milestoneDesc: {
     fontSize: 14,
-    color: '#6B7280',
-    lineHeight: 20,
+    color: '#666',
+    marginBottom: 8,
   },
-  searchContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  searchBar: {
+  milestoneMetaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    gap: 10,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#1F2937',
-    marginLeft: 12,
+  categoryBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
   },
-  articlesSection: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
+  categoryBadgeText: {
+    fontSize: 12,
     fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 16,
   },
-  articlesList: {
+  ageRange: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  // Add Custom Button
+  addCustomButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FDF2F0',
+    paddingVertical: 16,
+    borderRadius: 16,
+    marginTop: 16,
+    gap: 8,
+  },
+  addCustomButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#E07A5F',
+  },
+  // Empty State
+  emptyStateCard: {
+    padding: 40,
+    alignItems: 'center',
     gap: 16,
   },
-  articleCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  articleHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  articleTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+  emptyStateTitle: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#1F2937',
-    marginBottom: 8,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
     lineHeight: 24,
   },
-  articleSummary: {
-    fontSize: 14,
-    color: '#6B7280',
-    lineHeight: 20,
-    marginBottom: 16,
-  },
-  readButton: {
-    backgroundColor: '#8BA888', // Warm sage green
-    paddingVertical: 12,
+  emptyStateButton: {
+    backgroundColor: '#E07A5F',
     paddingHorizontal: 24,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
+    paddingVertical: 12,
+    borderRadius: 20,
+    marginTop: 8,
   },
-  readButtonText: {
-    fontSize: 14,
+  emptyStateButtonText: {
+    color: '#FFF',
+    fontSize: 16,
     fontWeight: '600',
-    color: '#FFFFFF',
   },
+  // Stats Grid
   statsGrid: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    marginBottom: 24,
+    flexWrap: 'wrap',
     gap: 12,
+    marginBottom: 24,
   },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+  statItem: {
+    width: (width - 52) / 2,
     padding: 16,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    gap: 12,
   },
-  statIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F9FAFB',
+  statIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: 'bold',
     color: '#1F2937',
-    marginBottom: 4,
   },
   statLabel: {
-    fontSize: 12,
-    color: '#6B7280',
-    textAlign: 'center',
+    fontSize: 14,
+    color: '#666',
   },
-  engagementCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    borderRadius: 16,
+  // Category Progress Card
+  categoryProgressCard: {
     padding: 20,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  engagementTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  engagementSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 20,
-  },
-  engagementProgress: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  engagementLabel: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  engagementCount: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  engagementMessage: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 12,
-    fontStyle: 'italic',
-  },
-  recentActivity: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  activitySubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
     marginBottom: 16,
   },
-  activityList: {
-    gap: 12,
+  categoryProgressTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 16,
   },
-  activityItem: {
+  categoryProgressRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
   },
-  activityDot: {
+  categoryProgressLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  categoryDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#8BA888', // Warm sage green
-    marginRight: 12,
   },
-  activityText: {
+  categoryProgressText: {
     fontSize: 14,
-    color: '#4B5563',
-    flex: 1,
-  },
-  // Next Steps styles
-  tipFooter: {
-    marginTop: 16,
-    gap: 12,
-  },
-  primaryActionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#8BA888',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    justifyContent: 'center',
-  },
-  primaryActionText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    marginLeft: 6,
-  },
-  secondaryActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  secondaryActionButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  secondaryActionText: {
-    fontSize: 14,
-    color: '#6B7280',
-    textDecorationLine: 'underline',
-  },
-  relatedLinkButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  relatedLinkText: {
-    fontSize: 14,
-    color: '#8BA888',
-    marginLeft: 4,
-    textDecorationLine: 'underline',
-  },
-  recommendedSection: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-  },
-  sectionSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 16,
-  },
-  recommendedScroll: {
-    marginHorizontal: -20,
-  },
-  recommendedContent: {
-    paddingHorizontal: 20,
-  },
-  compactArticleCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginRight: 12,
-    width: 280,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  compactArticleHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 8,
-  },
-  compactArticleTitle: {
-    fontSize: 16,
-    fontWeight: '600',
     color: '#1F2937',
-    marginBottom: 6,
-    lineHeight: 20,
   },
-  compactArticleSummary: {
-    fontSize: 13,
+  categoryProgressValue: {
+    fontSize: 14,
+    fontWeight: '600',
     color: '#6B7280',
-    lineHeight: 18,
+    minWidth: 45,
+    textAlign: 'right',
+  },
+  categoryProgressBar: {
+    flex: 1,
+    height: 8,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 4,
+    marginHorizontal: 12,
+    overflow: 'hidden',
+  },
+  categoryProgressFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 14,
+    color: THEME.colors.text.secondary,
+  },
+  // Insight Card
+  insightCard: {
+    padding: 20,
+    backgroundColor: '#FDF2F0',
+    borderWidth: 0,
+  },
+  insightHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     marginBottom: 12,
   },
-  compactReadButton: {
-    backgroundColor: '#8BA888',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
+  insightTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#E07A5F',
   },
-  compactReadButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
+  insightText: {
+    fontSize: 15,
+    color: '#1F2937',
+    lineHeight: 22,
+    marginBottom: 16,
   },
-  actionItemsSection: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-  },
-  actionItemsList: {
-    gap: 12,
-  },
-  actionItem: {
+  insightAction: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    gap: 6,
   },
-  actionItemIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F9FAFB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  actionItemContent: {
-    flex: 1,
-  },
-  actionItemTitle: {
+  insightActionText: {
+    color: '#E07A5F',
+    fontWeight: '700',
     fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 2,
   },
-  actionItemSubtitle: {
-    fontSize: 12,
-    color: '#6B7280',
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
-  actionItemButton: {
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+  modalContent: {
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
   },
-  actionItemButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#4B5563',
-  },
-  quickLibrarySection: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  quickLibraryHeader: {
+  modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
-  seeAllText: {
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1F2937',
+  },
+  modalBody: {
+    padding: 20,
+  },
+  inputLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#8BA888',
+    color: '#1F2937',
+    marginBottom: 8,
   },
-  tipLoadingCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 40,
-    marginBottom: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  tipLoadingText: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 12,
-    textAlign: 'center',
-  },
-  tipErrorCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 30,
-    marginBottom: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  tipErrorText: {
-    fontSize: 14,
-    color: '#EF4444',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  smallRetryButton: {
-    backgroundColor: '#8BA888',
-    paddingVertical: 8,
+  modalInput: {
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#1F2937',
+    marginBottom: 16,
   },
-  smallRetryButtonText: {
-    fontSize: 12,
+  modalTextArea: {
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  categorySelectRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  categorySelectChip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  categorySelectChipActive: {
+    backgroundColor: '#FDF2F0',
+  },
+  categorySelectText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6B7280',
+  },
+  modalFooter: {
+    flexDirection: 'row',
+    padding: 20,
+    gap: 12,
+  },
+  modalCancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: '#F3F4F6',
+  },
+  modalCancelText: {
+    fontSize: 16,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#6B7280',
+  },
+  modalSaveButton: {
+    flex: 2,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: '#E07A5F',
+  },
+  modalSaveButtonDisabled: {
+    opacity: 0.5,
+  },
+  modalSaveText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFF',
+  },
+  // Child Picker Modal
+  childPickerModal: {
+    backgroundColor: '#FFF',
+    marginHorizontal: 20,
+    marginBottom: 40,
+    borderRadius: 16,
+    padding: 16,
+  },
+  childPickerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  childPickerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    gap: 12,
+  },
+  childPickerItemActive: {
+    backgroundColor: '#FDF2F0',
+  },
+  childPickerItemText: {
+    flex: 1,
+    fontSize: 16,
+    color: '#1F2937',
+  },
+  childPickerItemTextActive: {
+    fontWeight: '600',
+    color: '#E07A5F',
   },
 });

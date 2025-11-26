@@ -5,11 +5,29 @@ import { Linking, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useAuthStore } from '@/src/shared/stores/authStore';
+import { useFonts, Nunito_700Bold } from '@expo-google-fonts/nunito';
+import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Prevent splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { checkAuthState, isAuthenticated } = useAuthStore();
+  const [fontsLoaded] = useFonts({
+    Nunito_700Bold,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+  });
   
   useFrameworkReady();
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   useEffect(() => {
     // Handle OAuth URL callbacks - simplified since session polling is used
@@ -71,6 +89,10 @@ export default function RootLayout() {
 
     return () => subscription?.remove();
   }, [checkAuthState]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <>

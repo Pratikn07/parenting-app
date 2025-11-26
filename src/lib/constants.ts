@@ -12,6 +12,43 @@ export const SUPABASE_CONFIG = {
   apiUrl: process.env.EXPO_PUBLIC_API_URL!,
 } as const;
 
+export const THEME = {
+  colors: {
+    primary: '#E07A5F',    // Terracotta - Love/Care/Primary Actions
+    secondary: '#8BA888',  // Sage Green - Growth/Data/Success
+    background: '#FDFCF8', // Soft Cream
+    text: {
+      primary: '#3D405B',
+      secondary: '#6B7280',
+      light: '#FFFFFF',
+      accent: '#E07A5F',
+    },
+    ui: {
+      white: '#FFFFFF',
+      border: '#E5E7EB',
+      inputBg: '#F9FAFB',
+    },
+    status: {
+      error: '#EF4444',
+      success: '#8BA888',
+      warning: '#F59E0B',
+    }
+  },
+  fonts: {
+    header: 'Nunito_700Bold',
+    body: 'Inter_400Regular',
+    bodyMedium: 'Inter_500Medium',
+    bodySemiBold: 'Inter_600SemiBold',
+  },
+  layout: {
+    borderRadius: {
+      sm: 12,
+      md: 24,
+      lg: 30,
+    }
+  }
+} as const;
+
 export const AUTH_CONFIG = {
   // Session duration in seconds (24 hours)
   sessionDuration: 24 * 60 * 60,
@@ -30,6 +67,7 @@ export const PARENTING_STAGES = {
   newborn: 'Newborn (0-3 months)',
   infant: 'Infant (3-12 months)',
   toddler: 'Toddler (1-3 years)',
+  preschool: 'Preschool (3-5 years)',
 } as const;
 
 export const FEEDING_PREFERENCES = {
@@ -43,6 +81,17 @@ export const MILESTONE_TYPES = {
   cognitive: 'Cognitive Development',
   social: 'Social Development',
   emotional: 'Emotional Development',
+} as const;
+
+export const TIP_CATEGORIES = {
+  sleep: { name: 'Sleep & Rest', icon: 'Moon', color: '#6366F1' },
+  feeding: { name: 'Feeding & Nutrition', icon: 'Utensils', color: '#F59E0B' },
+  development: { name: 'Growth & Development', icon: 'TrendingUp', color: '#10B981' },
+  health: { name: 'Health & Wellness', icon: 'Heart', color: '#EF4444' },
+  behavior: { name: 'Behavior & Discipline', icon: 'Brain', color: '#8B5CF6' },
+  activities: { name: 'Play & Activities', icon: 'Puzzle', color: '#EC4899' },
+  safety: { name: 'Safety & Childproofing', icon: 'Shield', color: '#14B8A6' },
+  bonding: { name: 'Bonding & Connection', icon: 'Heart', color: '#E07A5F' },
 } as const;
 
 export const ROUTES = {

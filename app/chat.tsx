@@ -8,40 +8,187 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Send, Mic, BookOpen, Heart, Calendar, Book, User, Paperclip } from 'lucide-react-native';
+import { Send, Mic, BookOpen, Paperclip, Menu, PenSquare, X } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '../src/shared/stores/authStore';
+import { ScreenBackground } from '../src/frontend/components/common/ScreenBackground';
+import { ChildSelector } from '../src/frontend/components/chat/ChildSelector';
+import { ChatSidebar } from '../src/frontend/components/chat/ChatSidebar';
+import { ImagePicker } from '../src/frontend/components/chat/ImagePicker';
+import { ChatImageBubble } from '../src/frontend/components/chat/ChatImageBubble';
+import { THEME } from '../src/lib/constants';
+import { ProgressService, chatService, imageService, GroupedSessions } from '../src/services';
+import { ChatMessage, Child, ChatSession } from '../src/lib/database.types';
 
 interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
-  actions?: Array<{
-    id: string;
-    label: string;
-    type: 'learn' | 'save' | 'track';
-    icon: any;
-  }>;
+  isLoading?: boolean;
+  isError?: boolean;
+  imageUrl?: string;
 }
 
+const WELCOME_MESSAGE = "Hi there! I'm Bloom, your parenting companion. I remember details about your little ones and our past conversations. You can also share photos for me to analyze - just tap the 📎 button. What's on your mind today?";
+
 export default function ChatScreen() {
-  const { user } = useAuthStore();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Hi there! I'm here to support you on your parenting journey. Feel free to ask me anything about feeding, sleep, development, or any concerns you have. What would you like to know today?",
-      isUser: false,
-      timestamp: new Date(),
-    },
-  ]);
+  const { user, guestData } = useAuthStore();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+  
+  // Child context state
+  const [children, setChildren] = useState<Child[]>([]);
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
+  
+  // Session state
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [sessions, setSessions] = useState<GroupedSessions>({
+    today: [],
+    yesterday: [],
+    lastWeek: [],
+    older: [],
+  });
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  
+  // Image state
+  const [isImagePickerVisible, setIsImagePickerVisible] = useState(false);
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  
   const scrollViewRef = useRef<ScrollView>(null);
 
-  // Get current time greeting
+  // Auto-send first message for Guests
+  useEffect(() => {
+    if (!user?.id && guestData && messages.length === 0) {
+      const initialMessage = `Hi ${guestData.parentName}! I see you're navigating ${guestData.mainChallenge} with a ${guestData.childAge} old. How can I help you start?`;
+      
+      setMessages([{
+        id: 'welcome-guest',
+        text: initialMessage,
+        isUser: false,
+        timestamp: new Date(),
+      }]);
+      setIsLoadingHistory(false);
+    }
+  }, [user?.id, guestData]);
+
+  // Load children, sessions, and chat history on mount
+  useEffect(() => {
+    if (user?.id) {
+      loadChildren();
+      loadSessions();
+    } else if (!guestData) {
+      setMessages([createWelcomeMessage()]);
+      setIsLoadingHistory(false);
+    }
+  }, [user?.id]);
+
+  const loadChildren = async () => {
+    if (!user?.id) return;
+    try {
+      const userChildren = await chatService.getChildren(user.id);
+      setChildren(userChildren);
+      if (userChildren.length > 0 && !selectedChildId) {
+        setSelectedChildId(userChildren[0].id);
+      }
+    } catch (error) {
+      console.error('Error loading children:', error);
+    }
+  };
+
+  const loadSessions = async () => {
+    if (!user?.id) return;
+    setIsLoadingSessions(true);
+    try {
+      const userSessions = await chatService.getSessions(user.id);
+      setSessions(userSessions);
+      
+      const allSessions = [
+        ...userSessions.today,
+        ...userSessions.yesterday,
+        ...userSessions.lastWeek,
+        ...userSessions.older,
+      ];
+      
+      if (allSessions.length > 0) {
+        await loadSessionMessages(allSessions[0].id);
+      } else {
+        setMessages([createWelcomeMessage()]);
+        setIsLoadingHistory(false);
+      }
+    } catch (error) {
+      console.error('Error loading sessions:', error);
+      setMessages([createWelcomeMessage()]);
+      setIsLoadingHistory(false);
+    } finally {
+      setIsLoadingSessions(false);
+    }
+  };
+
+  const loadSessionMessages = async (sessionId: string) => {
+    setIsLoadingHistory(true);
+    try {
+      const sessionMessages = await chatService.getSessionMessages(sessionId);
+      setCurrentSessionId(sessionId);
+      
+      if (sessionMessages.length === 0) {
+        setMessages([createWelcomeMessage()]);
+      } else {
+        const uiMessages: Message[] = sessionMessages.map((msg: ChatMessage) => ({
+          id: msg.id,
+          text: msg.message,
+          isUser: msg.is_from_user,
+          timestamp: new Date(msg.created_at),
+          imageUrl: msg.image_url || undefined,
+        }));
+        setMessages(uiMessages);
+      }
+    } catch (error) {
+      console.error('Error loading session messages:', error);
+      setMessages([createWelcomeMessage()]);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  const createWelcomeMessage = (): Message => ({
+    id: 'welcome',
+    text: WELCOME_MESSAGE,
+    isUser: false,
+    timestamp: new Date(),
+  });
+
+  const handleNewChat = async () => {
+    if (!user?.id) return;
+    setCurrentSessionId(null);
+    setMessages([createWelcomeMessage()]);
+    setSelectedImageUri(null);
+  };
+
+  const handleSelectSession = async (session: ChatSession) => {
+    await loadSessionMessages(session.id);
+  };
+
+  const handleDeleteSession = async (sessionId: string) => {
+    if (!user?.id) return;
+    const success = await chatService.deleteSession(sessionId);
+    if (success) {
+      await loadSessions();
+      if (currentSessionId === sessionId) {
+        handleNewChat();
+      }
+    }
+  };
+
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -49,242 +196,449 @@ export default function ChatScreen() {
     return 'Good evening';
   };
 
-  // Get user's first name
   const getUserFirstName = () => {
     if (!user?.name) return 'there';
     return user.name.split(' ')[0];
   };
 
-  const sampleResponses = [
-    {
-      trigger: ['sleep', 'sleeping', 'nap'],
-      response: "Sleep is so important for both you and your baby! At this stage, it's normal for sleep patterns to be unpredictable. Try establishing a gentle bedtime routine with dimmed lights and quiet activities. Remember, every baby is different, and you're doing great!",
-      actions: [
-        { id: '1', label: 'Sleep Tips', type: 'learn' as const, icon: BookOpen },
-        { id: '2', label: 'Save Answer', type: 'save' as const, icon: Heart },
-        { id: '3', label: 'Track Sleep', type: 'track' as const, icon: Calendar },
-      ],
-    },
-    {
-      trigger: ['feeding', 'eating', 'milk', 'breastfeeding'],
-      response: "Feeding can feel overwhelming at first, but you're giving your baby exactly what they need. Whether you're breastfeeding, formula feeding, or doing both, trust your instincts. Look for hunger cues like rooting or sucking motions, and remember that cluster feeding is completely normal.",
-      actions: [
-        { id: '1', label: 'Feeding Guide', type: 'learn' as const, icon: BookOpen },
-        { id: '2', label: 'Save Answer', type: 'save' as const, icon: Heart },
-      ],
-    },
-  ];
-
-  const sendMessage = () => {
-    if (!inputText.trim()) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputText,
-      isUser: true,
-      timestamp: new Date(),
-    };
-
-    // Find appropriate response
-    const matchingResponse = sampleResponses.find(response =>
-      response.trigger.some(trigger => 
-        inputText.toLowerCase().includes(trigger.toLowerCase())
-      )
-    );
-
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      text: matchingResponse?.response || "Thank you for sharing that with me. Every parent's journey is unique, and it sounds like you're being so thoughtful about your baby's needs. While I'd love to give you specific advice, I'd recommend speaking with your pediatrician about this particular concern. In the meantime, trust your instincts - they're often right on target!",
-      isUser: false,
-      timestamp: new Date(),
-      actions: matchingResponse?.actions,
-    };
-
-    setMessages(prev => [...prev, userMessage, botMessage]);
-    setInputText('');
-    
-    // Scroll to bottom after a short delay
+  const scrollToBottom = () => {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 100);
   };
 
-  const handleActionPress = (action: any) => {
-    console.log('Action pressed:', action);
+  const handleImageSelected = (uri: string) => {
+    setSelectedImageUri(uri);
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImageUri(null);
+  };
+
+  const sendMessage = async () => {
+    // Allow sending if there's text OR an image
+    if ((!inputText.trim() && !selectedImageUri) || isSending) return;
+    if (!user?.id) {
+      alert('Please sign in to chat');
+      return;
+    }
+
+    const messageText = inputText.trim() || (selectedImageUri ? "What do you see in this image?" : "");
+    const imageToSend = selectedImageUri;
     
-    if (action.type === 'save') {
-      alert('Answer saved to your collection!');
+    setInputText('');
+    setSelectedImageUri(null);
+    setIsSending(true);
+
+    // Upload image first if present
+    let uploadedImageUrl: string | undefined;
+    if (imageToSend) {
+      setIsUploadingImage(true);
+      try {
+        const uploadResult = await imageService.uploadImage(
+          user.id,
+          imageToSend,
+          currentSessionId || undefined
+        );
+        if (uploadResult.success && uploadResult.url) {
+          uploadedImageUrl = uploadResult.url;
+        } else {
+          throw new Error(uploadResult.error || 'Image upload failed');
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        setIsSending(false);
+        setIsUploadingImage(false);
+        // Show error message
+        setMessages(prev => [...prev, {
+          id: `error-${Date.now()}`,
+          text: "Failed to upload image. Please try again.",
+          isUser: false,
+          timestamp: new Date(),
+          isError: true,
+        }]);
+        return;
+      }
+      setIsUploadingImage(false);
+    }
+
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      text: messageText,
+      isUser: true,
+      timestamp: new Date(),
+      imageUrl: uploadedImageUrl,
+    };
+
+    const typingMessage: Message = {
+      id: 'typing',
+      text: '',
+      isUser: false,
+      timestamp: new Date(),
+      isLoading: true,
+    };
+
+    setMessages(prev => [...prev, userMessage, typingMessage]);
+    scrollToBottom();
+
+    try {
+      const result = await chatService.sendMessage(
+        user.id, 
+        messageText, 
+        selectedChildId || undefined,
+        currentSessionId || undefined,
+        uploadedImageUrl
+      );
+
+      setMessages(prev => {
+        const filtered = prev.filter(m => m.id !== 'typing');
+        
+        if (result.success && result.data) {
+          if (result.data.sessionId && result.data.sessionId !== currentSessionId) {
+            setCurrentSessionId(result.data.sessionId);
+            loadSessions();
+          }
+          
+          return [...filtered, {
+            id: result.data.id,
+            text: result.data.response,
+            isUser: false,
+            timestamp: new Date(result.data.createdAt),
+          }];
+        } else {
+          return [...filtered, {
+            id: `error-${Date.now()}`,
+            text: result.fallbackResponse || "I'm having trouble responding right now. Please try again.",
+            isUser: false,
+            timestamp: new Date(),
+            isError: true,
+          }];
+        }
+      });
+
+      try {
+        await ProgressService.logQuestionAsked(user.id, messageText);
+      } catch (error) {
+        console.error('Error logging question:', error);
+      }
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      
+      setMessages(prev => {
+        const filtered = prev.filter(m => m.id !== 'typing');
+        return [...filtered, {
+          id: `error-${Date.now()}`,
+          text: "Something went wrong. Please try again in a moment.",
+          isUser: false,
+          timestamp: new Date(),
+          isError: true,
+        }];
+      });
+    } finally {
+      setIsSending(false);
+      scrollToBottom();
     }
   };
 
   const toggleRecording = () => {
     setIsRecording(!isRecording);
-    if (!isRecording) {
-      console.log('Start recording');
-    } else {
-      console.log('Stop recording');
-    }
   };
 
   const handlePhotoAttachment = () => {
-    console.log('Photo attachment pressed');
-    // TODO: Implement photo picker functionality
-    alert('Photo attachment feature - coming soon!');
+    setIsImagePickerVisible(true);
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{getTimeGreeting()}, {getUserFirstName()}</Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity
-            style={styles.headerButton}
-            onPress={() => router.push('/resources')}
-            activeOpacity={0.7}
-          >
-            <BookOpen size={24} color="#6B7280" strokeWidth={2} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.profileButton}
-            onPress={() => router.push('/settings')}
-            activeOpacity={0.7}
-          >
-            <User size={20} color="#FFFFFF" strokeWidth={2} />
-          </TouchableOpacity>
-        </View>
-      </View>
+  const handleChildSelect = (childId: string) => {
+    setSelectedChildId(childId);
+  };
 
-      <KeyboardAvoidingView 
-        style={styles.chatContainer} 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
-        <ScrollView 
-          ref={scrollViewRef}
-          style={styles.messagesContainer}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.messagesContent}
+  const renderTypingIndicator = () => (
+    <View style={styles.typingContainer}>
+      <View style={styles.typingDot} />
+      <View style={[styles.typingDot, styles.typingDotMiddle]} />
+      <View style={styles.typingDot} />
+    </View>
+  );
+
+  const renderMessage = (message: Message) => {
+    // If message has an image, use ChatImageBubble
+    if (message.imageUrl) {
+      return (
+        <ChatImageBubble
+          imageUrl={message.imageUrl}
+          message={message.text}
+          isUser={message.isUser}
+          timestamp={message.timestamp}
+        />
+      );
+    }
+
+    // Loading state
+    if (message.isLoading) {
+      return (
+        <View style={[styles.messageBubble, styles.botMessage]}>
+          {renderTypingIndicator()}
+        </View>
+      );
+    }
+
+    // User message
+    if (message.isUser) {
+      return (
+        <View style={[styles.messageBubble, styles.userMessage]}>
+          <Text style={styles.userMessageText}>{message.text}</Text>
+        </View>
+      );
+    }
+
+    // Bot message
+    return (
+      <View style={[
+        styles.messageBubble, 
+        styles.botMessage,
+        message.isError && styles.errorMessage
+      ]}>
+        <Text style={[
+          styles.botMessageText,
+          message.isError && styles.errorMessageText
+        ]}>{message.text}</Text>
+      </View>
+    );
+  };
+
+  if (isLoadingHistory) {
+    return (
+      <View style={styles.container}>
+        <ScreenBackground />
+        <SafeAreaView style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={THEME.colors.primary} />
+          <Text style={styles.loadingText}>Loading your conversation...</Text>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <ScreenBackground />
+
+      <SafeAreaView style={styles.safeArea}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => setIsSidebarVisible(true)}
+          >
+            <Menu size={24} color="#3D405B" strokeWidth={2} />
+          </TouchableOpacity>
+          
+          <Text style={styles.headerTitle}>{getTimeGreeting()}, {getUserFirstName()}</Text>
+          
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={handleNewChat}
+            >
+              <PenSquare size={22} color="#3D405B" strokeWidth={2} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => router.push('/resources')}
+            >
+              <BookOpen size={22} color="#3D405B" strokeWidth={2} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Child Selector */}
+        {children.length > 0 && (
+          <ChildSelector
+            children={children}
+            selectedChildId={selectedChildId}
+            onSelectChild={handleChildSelect}
+          />
+        )}
+
+        <KeyboardAvoidingView
+          style={styles.chatContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
-          {messages.map((message) => (
-            <View key={message.id}>
-              <View style={[
-                styles.messageContainer,
-                message.isUser ? styles.userMessage : styles.botMessage
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.messagesContainer}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.messagesContent}
+            onContentSizeChange={scrollToBottom}
+          >
+            {messages.map((message) => (
+              <View key={message.id} style={[
+                styles.messageWrapper,
+                message.isUser ? styles.userMessageWrapper : styles.botMessageWrapper
               ]}>
-                <Text style={[
-                  styles.messageText,
-                  message.isUser ? styles.userMessageText : styles.botMessageText
-                ]}>
-                  {message.text}
-                </Text>
+                {renderMessage(message)}
               </View>
-              
-              {message.actions && (
-                <View style={styles.actionsContainer}>
-                  {message.actions.map((action) => (
-                    <TouchableOpacity
-                      key={action.id}
-                      style={styles.actionButton}
-                      onPress={() => handleActionPress(action)}
-                      activeOpacity={0.7}
-                    >
-                      <action.icon size={16} color="#D4635A" strokeWidth={2} />
-                      <Text style={styles.actionButtonText}>{action.label}</Text>
-                    </TouchableOpacity>
-                  ))}
+            ))}
+          </ScrollView>
+
+          {/* Selected Image Preview */}
+          {selectedImageUri && (
+            <View style={styles.imagePreviewContainer}>
+              <Image source={{ uri: selectedImageUri }} style={styles.imagePreview} />
+              <TouchableOpacity 
+                style={styles.removeImageButton}
+                onPress={handleRemoveImage}
+              >
+                <X size={16} color="#FFF" strokeWidth={2} />
+              </TouchableOpacity>
+              {isUploadingImage && (
+                <View style={styles.uploadingOverlay}>
+                  <ActivityIndicator size="small" color="#FFF" />
                 </View>
               )}
             </View>
-          ))}
-        </ScrollView>
+          )}
 
-        <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <TouchableOpacity
-              style={styles.attachButton}
-              onPress={handlePhotoAttachment}
-              activeOpacity={0.7}
-            >
-              <Paperclip size={20} color="#6B7280" strokeWidth={2} />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Ask me anything about parenting..."
-              placeholderTextColor="#9CA3AF"
-              value={inputText}
-              onChangeText={setInputText}
-              multiline
-              maxLength={500}
-            />
-            <View style={styles.inputActions}>
+          {/* Input Area */}
+          <View style={styles.inputContainer}>
+            <View style={styles.inputWrapper}>
               <TouchableOpacity
-                style={[styles.micButton, isRecording && styles.micButtonActive]}
-                onPress={toggleRecording}
-                activeOpacity={0.7}
+                style={[
+                  styles.attachButton,
+                  selectedImageUri && styles.attachButtonActive
+                ]}
+                onPress={handlePhotoAttachment}
               >
-                <Mic 
-                  size={20} 
-                  color={isRecording ? "#FFFFFF" : "#6B7280"} 
-                  strokeWidth={2} 
-                />
+                <Paperclip size={20} color={selectedImageUri ? THEME.colors.primary : "#6B7280"} strokeWidth={2} />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
-                onPress={sendMessage}
-                disabled={!inputText.trim()}
-                activeOpacity={0.7}
-              >
-                <Send size={20} color="#FFFFFF" strokeWidth={2} />
-              </TouchableOpacity>
+              <TextInput
+                style={styles.textInput}
+                placeholder={selectedImageUri ? "Add a question about this photo..." : "Ask me anything..."}
+                placeholderTextColor="#9CA3AF"
+                value={inputText}
+                onChangeText={setInputText}
+                multiline
+                maxLength={500}
+                editable={!isSending}
+                onSubmitEditing={sendMessage}
+              />
+              <View style={styles.inputActions}>
+                <TouchableOpacity
+                  style={[styles.micButton, isRecording && styles.micButtonActive]}
+                  onPress={toggleRecording}
+                >
+                  <Mic
+                    size={20}
+                    color={isRecording ? "#FFFFFF" : "#6B7280"}
+                    strokeWidth={2}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.sendButton, 
+                    (!inputText.trim() && !selectedImageUri || isSending) && styles.sendButtonDisabled
+                  ]}
+                  onPress={sendMessage}
+                  disabled={(!inputText.trim() && !selectedImageUri) || isSending}
+                >
+                  {isSending ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : (
+                    <Send size={20} color="#FFFFFF" strokeWidth={2} />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+
+      {/* Sidebar */}
+      <ChatSidebar
+        visible={isSidebarVisible}
+        onClose={() => setIsSidebarVisible(false)}
+        sessions={sessions}
+        currentSessionId={currentSessionId || undefined}
+        onSelectSession={handleSelectSession}
+        onNewChat={() => {
+          handleNewChat();
+          setIsSidebarVisible(false);
+        }}
+        onDeleteSession={handleDeleteSession}
+        children={children}
+        isLoading={isLoadingSessions}
+        user={user}
+        onProfilePress={() => router.push('/settings')}
+      />
+
+      {/* Image Picker Modal */}
+      <ImagePicker
+        visible={isImagePickerVisible}
+        onClose={() => setIsImagePickerVisible(false)}
+        onImageSelected={handleImageSelected}
+        selectedImage={selectedImageUri}
+        onRemoveImage={handleRemoveImage}
+        isUploading={isUploadingImage}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF7F3',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: THEME.colors.text.secondary,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
+    backgroundColor: '#FDFCF8',
+  },
+  menuButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: 18,
+    fontFamily: THEME.fonts.header,
+    color: THEME.colors.text.primary,
+    flex: 1,
+    textAlign: 'center',
   },
   headerActions: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
   headerButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F9FAFB',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
-  },
-  profileButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#D4635A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
   },
   chatContainer: {
     flex: 1,
@@ -294,114 +648,157 @@ const styles = StyleSheet.create({
   },
   messagesContent: {
     padding: 20,
+    paddingBottom: 40,
   },
-  messageContainer: {
+  messageWrapper: {
     marginBottom: 16,
     maxWidth: '85%',
-    borderRadius: 20,
+  },
+  userMessageWrapper: {
+    alignSelf: 'flex-end',
+  },
+  botMessageWrapper: {
+    alignSelf: 'flex-start',
+  },
+  messageBubble: {
     paddingVertical: 12,
     paddingHorizontal: 16,
+    borderRadius: 20,
   },
   userMessage: {
-    backgroundColor: '#D4635A',
-    alignSelf: 'flex-end',
-    borderBottomRightRadius: 8,
+    backgroundColor: '#E07A5F',
+    borderBottomRightRadius: 4,
   },
   botMessage: {
     backgroundColor: '#FFFFFF',
-    alignSelf: 'flex-start',
-    borderBottomLeftRadius: 8,
+    borderBottomLeftRadius: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
   },
-  messageText: {
-    fontSize: 16,
-    lineHeight: 22,
+  errorMessage: {
+    backgroundColor: '#FEF2F2',
+    borderColor: '#FECACA',
+    borderWidth: 1,
   },
   userMessageText: {
     color: '#FFFFFF',
+    fontSize: 16,
+    lineHeight: 22,
   },
   botMessageText: {
-    color: '#1F2937',
+    color: '#3D405B',
+    fontSize: 16,
+    lineHeight: 22,
   },
-  actionsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginLeft: 0,
-    marginBottom: 16,
-    marginTop: 8,
-    maxWidth: '85%',
+  errorMessageText: {
+    color: '#991B1B',
   },
-  actionButton: {
+  typingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginRight: 8,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    paddingVertical: 4,
   },
-  actionButtonText: {
-    fontSize: 14,
-    color: '#D4635A',
-    fontWeight: '500',
-    marginLeft: 6,
+  typingDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#9CA3AF',
+    marginHorizontal: 2,
+    opacity: 0.4,
+  },
+  typingDotMiddle: {
+    opacity: 0.7,
+  },
+  imagePreviewContainer: {
+    marginHorizontal: 20,
+    marginBottom: 8,
+    position: 'relative',
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: THEME.colors.primary,
+    borderRadius: 12,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  uploadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inputContainer: {
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#F3F4F6',
+    backgroundColor: '#FDFCF8',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#FFFFFF',
     borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
     minHeight: 56,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   attachButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 8,
+    marginBottom: 4,
+  },
+  attachButtonActive: {
+    backgroundColor: 'rgba(224, 122, 95, 0.1)',
+    borderRadius: 16,
   },
   textInput: {
     flex: 1,
     fontSize: 16,
-    color: '#1F2937',
+    color: '#3D405B',
     maxHeight: 120,
     minHeight: 24,
     paddingTop: 0,
-    paddingVertical: 4,
+    paddingVertical: 8,
   },
   inputActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 12,
+    marginLeft: 8,
+    marginBottom: 4,
   },
   micButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 8,
@@ -413,11 +810,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#D4635A',
+    backgroundColor: '#E07A5F',
     justifyContent: 'center',
     alignItems: 'center',
   },
   sendButtonDisabled: {
     backgroundColor: '#E5E7EB',
+    opacity: 0.5,
   },
 });

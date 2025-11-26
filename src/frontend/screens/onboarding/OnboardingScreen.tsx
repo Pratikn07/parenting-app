@@ -5,17 +5,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Platform,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronRight, X, Plus, ChevronLeft } from 'lucide-react-native';
+import { ChevronRight, X, Plus, ChevronLeft, Calendar as CalendarIcon } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { supabase } from '../../../lib/supabase';
-
-// TODO: Import analytics service when available
 import { useAuthStore } from '../../../shared/stores/authStore';
-import { Button } from '../../components/common/Button';
-import { Input } from '../../components/common/Input';
+import { ScreenBackground } from '../../components/common/ScreenBackground';
+import { ModernCard } from '../../components/common/ModernCard';
+import { ModernButton } from '../../components/common/ModernButton';
+import { THEME } from '../../../lib/constants';
 
 interface Child {
   id: string;
@@ -35,7 +35,7 @@ export default function OnboardingScreen() {
   const [data, setData] = useState<OnboardingData>({
     children: [],
   });
-  const [showDatePicker, setShowDatePicker] = useState<{childId: string | null, show: boolean}>({
+  const [showDatePicker, setShowDatePicker] = useState<{ childId: string | null, show: boolean }>({
     childId: null,
     show: false
   });
@@ -76,7 +76,6 @@ export default function OnboardingScreen() {
 
   const calculateAgeInMonths = (birthDate: string): number => {
     if (!birthDate) return 0;
-    // Robust parse for MM/DD/YYYY (also supports M/D/YYYY)
     const match = birthDate.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     let birth: Date | null = null;
     if (match) {
@@ -84,12 +83,10 @@ export default function OnboardingScreen() {
       const day = parseInt(match[2], 10);
       const year = parseInt(match[3], 10);
       const d = new Date(year, month, day);
-      // Validate constructed date
       if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
         birth = d;
       }
     } else {
-      // Fallback to Date parser (handles locale-selected values)
       const d = new Date(birthDate);
       if (!isNaN(d.getTime())) birth = d;
     }
@@ -104,11 +101,6 @@ export default function OnboardingScreen() {
     return months;
   };
 
-  React.useEffect(() => {
-    // TODO: Track screen view when analytics is available
-    console.log('Onboarding screen viewed');
-  }, []);
-
   const addChild = () => {
     const newChild: Child = {
       id: Date.now().toString(),
@@ -121,8 +113,6 @@ export default function OnboardingScreen() {
       ...prev,
       children: [...prev.children, newChild],
     }));
-    // TODO: Track event when analytics is available
-    console.log('Child added to onboarding');
   };
 
   const updateChild = (id: string, field: keyof Child, value: string | string[]) => {
@@ -131,12 +121,9 @@ export default function OnboardingScreen() {
       children: prev.children.map(child => {
         if (child.id === id) {
           const updatedChild = { ...child, [field]: value };
-          
-          // Auto-calculate age when birth date changes
           if (field === 'birthDate' && typeof value === 'string') {
             updatedChild.ageInMonths = calculateAgeInMonths(value);
           }
-          
           return updatedChild;
         }
         return child;
@@ -149,8 +136,6 @@ export default function OnboardingScreen() {
       ...prev,
       children: prev.children.filter(child => child.id !== id),
     }));
-    // TODO: Track event when analytics is available
-    console.log('Child removed from onboarding');
   };
 
   const toggleFeedingPreference = (childId: string, preference: string) => {
@@ -169,7 +154,7 @@ export default function OnboardingScreen() {
     }));
   };
 
-  // Modern Calendar Functions
+  // Calendar Functions
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -186,20 +171,16 @@ export default function OnboardingScreen() {
   const handleDateSelect = (childId: string, day: number) => {
     const formattedDate = new Date(calendarState.year, calendarState.month, day).toLocaleDateString('en-US');
     updateChild(childId, 'birthDate', formattedDate);
-    setShowDatePicker({childId: null, show: false});
+    setShowDatePicker({ childId: null, show: false });
   };
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCalendarState(prev => {
       if (direction === 'prev') {
-        if (prev.month === 0) {
-          return { month: 11, year: prev.year - 1 };
-        }
+        if (prev.month === 0) return { month: 11, year: prev.year - 1 };
         return { month: prev.month - 1, year: prev.year };
       } else {
-        if (prev.month === 11) {
-          return { month: 0, year: prev.year + 1 };
-        }
+        if (prev.month === 11) return { month: 0, year: prev.year + 1 };
         return { month: prev.month + 1, year: prev.year };
       }
     });
@@ -212,14 +193,14 @@ export default function OnboardingScreen() {
     }));
   };
 
-  // Dynamic Age-Based Messaging Functions
+  // Dynamic Age-Based Messaging
   const getStageEmoji = (ageInMonths: number): string => {
     if (ageInMonths < 0) return '⚠️';
     if (ageInMonths <= 3) return '👶';
     if (ageInMonths <= 12) return '🍼';
     if (ageInMonths <= 36) return '🧸';
     if (ageInMonths <= 60) return '🎨';
-    if (ageInMonths <= 156) return '🧒'; // 13y
+    if (ageInMonths <= 156) return '🧒';
     return '⚠️';
   };
 
@@ -231,7 +212,7 @@ export default function OnboardingScreen() {
     if (ageInMonths <= 60) return 'Preschool';
     if (ageInMonths <= 96) return 'Early School';
     if (ageInMonths <= 156) return 'Tween';
-    return 'Outside Supported Range';
+    return 'Outside Range';
   };
 
   const getAgeDisplay = (ageInMonths: number): string => {
@@ -240,774 +221,454 @@ export default function OnboardingScreen() {
     } else {
       const years = Math.floor(ageInMonths / 12);
       const remainingMonths = ageInMonths % 12;
-      if (remainingMonths === 0) {
-        return `${years} year${years !== 1 ? 's' : ''} old`;
-      }
+      if (remainingMonths === 0) return `${years} year${years !== 1 ? 's' : ''} old`;
       return `${years}y ${remainingMonths}m old`;
     }
   };
 
   const getStageMessage = (ageInMonths: number): string => {
-    if (ageInMonths < 0) {
-      return 'Please enter a valid birthdate in the past.';
-    }
-    if (ageInMonths > 156) {
-      return "This looks like an older child's date. Our guidance currently covers 0–13 years.";
-    }
-    if (ageInMonths <= 3) {
-      return "Focus on sleep schedules, feeding patterns, and bonding. Every day brings new developments!";
-    }
-    if (ageInMonths <= 6) {
-      return "Time for first foods and exploring textures. Watch for those precious first smiles and giggles!";
-    }
-    if (ageInMonths <= 12) {
-      return "Crawling, babbling, and maybe first steps! This is an exciting time of rapid development.";
-    }
-    if (ageInMonths <= 24) {
-      return "Language explosion and independence emerging. Toddler adventures are just beginning!";
-    }
-    if (ageInMonths <= 36) {
-      return "Curiosity peaks and social skills develop. Perfect time for interactive learning and play.";
-    }
-    if (ageInMonths <= 60) {
-      return "Preschool readiness and creative expression. Learning through play becomes more structured.";
-    }
-    if (ageInMonths <= 96) {
-      return 'Early literacy, routines, and social development—build consistency and healthy habits.';
-    }
-    return 'Curiosity and independence grow—support confidence, friendships, and problem-solving.';
+    if (ageInMonths < 0) return 'Please enter a valid birthdate.';
+    if (ageInMonths > 156) return "Our guidance currently covers 0–13 years.";
+    if (ageInMonths <= 3) return "Focus on sleep schedules and bonding.";
+    if (ageInMonths <= 6) return "Time for first foods and smiles!";
+    if (ageInMonths <= 12) return "Crawling, babbling, and first steps!";
+    if (ageInMonths <= 24) return "Language explosion and independence.";
+    if (ageInMonths <= 36) return "Curiosity peaks and social skills develop.";
+    if (ageInMonths <= 60) return "Preschool readiness and creative play.";
+    if (ageInMonths <= 96) return 'Early literacy and healthy habits.';
+    return 'Supporting confidence and friendships.';
   };
 
   const handleComplete = async () => {
     try {
-      // TODO: Track event when analytics is available
-      console.log('Onboarding completed', {
-        children_count: data.children.length,
-        total_feeding_preferences: data.children.reduce((sum, child) => sum + (child.feedingPreferences?.length || 0), 0),
-      });
-      
-      // Save children data to database
       if (data.children.length > 0) {
-        console.log('💾 Saving children data to database...', data.children);
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          // Upsert children into children table
           const childrenPayload = data.children.map((c) => ({
             user_id: user.id,
             name: c.name || null,
             date_of_birth: (() => {
               if (!c.birthDate) return null;
-              const m = c.birthDate.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-              if (m) {
-                const month = parseInt(m[1], 10) - 1;
-                const day = parseInt(m[2], 10);
-                const year = parseInt(m[3], 10);
-                const d = new Date(year, month, day);
-                if (!isNaN(d.getTime())) return d.toISOString().slice(0,10);
-                return null;
-              }
               const d = new Date(c.birthDate);
-              return isNaN(d.getTime()) ? null : d.toISOString().slice(0,10);
+              return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
             })(),
             created_at: new Date().toISOString(),
           }));
+
           if (childrenPayload.length > 0) {
-            const { error: childrenError } = await supabase
-              .from('children')
-              .insert(childrenPayload);
-            if (childrenError) {
-              console.error('Failed to save children:', childrenError.message);
-            }
+            await supabase.from('children').insert(childrenPayload);
           }
 
-          // Mark onboarding complete on user profile
-          const { error: userError } = await supabase
+          await supabase
             .from('users')
             .update({ has_completed_onboarding: true })
             .eq('id', user.id);
-          if (userError) {
-            console.error('Failed to mark onboarding complete:', userError.message);
-          }
         }
       }
-      
       completeOnboarding();
       router.replace('/chat');
     } catch (error) {
       console.error('Error completing onboarding:', error);
-      // Still proceed even if saving fails
       completeOnboarding();
       router.replace('/chat');
     }
   };
 
   const handleSkip = () => {
-    // TODO: Track event when analytics is available
-    console.log('Onboarding skipped');
     completeOnboarding();
     router.replace('/chat');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Who are we helping?</Text>
-        <Text style={styles.subtitle}>Tell us about your child(ren).</Text>
-      </View>
+    <View style={styles.container}>
+      <ScreenBackground />
 
-      {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {data.children.map((child, index) => (
-          <View key={child.id} style={styles.childCard}>
-            <View style={styles.childHeader}>
-              <Text style={styles.childLabel}>Child {index + 1}</Text>
-              {data.children.length > 1 && (
-                <TouchableOpacity
-                  onPress={() => removeChild(child.id)}
-                  style={styles.removeButton}
-                  activeOpacity={0.7}
-                >
-                  <X size={16} color="#6B7280" strokeWidth={2} />
-                </TouchableOpacity>
-              )}
-            </View>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Who are we helping?</Text>
+          <Text style={styles.subtitle}>Tell us about your child(ren).</Text>
+        </View>
 
-            <Input
-              label="Name (optional)"
-              placeholder="Enter child's name"
-              value={child.name}
-              onChangeText={(text) => updateChild(child.id, 'name', text)}
-            />
-
-            <View>
-              <Text style={styles.inputLabel}>Birthdate (or Due date)</Text>
-              <View style={styles.modernDateInputWrapper}>
-                <Input
-                  placeholder="MM/DD/YYYY or tap calendar"
-                  value={child.birthDate}
-                  onChangeText={(text) => updateChild(child.id, 'birthDate', text)}
-                  style={styles.modernDateInput}
-                />
-                <TouchableOpacity
-                  style={styles.embeddedCalendarIcon}
-                  onPress={() => setShowDatePicker({childId: child.id, show: !showDatePicker.show})}
-                >
-                  <Text style={styles.embeddedCalendarText}>📅</Text>
-                </TouchableOpacity>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {data.children.map((child, index) => (
+            <ModernCard key={child.id} style={styles.childCard}>
+              <View style={styles.childHeader}>
+                <Text style={styles.childLabel}>Child {index + 1}</Text>
+                {data.children.length > 1 && (
+                  <TouchableOpacity
+                    onPress={() => removeChild(child.id)}
+                    style={styles.removeButton}
+                  >
+                    <X size={16} color="#3D405B" strokeWidth={2} />
+                  </TouchableOpacity>
+                )}
               </View>
-              
-              {/* Modern Pure JS Calendar - No Native Dependencies */}
-              {showDatePicker.show && showDatePicker.childId === child.id && (
-                <View style={styles.modernCalendarCard}>
-                  {/* Header */}
-                  <View style={styles.calendarHeader}>
-                    <TouchableOpacity onPress={() => navigateMonth('prev')} style={styles.navButton}>
-                      <ChevronLeft size={20} color="#6B7280" />
-                    </TouchableOpacity>
-                    
-                    <View style={styles.monthYearContainer}>
-                      <Text style={styles.monthText}>{months[calendarState.month]}</Text>
-                      <View style={styles.yearControls}>
-                        <TouchableOpacity onPress={() => navigateYear('prev')} style={styles.yearButton}>
-                          <ChevronLeft size={14} color="#9CA3AF" />
-                        </TouchableOpacity>
-                        <Text style={styles.yearText}>{calendarState.year}</Text>
-                        <TouchableOpacity onPress={() => navigateYear('next')} style={styles.yearButton}>
-                          <ChevronRight size={14} color="#9CA3AF" />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    
-                    <TouchableOpacity onPress={() => navigateMonth('next')} style={styles.navButton}>
-                      <ChevronRight size={20} color="#6B7280" />
-                    </TouchableOpacity>
-                  </View>
 
-                  {/* Days of Week */}
-                  <View style={styles.daysOfWeekContainer}>
-                    {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                      <Text key={day} style={styles.dayOfWeekText}>{day}</Text>
-                    ))}
-                  </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Name (optional)</Text>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    placeholder="Enter child's name"
+                    placeholderTextColor="#9CA3AF"
+                    value={child.name}
+                    onChangeText={(text) => updateChild(child.id, 'name', text)}
+                    style={styles.input}
+                  />
+                </View>
+              </View>
 
-                  {/* Calendar Grid */}
-                  <View style={styles.calendarGrid}>
-                    {(() => {
-                      const daysInMonth = getDaysInMonth(calendarState.month, calendarState.year);
-                      const firstDay = getFirstDayOfMonth(calendarState.month, calendarState.year);
-                      const days = [];
-                      
-                      // Empty cells for days before first day
-                      for (let i = 0; i < firstDay; i++) {
-                        days.push(<View key={`empty-${i}`} style={styles.emptyDay} />);
-                      }
-                      
-                      // Days of the month
-                      for (let day = 1; day <= daysInMonth; day++) {
-                        const date = new Date(calendarState.year, calendarState.month, day);
-                        const isToday = date.toDateString() === new Date().toDateString();
-                        const isSelected = child.birthDate === date.toLocaleDateString('en-US');
-                        const isFuture = date > new Date();
-                        
-                        days.push(
-                          <TouchableOpacity
-                            key={day}
-                            style={[
-                              styles.dayButton,
-                              isSelected && styles.dayButtonSelected,
-                              isToday && !isSelected && styles.dayButtonToday,
-                              isFuture && styles.dayButtonDisabled
-                            ]}
-                            onPress={() => !isFuture && handleDateSelect(child.id, day)}
-                            disabled={isFuture}
-                          >
-                            <Text style={[
-                              styles.dayText,
-                              isSelected && styles.dayTextSelected,
-                              isToday && !isSelected && styles.dayTextToday,
-                              isFuture && styles.dayTextDisabled
-                            ]}>
-                              {day}
-                            </Text>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Birthdate (or Due date)</Text>
+                <View style={styles.dateRow}>
+                  <View style={[styles.inputWrapper, { flex: 1 }]}>
+                    <TextInput
+                      placeholder="MM/DD/YYYY"
+                      placeholderTextColor="#9CA3AF"
+                      value={child.birthDate}
+                      onChangeText={(text) => updateChild(child.id, 'birthDate', text)}
+                      style={styles.input}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={styles.calendarButton}
+                    onPress={() => setShowDatePicker({ childId: child.id, show: !showDatePicker.show })}
+                  >
+                    <CalendarIcon size={20} color="#E07A5F" />
+                  </TouchableOpacity>
+                </View>
+
+                {showDatePicker.show && showDatePicker.childId === child.id && (
+                  <ModernCard style={styles.calendarCard}>
+                    {/* Calendar Header */}
+                    <View style={styles.calendarHeader}>
+                      <TouchableOpacity onPress={() => navigateMonth('prev')}>
+                        <ChevronLeft size={20} color="#3D405B" />
+                      </TouchableOpacity>
+                      <View style={styles.monthYearContainer}>
+                        <Text style={styles.monthText}>{months[calendarState.month]}</Text>
+                        <View style={styles.yearControls}>
+                          <TouchableOpacity onPress={() => navigateYear('prev')}>
+                            <ChevronLeft size={14} color="#6B7280" />
                           </TouchableOpacity>
-                        );
-                      }
-                      
-                      return days;
-                    })()}
-                  </View>
+                          <Text style={styles.yearText}>{calendarState.year}</Text>
+                          <TouchableOpacity onPress={() => navigateYear('next')}>
+                            <ChevronRight size={14} color="#6B7280" />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                      <TouchableOpacity onPress={() => navigateMonth('next')}>
+                        <ChevronRight size={20} color="#3D405B" />
+                      </TouchableOpacity>
+                    </View>
 
-                  {/* Footer */}
-                  <View style={styles.calendarFooter}>
-                    <Text style={styles.calendarHint}>💡 You can also type the date manually above</Text>
-                    <TouchableOpacity
-                      style={styles.calendarCloseButton}
-                      onPress={() => setShowDatePicker({childId: null, show: false})}
-                    >
-                      <Text style={styles.calendarCloseText}>Done</Text>
-                    </TouchableOpacity>
+                    {/* Days Grid */}
+                    <View style={styles.calendarGrid}>
+                      {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                        <Text key={day} style={styles.dayLabel}>{day}</Text>
+                      ))}
+                      {/* Calendar logic */}
+                      {(() => {
+                        const daysInMonth = getDaysInMonth(calendarState.month, calendarState.year);
+                        const firstDay = getFirstDayOfMonth(calendarState.month, calendarState.year);
+                        const days = [];
+                        for (let i = 0; i < firstDay; i++) days.push(<View key={`empty-${i}`} style={styles.dayCell} />);
+                        for (let day = 1; day <= daysInMonth; day++) {
+                          const date = new Date(calendarState.year, calendarState.month, day);
+                          const isSelected = child.birthDate === date.toLocaleDateString('en-US');
+                          days.push(
+                            <TouchableOpacity
+                              key={day}
+                              style={[styles.dayCell, isSelected && styles.daySelected]}
+                              onPress={() => handleDateSelect(child.id, day)}
+                            >
+                              <Text style={[styles.dayText, isSelected && styles.dayTextSelected]}>{day}</Text>
+                            </TouchableOpacity>
+                          );
+                        }
+                        return days;
+                      })()}
+                    </View>
+                  </ModernCard>
+                )}
+              </View>
+
+              {/* Age Insight */}
+              {child.birthDate && child.ageInMonths !== undefined && (
+                <View style={styles.insightContainer}>
+                  <View style={styles.insightHeader}>
+                    <Text style={styles.insightEmoji}>{getStageEmoji(child.ageInMonths)}</Text>
+                    <View>
+                      <Text style={styles.insightTitle}>{getStageTitle(child.ageInMonths)}</Text>
+                      <Text style={styles.insightSubtitle}>{getAgeDisplay(child.ageInMonths)}</Text>
+                    </View>
                   </View>
+                  <Text style={styles.insightMessage}>{getStageMessage(child.ageInMonths)}</Text>
                 </View>
               )}
-              
-              <Text style={styles.helperText}>We'll auto-calculate age in months/years</Text>
-            </View>
 
-            {/* Dynamic Age-Based Card */}
-            {child.birthDate && child.ageInMonths !== undefined && (
-              <View style={styles.ageInsightCard}>
-                <View style={styles.ageInsightHeader}>
-                  <Text style={styles.ageInsightEmoji}>{getStageEmoji(child.ageInMonths)}</Text>
-                  <View style={styles.ageInsightText}>
-                    <Text style={styles.ageInsightTitle}>{getStageTitle(child.ageInMonths)}</Text>
-                    <Text style={styles.ageInsightAge}>{getAgeDisplay(child.ageInMonths)}</Text>
-                  </View>
-                </View>
-                <Text style={styles.ageInsightMessage}>{getStageMessage(child.ageInMonths)}</Text>
+              {/* Feeding Preferences */}
+              <Text style={styles.sectionTitle}>Feeding & Nutrition</Text>
+              <View style={styles.chipsContainer}>
+                {[...baseFeedingOptions, ...getAgeSpecificOptions(child.ageInMonths || 0)].map(option => (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => toggleFeedingPreference(child.id, option)}
+                    style={[
+                      styles.chip,
+                      child.feedingPreferences?.includes(option) && styles.chipSelected
+                    ]}
+                  >
+                    <Text style={[
+                      styles.chipText,
+                      child.feedingPreferences?.includes(option) && styles.chipTextSelected
+                    ]}>{option}</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-            )}
+            </ModernCard>
+          ))}
 
-            {/* Feeding Preferences */}
-            <Text style={styles.sectionTitle}>Feeding & Nutrition Interests</Text>
-            
-            {/* Base options for all children */}
-            <Text style={styles.optionsSubtitle}>For all ages:</Text>
-            <View style={styles.optionsGrid}>
-              {baseFeedingOptions.map((option) => (
-                <TouchableOpacity
-                  key={option}
-                  style={[
-                    styles.optionChip,
-                    child.feedingPreferences?.includes(option) && styles.optionChipSelected,
-                  ]}
-                  onPress={() => toggleFeedingPreference(child.id, option)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[
-                    styles.optionChipText,
-                    child.feedingPreferences?.includes(option) && styles.optionChipTextSelected,
-                  ]}>
-                    {option}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+          {data.children.length < 3 && (
+            <ModernButton
+              title="Add Child"
+              onPress={addChild}
+              icon={<Plus size={20} color="#E07A5F" />}
+              variant="secondary"
+              style={styles.addChildButton}
+            />
+          )}
 
-            {/* Age-specific options */}
-            {child.ageInMonths !== undefined && child.ageInMonths > 0 && (
-              <>
-                <Text style={styles.optionsSubtitle}>
-                  Age-specific ({child.ageInMonths} months):
-                </Text>
-                <View style={styles.optionsGrid}>
-                  {getAgeSpecificOptions(child.ageInMonths).map((option) => (
-                    <TouchableOpacity
-                      key={option}
-                      style={[
-                        styles.optionChip,
-                        child.feedingPreferences?.includes(option) && styles.optionChipSelected,
-                      ]}
-                      onPress={() => toggleFeedingPreference(child.id, option)}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={[
-                        styles.optionChipText,
-                        child.feedingPreferences?.includes(option) && styles.optionChipTextSelected,
-                      ]}>
-                        {option}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </>
-            )}
+          <View style={{ height: 100 }} />
+        </ScrollView>
 
-            {/* Safety note for allergies */}
-            {child.feedingPreferences?.includes('Allergies / intolerances') && (
-              <View style={styles.safetyNote}>
-                <Text style={styles.safetyNoteText}>
-                  General guidance only. For known or suspected allergies, follow your clinician's plan.
-                </Text>
-              </View>
-            )}
-          </View>
-        ))}
-
-        {/* Add Child Button */}
-        {data.children.length < 3 && (
-          <TouchableOpacity
-            style={styles.addChildButton}
-            onPress={addChild}
-            activeOpacity={0.7}
-          >
-            <Plus size={20} color="#D4635A" strokeWidth={2} />
-            <Text style={styles.addChildText}>Add Child</Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Empty state */}
-        {data.children.length === 0 && (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>
-              Tap "Add Child" to get started with personalized guidance
-            </Text>
-          </View>
-        )}
-      </ScrollView>
-
-      {/* Actions */}
-      <View style={styles.actions}>
-        <Button
-          title="Skip for now"
-          onPress={handleSkip}
-          variant="ghost"
-        />
-
-        <Button
-          title="Save & Start Chat"
-          onPress={handleComplete}
-          variant="primary"
-          icon={<ChevronRight size={20} color="#FFFFFF" strokeWidth={2} />}
-          iconPosition="right"
-        />
-      </View>
-    </SafeAreaView>
+        <View style={styles.footer}>
+          <ModernButton
+            title="Skip"
+            onPress={handleSkip}
+            variant="secondary"
+            style={{ flex: 1 }}
+          />
+          <ModernButton
+            title="Start Chat"
+            onPress={handleComplete}
+            variant="primary"
+            style={{ flex: 2 }}
+          />
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF7F3',
+  },
+  safeArea: {
+    flex: 1,
   },
   header: {
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    padding: 24,
     alignItems: 'center',
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontFamily: THEME.fonts.header,
+    color: THEME.colors.text.primary,
     marginBottom: 8,
-    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-    lineHeight: 24,
+    color: '#3D405B',
+    opacity: 0.8,
   },
   content: {
     flex: 1,
     paddingHorizontal: 24,
   },
   childCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    marginBottom: 24,
   },
   childHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   childLabel: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
-    color: '#1F2937',
+    color: '#E07A5F',
   },
   removeButton: {
     padding: 4,
   },
+  inputContainer: {
+    marginBottom: 16,
+  },
   inputLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
+    color: '#3D405B',
     marginBottom: 8,
-    marginTop: 16,
+    marginLeft: 4,
   },
-  stageScroll: {
-    marginBottom: 16,
-  },
-  stageChip: {
-    backgroundColor: '#F3F4F6',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  stageChipSelected: {
-    backgroundColor: '#D4635A',
-    borderColor: '#D4635A',
-  },
-  stageChipText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
-  },
-  stageChipTextSelected: {
-    color: '#FFFFFF',
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginTop: 20,
-    marginBottom: 12,
-  },
-  optionsSubtitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
-    marginBottom: 8,
-  },
-  optionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 12,
-  },
-  optionChip: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  optionChipSelected: {
-    backgroundColor: '#D4635A',
-    borderColor: '#D4635A',
-  },
-  optionChipText: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#6B7280',
-  },
-  optionChipTextSelected: {
-    color: '#FFFFFF',
-  },
-  safetyNote: {
-    backgroundColor: '#FEF3E2',
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 8,
-    borderLeftWidth: 3,
-    borderLeftColor: '#F59E0B',
-  },
-  safetyNoteText: {
-    fontSize: 12,
-    color: '#92400E',
-    fontStyle: 'italic',
-    lineHeight: 16,
-  },
-  addChildButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-    borderColor: '#D4635A',
-    borderStyle: 'dashed',
+  inputWrapper: {
     borderRadius: 16,
-    paddingVertical: 20,
-    gap: 8,
-    marginBottom: 20,
-  },
-  addChildText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#D4635A',
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 20,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-  },
-  dateInput: {
+    backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  input: {
     paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: '#FFFFFF',
-    minHeight: 48,
-    justifyContent: 'center',
-  },
-  dateInputText: {
+    paddingVertical: 12,
     fontSize: 16,
-    color: '#9CA3AF',
+    color: '#3D405B',
   },
-  dateInputTextFilled: {
-    color: '#1F2937',
+  dateRow: {
+    flexDirection: 'row',
+    gap: 12,
   },
-  helperText: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
-    fontStyle: 'italic',
-  },
-  modernDateInputWrapper: {
-    position: 'relative',
-  },
-  modernDateInput: {
-    paddingRight: 48, // Space for embedded icon
-  },
-  embeddedCalendarIcon: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    marginTop: -12, // Half of icon height for perfect centering
-    width: 24,
-    height: 24,
+  calendarButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  embeddedCalendarText: {
-    fontSize: 18,
-    opacity: 0.6,
-  },
-  modernCalendarCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    marginTop: 8,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-    elevation: 8,
+  calendarCard: {
+    marginTop: 12,
+    padding: 16,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+    shadowOpacity: 0.1,
   },
   calendarHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  navButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#F9FAFB',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   monthYearContainer: {
     alignItems: 'center',
   },
   monthText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
+    color: '#3D405B',
   },
   yearControls: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  yearButton: {
-    padding: 2,
-  },
   yearText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
-    minWidth: 40,
-    textAlign: 'center',
-  },
-  daysOfWeekContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 12,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  dayOfWeekText: {
     fontSize: 12,
-    fontWeight: '500',
-    color: '#9CA3AF',
-    width: 32,
-    textAlign: 'center',
+    color: '#6B7280',
   },
   calendarGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginBottom: 20,
   },
-  emptyDay: {
-    width: 32,
-    height: 32,
-    margin: 2,
+  dayLabel: {
+    width: '14.28%',
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginBottom: 8,
   },
-  dayButton: {
-    width: 32,
-    height: 32,
-    margin: 2,
-    borderRadius: 8,
+  dayCell: {
+    width: '14.28%',
+    aspectRatio: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    borderRadius: 20,
   },
-  dayButtonSelected: {
-    backgroundColor: '#D4635A',
-  },
-  dayButtonToday: {
-    backgroundColor: '#F3F4F6',
-    borderWidth: 1,
-    borderColor: '#D4635A',
-  },
-  dayButtonDisabled: {
-    opacity: 0.3,
+  daySelected: {
+    backgroundColor: '#E07A5F',
   },
   dayText: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
+    color: '#3D405B',
   },
   dayTextSelected: {
     color: '#FFFFFF',
     fontWeight: '600',
   },
-  dayTextToday: {
-    color: '#D4635A',
-    fontWeight: '600',
-  },
-  dayTextDisabled: {
-    color: '#9CA3AF',
-  },
-  calendarFooter: {
-    alignItems: 'center',
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    gap: 12,
-  },
-  calendarHint: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    fontStyle: 'italic',
-  },
-  calendarCloseButton: {
-    backgroundColor: '#D4635A',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-  },
-  calendarCloseText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  ageInsightCard: {
-    backgroundColor: '#FDF7F3',
-    borderRadius: 12,
+  insightContainer: {
+    backgroundColor: '#F0FDF4', // Light green background for insight
+    borderRadius: 16,
     padding: 16,
-    marginTop: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: '#D4635A',
+    marginTop: 8,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#DCFCE7',
   },
-  ageInsightHeader: {
+  insightHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+    gap: 12,
   },
-  ageInsightEmoji: {
+  insightEmoji: {
     fontSize: 24,
-    marginRight: 12,
   },
-  ageInsightText: {
-    flex: 1,
-  },
-  ageInsightTitle: {
+  insightTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 2,
+    color: '#3D405B',
   },
-  ageInsightAge: {
-    fontSize: 14,
-    color: '#D4635A',
-    fontWeight: '500',
-  },
-  ageInsightMessage: {
+  insightSubtitle: {
     fontSize: 14,
     color: '#6B7280',
+  },
+  insightMessage: {
+    fontSize: 14,
+    color: '#3D405B',
     lineHeight: 20,
-    fontStyle: 'italic',
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#3D405B',
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  chipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  chip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  chipSelected: {
+    backgroundColor: '#FFF1F2', // Light red/pink
+    borderColor: '#E07A5F',
+  },
+  chipText: {
+    fontSize: 14,
+    color: '#3D405B',
+  },
+  chipTextSelected: {
+    color: '#E07A5F',
+    fontWeight: '600',
+  },
+  addChildButton: {
+    marginBottom: 20,
+  },
+  footer: {
+    flexDirection: 'row',
+    padding: 24,
+    gap: 16,
   },
 });
