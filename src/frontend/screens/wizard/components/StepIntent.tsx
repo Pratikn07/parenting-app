@@ -1,7 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
-import { Moon, Baby, Brain, HeartPulse, Activity, MoreHorizontal } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import Animated, { FadeInRight, FadeOutLeft, FadeIn } from 'react-native-reanimated';
+import { Moon, Baby, Brain, HeartPulse, Activity, MoreHorizontal, ArrowRight, X } from 'lucide-react-native';
 import { THEME } from '@/src/lib/constants';
 import { useWizardStore, WizardData } from '../wizardStore';
 
@@ -16,11 +25,76 @@ const intents: { id: WizardData['intent'], label: string, icon: React.ReactNode 
 
 export const StepIntent = () => {
   const { updateData, setStep, data } = useWizardStore();
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [otherText, setOtherText] = useState('');
 
   const handleSelect = (intent: WizardData['intent']) => {
-    updateData({ intent });
+    if (intent === 'other') {
+      setShowOtherInput(true);
+      return;
+    }
+    updateData({ intent, customIntent: undefined });
     setStep('childProfile', 'forward');
   };
+
+  const handleOtherSubmit = () => {
+    if (otherText.trim()) {
+      updateData({ intent: 'other', customIntent: otherText.trim() });
+      setStep('childProfile', 'forward');
+    }
+  };
+
+  const handleCancelOther = () => {
+    setShowOtherInput(false);
+    setOtherText('');
+  };
+
+  // Show the "other" input view
+  if (showOtherInput) {
+    return (
+      <Animated.View 
+        entering={FadeIn} 
+        style={styles.container}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.otherContainer}
+        >
+          <TouchableOpacity style={styles.cancelButton} onPress={handleCancelOther}>
+            <X size={24} color={THEME.colors.text.secondary} />
+          </TouchableOpacity>
+
+          <View style={styles.otherHeader}>
+            <Text style={styles.title}>Tell us more</Text>
+            <Text style={styles.subtitle}>What's on your mind, {data.parentName}?</Text>
+          </View>
+
+          <TextInput
+            style={styles.otherInput}
+            placeholder="e.g., Potty training, sibling rivalry, screen time..."
+            placeholderTextColor={THEME.colors.text.muted}
+            value={otherText}
+            onChangeText={setOtherText}
+            multiline
+            autoFocus
+            textAlignVertical="top"
+          />
+
+          <TouchableOpacity 
+            style={[
+              styles.submitButton, 
+              !otherText.trim() && styles.submitButtonDisabled
+            ]}
+            onPress={handleOtherSubmit}
+            disabled={!otherText.trim()}
+          >
+            <Text style={styles.submitButtonText}>Continue</Text>
+            <ArrowRight size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </Animated.View>
+    );
+  }
 
   return (
     <Animated.View 
@@ -109,6 +183,51 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: THEME.fonts.bodySemiBold,
     color: THEME.colors.text.primary,
+  },
+  // "Something else" input styles
+  otherContainer: {
+    flex: 1,
+    paddingTop: 16,
+  },
+  cancelButton: {
+    alignSelf: 'flex-start',
+    padding: 8,
+    marginLeft: -8,
+    marginBottom: 16,
+  },
+  otherHeader: {
+    marginBottom: 24,
+  },
+  otherInput: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    fontSize: 18,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.text.primary,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    minHeight: 120,
+    textAlignVertical: 'top',
+  },
+  submitButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: THEME.colors.primary,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    marginTop: 24,
+    gap: 8,
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#D1D5DB',
+  },
+  submitButtonText: {
+    fontSize: 18,
+    fontFamily: THEME.fonts.bodySemiBold,
+    color: '#FFFFFF',
   },
 });
 

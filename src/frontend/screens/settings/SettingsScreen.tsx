@@ -84,7 +84,7 @@ export default function SettingsScreen() {
           onPress: async () => {
             try {
               await logout();
-              router.replace('/auth');
+              router.replace('/launch');
             } catch (error) {
               console.error('Logout error:', error);
             }

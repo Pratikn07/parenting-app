@@ -1,44 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ModernButton } from '@/src/frontend/components/common/ModernButton';
 import { THEME } from '@/src/lib/constants';
 import { Video, ResizeMode } from 'expo-av';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useAuthStore } from '@/src/shared/stores/authStore';
+import { AntDesign } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
 export default function LaunchScreen() {
-  // Placeholder gradient background if video is not available
-  const VideoPlaceholder = () => (
-    <LinearGradient
-      colors={['#E07A5F', '#3D405B']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={StyleSheet.absoluteFill}
-    />
-  );
+  const { continueWithGoogle, isLoading } = useAuthStore();
 
   return (
     <View style={styles.container}>
       {/* Background Layer */}
       <View style={styles.backgroundContainer}>
-        {/* Using placeholder gradient for now until video asset is added */}
-        <VideoPlaceholder />
-        
-        {/* 
-          Uncomment below when video asset is available
-          <Video
-            source={require('@/assets/videos/welcome.mp4')}
-            style={StyleSheet.absoluteFill}
-            resizeMode={ResizeMode.COVER}
-            isLooping
-            shouldPlay
-            isMuted={true}
-          />
-        */}
-        
+        <Video
+          source={require('../../../../images-videos/nf0Ia3IB59lcuD07BWNYI_output.mp4')}
+          style={StyleSheet.absoluteFill}
+          resizeMode={ResizeMode.COVER}
+          isLooping
+          shouldPlay
+          isMuted={true}
+        />
         {/* Dark Overlay for text readability */}
         <View style={styles.overlay} />
       </View>
@@ -53,20 +38,30 @@ export default function LaunchScreen() {
         </View>
 
         <View style={styles.footer}>
-          <ModernButton
-            title="Start My Journey"
-            onPress={() => router.push('/onboarding')}
-            style={styles.button}
-            variant="primary"
-            textStyle={styles.buttonText}
-          />
+          {/* Google Sign In Button - Polished */}
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={continueWithGoogle}
+            disabled={isLoading}
+            activeOpacity={0.9}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#1F2937" />
+            ) : (
+              <>
+                <AntDesign name="google" size={24} color="#DB4437" style={styles.googleIcon} />
+                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              </>
+            )}
+          </TouchableOpacity>
           
+          {/* Email Login Link */}
           <TouchableOpacity 
             onPress={() => router.push('/auth')}
             style={styles.loginLink}
           >
             <Text style={styles.loginText}>
-              Already have an account? <Text style={styles.loginTextBold}>Log In</Text>
+              Or log in with Email
             </Text>
           </TouchableOpacity>
         </View>
@@ -130,32 +125,47 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   footer: {
-    gap: 24,
-    marginBottom: 20,
+    gap: 16,
+    marginBottom: 40, // Increased bottom margin for balance
     width: '100%',
     alignItems: 'center',
   },
-  button: {
+  googleButton: {
     width: '100%',
     backgroundColor: '#FFFFFF',
     height: 56,
+    borderRadius: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    // Added shadow for "pretty" pop
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
-  buttonText: {
-    color: '#3D405B',
+  googleIcon: {
+    marginRight: 12,
+  },
+  googleButtonText: {
+    color: '#1F2937',
     fontSize: 18,
+    fontFamily: THEME.fonts.bodySemiBold,
     fontWeight: '600',
   },
   loginLink: {
-    padding: 8,
+    padding: 12,
   },
   loginText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontFamily: THEME.fonts.body,
     opacity: 0.9,
-  },
-  loginTextBold: {
-    fontWeight: '700',
-    textDecorationLine: 'underline',
+    textDecorationLine: 'underline', // Added underline for clarity
   },
 });

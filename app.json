@@ -18,7 +18,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pratikn07.mycuratedhaven",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to upload images for AI-powered parenting advice.",
+        "NSCameraUsageDescription": "This app needs access to your camera to take photos for AI-powered parenting advice."
+      }
     },
     "android": {
       "package": "com.pratikn07.mycuratedhaven",
@@ -35,7 +39,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This app needs access to your photo library to upload images for AI-powered parenting advice.",
+          "cameraPermission": "This app needs access to your camera to take photos for AI-powered parenting advice."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

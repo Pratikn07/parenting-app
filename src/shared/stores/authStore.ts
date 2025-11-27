@@ -34,6 +34,7 @@ interface AuthState {
   checkAuthState: (url?: string) => Promise<void>;
   // Guest Actions
   setGuestData: (data: any) => void;
+  continueWithGoogle: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -49,6 +50,23 @@ export const useAuthStore = create<AuthState>()(
 
       setGuestData: (data: any) => {
         set({ guestData: data, hasCompletedOnboarding: true });
+      },
+
+      continueWithGoogle: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const { AuthService } = await import('../../services/auth/AuthService');
+          await AuthService.signInWithGoogle();
+          // Note: OAuth redirects away, so loading state is handled by checkAuthState
+          // But we reset it here in case the browser is dismissed without completing
+          set({ isLoading: false });
+        } catch (error) {
+          console.error('Google auth error:', error);
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Google Sign In failed',
+          });
+        }
       },
 
       // Actions
@@ -133,12 +151,14 @@ export const useAuthStore = create<AuthState>()(
           const { AuthService } = await import('../../services/auth/AuthService');
           await AuthService.signOut();
           
-          // Clear local state
+          // Clear local state completely
           set({
             user: null,
             isAuthenticated: false,
             hasCompletedOnboarding: false,
+            isLoading: false,
             error: null,
+            guestData: null,
           });
         } catch (error) {
           console.error('Logout error:', error);
@@ -147,7 +167,9 @@ export const useAuthStore = create<AuthState>()(
             user: null,
             isAuthenticated: false,
             hasCompletedOnboarding: false,
+            isLoading: false,
             error: null,
+            guestData: null,
           });
         }
       },
@@ -222,6 +244,9 @@ export const useAuthStore = create<AuthState>()(
               error: null,
             });
           } else {
+            // User has a session but no profile - sign them out to clear stale session
+            console.log('⚠️ Session exists but no user profile found, signing out...');
+            await AuthService.signOut();
             set({
               user: null,
               isAuthenticated: false,
@@ -230,11 +255,18 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error) {
           console.error('Check auth state error:', error);
+          // If there's an error (like user deleted), clear the session
+          try {
+            const { AuthService } = await import('../../services/auth/AuthService');
+            await AuthService.signOut();
+          } catch (signOutError) {
+            console.error('Failed to sign out after error:', signOutError);
+          }
           set({
             user: null,
             isAuthenticated: false,
             hasCompletedOnboarding: false,
-            error: error instanceof Error ? error.message : 'Authentication check failed',
+            error: null, // Don't show error for deleted user scenario
           });
         }
       },

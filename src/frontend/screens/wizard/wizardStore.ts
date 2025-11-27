@@ -5,15 +5,18 @@ import { create } from 'zustand';
 export const wizardSchema = z.object({
   parentName: z.string().min(1, "Name is required"),
   intent: z.enum(['sleep', 'feeding', 'behavior', 'development', 'health', 'other']),
-  childName: z.string().optional(),
+  customIntent: z.string().optional(), // When intent is 'other', this holds the custom text
+  childName: z.string().optional(), // Optional for expecting parents
   childAge: z.string(), // Can be "0-3m", "toddler", etc. or specific date
   childAgeInMonths: z.number().optional(),
+  childStage: z.enum(['expecting', 'newborn', 'infant', 'toddler', 'preschool', 'school']).optional(),
+  childDateOfBirth: z.string().optional(), // Actual DOB in YYYY-MM-DD format
   mainChallenge: z.string(),
 });
 
 export type WizardData = z.infer<typeof wizardSchema>;
 
-export type WizardStep = 'parentName' | 'intent' | 'childProfile' | 'challenge' | 'reveal';
+export type WizardStep = 'parentName' | 'intent' | 'childProfile' | 'challenge';
 
 interface WizardStore {
   // State

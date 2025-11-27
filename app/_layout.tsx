@@ -73,11 +73,23 @@ export default function RootLayout() {
           // Ignore errors if no browser is open
         }
         
+        // Wait for auth state to be fully processed before navigating
         setTimeout(async () => {
           await checkAuthState(url);
-          const { isAuthenticated: authed } = useAuthStore.getState();
-          if (authed) router.replace('/chat');
-        }, 800);
+          // Small delay to ensure state is propagated
+          await new Promise(resolve => setTimeout(resolve, 100));
+          const { isAuthenticated: authed, hasCompletedOnboarding } = useAuthStore.getState();
+          console.log('🔐 OAuth callback auth state:', { authed, hasCompletedOnboarding });
+          if (authed) {
+            if (hasCompletedOnboarding) {
+              console.log('📱 OAuth: Navigating to chat');
+              router.replace('/chat');
+            } else {
+              console.log('📝 OAuth: Navigating to onboarding');
+              router.replace('/onboarding');
+            }
+          }
+        }, 500);
       }
     };
 

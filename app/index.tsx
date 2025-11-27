@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { router } from 'expo-router';
 import { useAuthStore } from '../src/shared/stores/authStore';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
@@ -6,6 +6,7 @@ import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 export default function AppEntry() {
   const { isAuthenticated, hasCompletedOnboarding, isLoading, checkAuthState } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
+  const hasNavigated = useRef(false);
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -24,32 +25,31 @@ export default function AppEntry() {
   }, [checkAuthState]);
 
   useEffect(() => {
-    // Only navigate after initialization is complete
-    if (!isInitializing && !isLoading) {
-      const timer = setTimeout(() => {
-        console.log('🚀 Navigation decision:', { 
-          isAuthenticated, 
-          hasCompletedOnboarding, 
-          isInitializing, 
-          isLoading 
-        });
-        
-        if (isAuthenticated && hasCompletedOnboarding) {
-          // User is authenticated and has completed onboarding - go to chat
-          console.log('📱 Navigating to chat (authenticated + onboarded)');
-          router.replace('/chat');
-        } else if (isAuthenticated && !hasCompletedOnboarding) {
-          // User is authenticated but hasn't completed onboarding
-          console.log('📝 Navigating to onboarding (authenticated but not onboarded)');
-          router.replace('/onboarding');
-        } else {
-          // User is not authenticated - show launch screen first
-          console.log('🚪 Navigating to launch (not authenticated)');
-          router.replace('/launch');
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
+    // Only navigate after initialization is complete and only once
+    if (!isInitializing && !isLoading && !hasNavigated.current) {
+      // Mark as navigated immediately to prevent double navigation
+      hasNavigated.current = true;
+      
+      console.log('🚀 Navigation decision:', { 
+        isAuthenticated, 
+        hasCompletedOnboarding, 
+        isInitializing, 
+        isLoading 
+      });
+      
+      if (isAuthenticated && hasCompletedOnboarding) {
+        // User is authenticated and has completed onboarding - go to chat
+        console.log('📱 Navigating to chat (authenticated + onboarded)');
+        router.replace('/chat');
+      } else if (isAuthenticated && !hasCompletedOnboarding) {
+        // User is authenticated but hasn't completed onboarding
+        console.log('📝 Navigating to onboarding (authenticated but not onboarded)');
+        router.replace('/onboarding');
+      } else {
+        // User is not authenticated - show launch screen first
+        console.log('🚪 Navigating to launch (not authenticated)');
+        router.replace('/launch');
+      }
     }
   }, [isAuthenticated, hasCompletedOnboarding, isInitializing, isLoading]);
 

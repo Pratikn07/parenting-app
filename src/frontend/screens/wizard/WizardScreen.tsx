@@ -6,13 +6,12 @@ import { StepParentName } from './components/StepParentName';
 import { StepIntent } from './components/StepIntent';
 import { StepChildProfile } from './components/StepChildProfile';
 import { StepChallenge } from './components/StepChallenge';
-import { StepReveal } from './components/StepReveal';
 import { useWizardStore, WizardStep } from './wizardStore';
 
 export default function WizardScreen() {
   const { currentStep, setStep } = useWizardStore();
 
-  const steps: WizardStep[] = ['parentName', 'intent', 'childProfile', 'challenge', 'reveal'];
+  const steps: WizardStep[] = ['parentName', 'intent', 'childProfile', 'challenge'];
   const progress = ((steps.indexOf(currentStep) + 1) / steps.length) * 100;
 
   const handleBack = () => {
@@ -30,7 +29,6 @@ export default function WizardScreen() {
       case 'intent': return <StepIntent />;
       case 'childProfile': return <StepChildProfile />;
       case 'challenge': return <StepChallenge />;
-      case 'reveal': return <StepReveal />;
       default: return <StepParentName />;
     }
   };
@@ -39,7 +37,7 @@ export default function WizardScreen() {
     <WizardLayout 
       progress={progress} 
       onBack={handleBack}
-      showBack={currentStep !== 'reveal'}
+      showBack={true}
     >
       {renderStep()}
     </WizardLayout>

@@ -6,3 +6,4 @@ ADD COLUMN IF NOT EXISTS image_url TEXT;
 
 COMMENT ON COLUMN public.chat_messages.image_url IS 'URL to uploaded image for vision analysis (stored in chat-images bucket)';
 
+
