@@ -8,13 +8,27 @@ A comprehensive AI-powered parenting app that provides personalized guidance, mi
 
 **Parenting App** is designed to make parenting less overwhelming and more informed. It combines personalized AI guidance with practical tools to help parents:
 
-### 🤖 **AI-Powered Chat Support**
-Get instant, personalized answers to your parenting questions. Our AI assistant understands your specific situation (baby's age, parenting stage, concerns) and provides tailored advice on:
-- Sleep routines and sleep training
-- Feeding schedules and nutrition
-- Developmental milestones
-- Behavioral guidance
-- Health and safety concerns
+### 🎬 **Premium Launch Experience**
+Welcome to a beautifully crafted launch screen featuring:
+- Immersive video background showcasing family moments
+- One-tap Google OAuth authentication
+- Smooth animations and premium design
+- Quick access to email login
+
+### 🧙 **Wizard Onboarding Flow**
+Personalized setup experience that guides you through:
+- Parent profile creation
+- Child profile setup with ages and milestones
+- Parenting stage selection (Expecting, Newborn, Infant, Toddler)
+- Custom parenting challenges and goals
+- Intent-based personalization
+
+### 🤖 **AI-Powered Chat Support with Vision**
+Get instant, personalized answers to your parenting questions. Our AI assistant understands your specific situation and provides tailored advice:
+- **Text Chat**: Ask questions about sleep, feeding, development, behavior, and health
+- **Vision Support**: Upload photos for contextual advice (rashes, baby-proofing, meal ideas)
+- **Child-Specific**: Select which child you're asking about for personalized responses
+- **Conversation History**: Review past chats and advice
 
 ### 📈 **Milestone Tracking & Progress**
 Track your child's developmental journey with our comprehensive milestone system:
@@ -38,22 +52,25 @@ The app learns from your profile to deliver relevant content:
 - **Parenting Stage Selection**: Expecting, Newborn (0-3 months), Infant (3-12 months), Toddler (1-3 years)
 - **Automatic Recommendations**: Content adapts as your child grows
 
-### 🎯 **Key Features Shown in Screenshots**
-1. **Welcome & Onboarding**: Clean account creation with Google OAuth integration
-2. **AI Chat Interface**: Natural conversation with "Good evening, Pratik" personalized greetings
-3. **Resources Hub**: Three-tab system (Next Steps, Progress, Milestones) for organized content discovery
-4. **Milestone Tracker**: Visual progress with category breakdowns and completion tracking
-5. **Weekly Progress**: Engagement metrics and activity highlights
-6. **Personalized Tips**: Age-appropriate content with quick tips and completion tracking
-7. **Settings Profile**: Easy profile management for both parent and child information
+### 🎯 **Key Features**
+1. **Launch Screen**: Premium video background with one-tap Google authentication
+2. **Wizard Onboarding**: Step-by-step personalized setup flow
+3. **AI Chat with Vision**: Text and image-based parenting advice
+4. **Child Selector**: Switch between children for personalized guidance
+5. **Resources Hub**: Three-tab system (Next Steps, Progress, Milestones)
+6. **Milestone Tracker**: Visual progress with category breakdowns
+7. **Weekly Progress**: Engagement metrics and activity highlights
+8. **Settings Profile**: Easy profile management for family
 
 ## 🚀 Tech Stack
 
-- **Frontend**: React Native 0.79, React 19, Expo 53 (Expo Router)
-- **Language**: TypeScript
-- **State Management**: Zustand
+- **Frontend**: React Native 0.79.5, React 19.0.0, Expo 53.0.20 (Expo Router)
+- **Language**: TypeScript 5.8.3
+- **State Management**: Zustand 5.0.7
 - **Backend**: Supabase (Database, Auth, Real-time)
-- **Testing**: Jest + React Native Testing Library, Vitest
+- **Media**: Expo AV (video playback), Expo Image Picker, Expo Camera
+- **Validation**: Zod 4.1.13
+- **Testing**: Jest 29.7.0 + React Native Testing Library, Vitest 3.2.4
 - **UI/UX**: Custom components with modern, accessible design
 
 ## 📱 Platform Support
@@ -107,22 +124,35 @@ See `src/lib/supabase.ts` and `src/lib/constants.ts` for configuration details.
 
 ```
 app/                      # Expo Router screens and navigation
-├── auth.tsx             # Authentication screen
-├── chat.tsx             # AI chat interface
-├── onboarding.tsx       # User onboarding flow
+├── index.tsx            # Root entry point
+├── launch.tsx           # Launch screen with video background
+├── auth/                # Authentication screens
+├── onboarding.tsx       # Wizard onboarding flow
+├── chat.tsx             # AI chat interface with vision support
 ├── resources.tsx        # Resources & tips hub
 ├── settings.tsx         # User profile and settings
 └── (tabs)/              # Tab navigation layout
 
 src/
-├── frontend/            # Reusable UI components and screens
+├── frontend/
+│   ├── components/      # Reusable UI components
+│   │   └── chat/        # Child selector, message components
+│   └── screens/         # Screen implementations
+│       ├── auth/        # Authentication screen
+│       ├── launch/      # Launch screen with video
+│       ├── wizard/      # Onboarding wizard steps
+│       ├── settings/    # Settings screen
+│       └── resources/   # Resources screen
 ├── lib/                 # Supabase client, database types, constants
 ├── services/            # Business logic (auth, recommendations)
-├── shared/              # Stores, types, utilities
+├── shared/
+│   └── stores/          # Zustand stores (auth, wizard)
 └── __tests__/           # Test files and setup
 
 ios/                     # Native iOS project
+images-videos/           # Video assets for launch screen
 assets/                  # Images, icons, screenshots
+migrations/              # Database migrations
 ```
 
 ## 🧪 Available Scripts
@@ -197,12 +227,14 @@ Build profiles are configured in `eas.json`.
 
 - **Database**: Supabase PostgreSQL with real-time subscriptions
 - **Authentication**: Supabase Auth with Google OAuth integration
-- **File Storage**: Supabase Storage for user uploads
+- **File Storage**: Supabase Storage for user uploads and chat images
 - **Schema**: See `supabase-schema.sql` for complete database structure
+- **Migrations**: Database migrations in `migrations/` directory
 
 Key tables:
 - `users`: Parent profiles and preferences
 - `children`: Child profiles and birth information  
+- `chat_messages`: AI chat history with image URLs
 - `daily_tips`: Personalized daily guidance
 - `articles`: Curated parenting resources
 - `user_activity_log`: Engagement tracking
