@@ -22,7 +22,7 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   guestData?: any;
-  
+
   // Actions
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
@@ -72,29 +72,33 @@ export const useAuthStore = create<AuthState>()(
       // Actions
       login: async (email: string, password: string) => {
         set({ isLoading: true, error: null });
-        
+
         try {
-          // TODO: Implement actual authentication
           console.log('Login attempt:', { email });
-          
-          // Mock successful login for demo
-          const mockUser: User = {
-            id: 'demo-user-' + Date.now(),
-            name: email.split('@')[0],
-            email,
-            parentingStage: 'newborn',
-            feedingPreference: 'breastfeeding',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+
+          // Call actual Supabase authentication
+          const { AuthService } = await import('../../services/auth/AuthService');
+          const response = await AuthService.signInWithEmail({ email, password });
+
+          if (!response.user) {
+            throw new Error('Authentication failed - no user data returned');
+          }
+
+          // Map the response to our User type
+          const user: User = {
+            id: response.user.id,
+            name: response.user.name || 'User',
+            email: response.user.email,
+            parentingStage: response.user.parenting_stage || 'expecting',
+            feedingPreference: response.user.feeding_preference || 'breastfeeding',
+            createdAt: response.user.created_at,
+            updatedAt: response.user.updated_at,
           };
 
-          // Simulate API delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
-
           set({
-            user: mockUser,
+            user,
             isAuthenticated: true,
-            hasCompletedOnboarding: true, // Auto-complete onboarding for demo login
+            hasCompletedOnboarding: response.user.has_completed_onboarding || false,
             isLoading: false,
             error: null,
           });
@@ -102,35 +106,40 @@ export const useAuthStore = create<AuthState>()(
           console.error('Login error:', error);
           set({
             isLoading: false,
-            error: error instanceof Error ? error.message : 'Login failed',
+            error: error instanceof Error ? error.message : 'Login failed. Please check your email and password.',
           });
         }
       },
 
       signup: async (name: string, email: string, password: string) => {
         set({ isLoading: true, error: null });
-        
+
         try {
-          // TODO: Implement actual registration
           console.log('Signup attempt:', { name, email });
-          
-          // Mock successful signup for demo
-          const mockUser: User = {
-            id: 'demo-user-' + Date.now(),
-            name,
-            email,
-            parentingStage: 'expecting',
-            feedingPreference: 'breastfeeding',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+
+          // Call actual Supabase authentication
+          const { AuthService } = await import('../../services/auth/AuthService');
+          const response = await AuthService.signUpWithEmail({ name, email, password });
+
+          if (!response.user) {
+            throw new Error('Registration failed - no user data returned');
+          }
+
+          // Map the response to our User type
+          const user: User = {
+            id: response.user.id,
+            name: response.user.name || name,
+            email: response.user.email,
+            parentingStage: response.user.parenting_stage || 'expecting',
+            feedingPreference: response.user.feeding_preference || 'breastfeeding',
+            createdAt: response.user.created_at,
+            updatedAt: response.user.updated_at,
           };
 
-          // Simulate API delay
-          await new Promise(resolve => setTimeout(resolve, 1500));
-
           set({
-            user: mockUser,
+            user,
             isAuthenticated: true,
+            hasCompletedOnboarding: response.user.has_completed_onboarding || false,
             isLoading: false,
             error: null,
           });
@@ -138,7 +147,7 @@ export const useAuthStore = create<AuthState>()(
           console.error('Signup error:', error);
           set({
             isLoading: false,
-            error: error instanceof Error ? error.message : 'Signup failed',
+            error: error instanceof Error ? error.message : 'Signup failed. Please try again.',
           });
         }
       },
@@ -146,11 +155,11 @@ export const useAuthStore = create<AuthState>()(
       logout: async () => {
         try {
           console.log('Logout');
-          
+
           // Actually sign out from Supabase to clear session
           const { AuthService } = await import('../../services/auth/AuthService');
           await AuthService.signOut();
-          
+
           // Clear local state completely
           set({
             user: null,
@@ -201,20 +210,20 @@ export const useAuthStore = create<AuthState>()(
       checkAuthState: async (url?: string) => {
         try {
           const { AuthService } = await import('../../services/auth/AuthService');
-          
+
           console.log('🔍 Auth state check started...');
-          
+
           // Handle OAuth callback if URL is provided
           if (url) {
             console.log('🔗 Processing OAuth callback URL:', url);
             await AuthService.handleOAuthCallback(url);
           }
-          
+
           // Check current session
           console.log('🔑 Getting current session...');
           const session = await AuthService.getSession();
           console.log('📋 Session result:', session ? 'Found session' : 'No session');
-          
+
           if (!session) {
             set({
               user: null,
