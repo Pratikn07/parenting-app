@@ -20,7 +20,7 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
   });
-  
+
   useFrameworkReady();
 
   useEffect(() => {
@@ -33,14 +33,14 @@ export default function RootLayout() {
     // Handle OAuth URL callbacks - simplified since session polling is used
     const handleURL = async (url: string) => {
       console.log('Received deep link URL:', url);
-      
+
       // Get the correct bundle ID based on platform
       const bundleId = Platform.select({
         ios: 'com.pratikn07.mycuratedhaven',
         android: 'com.pratikn07.mycuratedhaven',
         default: 'com.pratikn07.mycuratedhaven'
       });
-      
+
       if (
         url.includes('auth/callback') ||
         url.includes('oauth') ||
@@ -50,8 +50,15 @@ export default function RootLayout() {
         url.includes('code=') ||
         url.includes('error=')
       ) {
+        // Check if this is a password reset link
+        if (url.includes('auth/reset-password') || url.includes('type=recovery')) {
+          console.log('Password reset link detected, navigating to reset screen...');
+          router.replace('/auth/reset-password');
+          return;
+        }
+
         console.log('OAuth callback detected (Apple/Google), checking auth state...');
-        
+
         // Check for OAuth errors
         if (url.includes('error=')) {
           const errorMatch = url.match(/error=([^&]+)/);
@@ -64,7 +71,7 @@ export default function RootLayout() {
             return;
           }
         }
-        
+
         // Dismiss any open browser windows when OAuth callback is received
         try {
           const WebBrowser = await import('expo-web-browser');
@@ -72,32 +79,32 @@ export default function RootLayout() {
         } catch (error) {
           // Ignore errors if no browser is open
         }
-        
-        // Wait for auth state to be fully processed before navigating
-        setTimeout(async () => {
-          await checkAuthState(url);
-          // Small delay to ensure state is propagated
-          await new Promise(resolve => setTimeout(resolve, 100));
-          const { isAuthenticated: authed, hasCompletedOnboarding } = useAuthStore.getState();
-          console.log('🔐 OAuth callback auth state:', { authed, hasCompletedOnboarding });
-          if (authed) {
-            if (hasCompletedOnboarding) {
-              console.log('📱 OAuth: Navigating to chat');
-              router.replace('/chat');
-            } else {
-              console.log('📝 OAuth: Navigating to onboarding');
-              router.replace('/onboarding');
-            }
+
+        // Process auth state update
+        await checkAuthState(url);
+
+        // Check current state after update
+        const { isAuthenticated: authed, hasCompletedOnboarding } = useAuthStore.getState();
+        console.log('🔐 OAuth callback auth state:', { authed, hasCompletedOnboarding });
+
+        // Only navigate if we are not already on the correct screen
+        // This prevents fighting with index.tsx's initial navigation
+        if (authed) {
+          if (hasCompletedOnboarding) {
+            console.log('📱 OAuth: Navigating to chat');
+            router.replace('/chat');
+          } else {
+            console.log('📝 OAuth: Navigating to onboarding');
+            router.replace('/onboarding');
           }
-        }, 500);
+        }
       }
     };
 
     const subscription = Linking.addEventListener('url', ({ url }) => handleURL(url));
 
-    Linking.getInitialURL().then((url) => {
-      if (url) handleURL(url);
-    });
+    // Note: We don't check getInitialURL here anymore because app/index.tsx handles it
+    // This prevents a race condition where both components try to handle the initial URL
 
     return () => subscription?.remove();
   }, [checkAuthState]);
@@ -108,27 +115,27 @@ export default function RootLayout() {
 
   return (
     <>
-      <Stack 
-        screenOptions={{ 
+      <Stack
+        screenOptions={{
           headerShown: false,
           presentation: 'card',
           animation: 'default'
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen 
-          name="resources" 
-          options={{ 
+        <Stack.Screen
+          name="resources"
+          options={{
             presentation: 'modal',
             animation: 'slide_from_bottom'
-          }} 
+          }}
         />
-        <Stack.Screen 
-          name="settings" 
-          options={{ 
+        <Stack.Screen
+          name="settings"
+          options={{
             presentation: 'modal',
             animation: 'slide_from_bottom'
-          }} 
+          }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>

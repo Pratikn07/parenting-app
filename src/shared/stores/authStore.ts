@@ -61,7 +61,7 @@ export const useAuthStore = create<AuthState>()(
           // But we reset it here in case the browser is dismissed without completing
           set({ isLoading: false });
         } catch (error) {
-          console.error('Google auth error:', error);
+          console.log('Google auth error:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Google Sign In failed',
@@ -103,7 +103,7 @@ export const useAuthStore = create<AuthState>()(
             error: null,
           });
         } catch (error) {
-          console.error('Login error:', error);
+          console.log('Login error:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Login failed. Please check your email and password.',
@@ -144,7 +144,7 @@ export const useAuthStore = create<AuthState>()(
             error: null,
           });
         } catch (error) {
-          console.error('Signup error:', error);
+          console.log('Signup error:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Signup failed. Please try again.',
@@ -170,7 +170,7 @@ export const useAuthStore = create<AuthState>()(
             guestData: null,
           });
         } catch (error) {
-          console.error('Logout error:', error);
+          console.log('Logout error:', error);
           // Still clear local state even if logout fails
           set({
             user: null,
@@ -263,13 +263,13 @@ export const useAuthStore = create<AuthState>()(
             });
           }
         } catch (error) {
-          console.error('Check auth state error:', error);
+          console.log('Check auth state error:', error);
           // If there's an error (like user deleted), clear the session
           try {
             const { AuthService } = await import('../../services/auth/AuthService');
             await AuthService.signOut();
           } catch (signOutError) {
-            console.error('Failed to sign out after error:', signOutError);
+            console.log('Failed to sign out after error:', signOutError);
           }
           set({
             user: null,

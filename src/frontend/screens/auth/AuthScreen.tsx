@@ -12,7 +12,8 @@ import {
   TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AntDesign, AlertCircle } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { AlertCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { THEME } from '@/src/lib/constants';
 
@@ -22,14 +23,14 @@ import { useAuthStore } from '@/src/shared/stores/authStore';
 import { Input } from '../../components/common/Input';
 
 export default function AuthScreen() {
-  const { 
-    login, 
-    signup, 
-    error, 
-    isLoading, 
-    clearError, 
-    isAuthenticated, 
-    hasCompletedOnboarding 
+  const {
+    login,
+    signup,
+    error,
+    isLoading,
+    clearError,
+    isAuthenticated,
+    hasCompletedOnboarding
   } = useAuthStore();
 
   const [isSignIn, setIsSignIn] = useState(true);
@@ -37,6 +38,7 @@ export default function AuthScreen() {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
   const [formErrors, setFormErrors] = useState<Partial<AuthFormData>>({});
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -66,34 +68,52 @@ export default function AuthScreen() {
   // Form validation
   const validateForm = (): boolean => {
     const errors: Partial<AuthFormData> = {};
-    
+
     if (!isSignIn && !formData.name.trim()) {
       errors.name = 'Name is required';
     }
-    
+
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = 'Please enter a valid email address';
     }
-    
+
     if (!formData.password) {
       errors.password = 'Password is required';
-    } else if (!isSignIn && formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
-    } else if (!isSignIn && !/(?=.*[a-zA-Z])(?=.*\d)/.test(formData.password)) {
-      errors.password = 'Password must contain both letters and numbers';
+    } else if (!isSignIn) {
+      // Sign-up password validation
+      if (formData.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+      } else if (!/(?=.*[a-z])/.test(formData.password)) {
+        errors.password = 'Password must contain a lowercase letter';
+      } else if (!/(?=.*[A-Z])/.test(formData.password)) {
+        errors.password = 'Password must contain an uppercase letter';
+      } else if (!/(?=.*\d)/.test(formData.password)) {
+        errors.password = 'Password must contain a number';
+      } else if (!/(?=.*[@$!%*?&])/.test(formData.password)) {
+        errors.password = 'Password must contain a symbol (@$!%*?&)';
+      }
     }
-    
+
+    // Check password confirmation for sign-up
+    if (!isSignIn && !errors.password) {
+      if (!formData.confirmPassword) {
+        errors.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        errors.confirmPassword = 'Passwords do not match';
+      }
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleEmailAuth = async () => {
     if (!validateForm()) return;
-    
+
     clearError();
-    
+
     try {
       if (isSignIn) {
         await login(formData.email, formData.password);
@@ -110,13 +130,13 @@ export default function AuthScreen() {
       Alert.alert('Email Required', 'Please enter your email address to reset your password.');
       return;
     }
-    
+
     try {
       setResetLoading(true);
       // Import AuthService dynamically if needed or use store action
       const { AuthService } = await import('@/src/services/auth/AuthService');
       await AuthService.resetPassword(resetEmail);
-      
+
       Alert.alert(
         'Check Your Email',
         'We have sent a password reset link to your email address.',
@@ -131,7 +151,7 @@ export default function AuthScreen() {
 
   const renderForgotPasswordModal = () => {
     if (!showForgotPassword) return null;
-    
+
     return (
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
@@ -139,7 +159,7 @@ export default function AuthScreen() {
           <Text style={styles.modalSubtitle}>
             Enter your email address and we'll send you a link to reset your password.
           </Text>
-          
+
           <TextInput
             style={styles.modalInput}
             placeholder="Enter your email"
@@ -149,7 +169,7 @@ export default function AuthScreen() {
             autoCapitalize="none"
             placeholderTextColor="#9CA3AF"
           />
-          
+
           <View style={styles.modalButtons}>
             <TouchableOpacity
               style={styles.modalButtonSecondary}
@@ -158,7 +178,7 @@ export default function AuthScreen() {
             >
               <Text style={styles.modalButtonSecondaryText}>Cancel</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.modalButtonPrimary, resetLoading && styles.modalButtonDisabled]}
               onPress={handleForgotPassword}
@@ -178,18 +198,18 @@ export default function AuthScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <ScrollView 
+        <ScrollView
           style={styles.scrollContainer}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
           {/* Header */}
-          <TouchableOpacity 
-            onPress={() => router.back()} 
+          <TouchableOpacity
+            onPress={() => router.back()}
             style={styles.backButton}
           >
             <AntDesign name="arrowleft" size={24} color="#1F2937" />
@@ -200,8 +220,8 @@ export default function AuthScreen() {
               {isSignIn ? 'Welcome back' : 'Create account'}
             </Text>
             <Text style={styles.subtitle}>
-              {isSignIn 
-                ? 'Enter your details to sign in.' 
+              {isSignIn
+                ? 'Enter your details to sign in.'
                 : 'Start your parenting journey today.'}
             </Text>
           </View>
@@ -261,8 +281,29 @@ export default function AuthScreen() {
                 }}
                 secureTextEntry
                 error={formErrors.password}
+                helperText={
+                  !isSignIn && !formErrors.password
+                    ? 'Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol.'
+                    : undefined
+                }
               />
             </View>
+
+            {!isSignIn && (
+              <View>
+                <Input
+                  label="Confirm Password"
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword || ''}
+                  onChangeText={(text) => {
+                    setFormData(prev => ({ ...prev, confirmPassword: text }));
+                    if (formErrors.confirmPassword) setFormErrors(prev => ({ ...prev, confirmPassword: undefined }));
+                  }}
+                  secureTextEntry
+                  error={formErrors.confirmPassword}
+                />
+              </View>
+            )}
 
             {isSignIn && (
               <TouchableOpacity
@@ -296,11 +337,12 @@ export default function AuthScreen() {
             <Text style={styles.footerText}>
               {isSignIn ? "Don't have an account?" : "Already have an account?"}
             </Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => {
                 setIsSignIn(!isSignIn);
                 clearError();
                 setFormErrors({});
+                setFormData(prev => ({ ...prev, confirmPassword: '' }));
               }}
             >
               <Text style={styles.footerLink}>
@@ -310,7 +352,7 @@ export default function AuthScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      
+
       {renderForgotPasswordModal()}
     </SafeAreaView>
   );
@@ -476,6 +518,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: THEME.colors.primary,
     alignItems: 'center',
+  },
+  modalButtonDisabled: {
+    opacity: 0.5,
   },
   modalButtonPrimaryText: {
     color: '#FFFFFF',

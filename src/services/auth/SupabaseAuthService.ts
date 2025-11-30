@@ -51,7 +51,7 @@ class SupabaseAuthService {
         refreshToken: data.session.refresh_token,
       };
     } catch (error) {
-      console.error('Sign in error:', error);
+      console.log('Sign in error:', error);
       throw error;
     }
   }
@@ -88,7 +88,7 @@ class SupabaseAuthService {
         refreshToken: data.session.refresh_token,
       };
     } catch (error) {
-      console.error('Sign up error:', error);
+      console.log('Sign up error:', error);
       throw error;
     }
   }
@@ -170,7 +170,7 @@ class SupabaseAuthService {
         throw new Error('OAuth completed but session not found');
       }
     } catch (error) {
-      console.error('Google sign in error:', error);
+      console.log('Google sign in error:', error);
       throw error;
     }
   }
@@ -189,7 +189,7 @@ class SupabaseAuthService {
       // Note: We don't clear Google's browser session as it causes
       // unwanted deep link redirects that auto-trigger sign-in
     } catch (error) {
-      console.error('Sign out error:', error);
+      console.log('Sign out error:', error);
       throw error;
     }
   }
@@ -228,7 +228,7 @@ class SupabaseAuthService {
         };
       }
     } catch (error) {
-      console.error('Get current user error:', error);
+      console.log('Get current user error:', error);
       return null;
     }
   }
@@ -251,7 +251,7 @@ class SupabaseAuthService {
 
       return data.session;
     } catch (error) {
-      console.error('Get session error:', error);
+      console.log('Get session error:', error);
       return null;
     }
   }
@@ -292,7 +292,7 @@ class SupabaseAuthService {
 
       console.log('✅ OAuth callback handled successfully, session established');
     } catch (error) {
-      console.error('OAuth callback error:', error);
+      console.log('OAuth callback error:', error);
       throw error;
     }
   }
@@ -303,14 +303,14 @@ class SupabaseAuthService {
   async resetPassword(email: string): Promise<void> {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
+        redirectTo: 'com.pratikn07.mycuratedhaven://auth/reset-password',
       });
 
       if (error) {
         throw new Error(error.message);
       }
     } catch (error) {
-      console.error('Password reset error:', error);
+      console.log('Password reset error:', error);
       throw error;
     }
   }
@@ -328,7 +328,7 @@ class SupabaseAuthService {
         throw new Error(error.message);
       }
     } catch (error) {
-      console.error('Update password error:', error);
+      console.log('Update password error:', error);
       throw error;
     }
   }
@@ -357,7 +357,7 @@ class SupabaseAuthService {
 
       return data;
     } catch (error) {
-      console.error('Update profile error:', error);
+      console.log('Update profile error:', error);
       throw error;
     }
   }
@@ -418,7 +418,7 @@ class SupabaseAuthService {
       // Other error
       throw new Error(`Failed to get user profile: ${error?.message}`);
     } catch (error) {
-      console.error('Get user profile error:', error);
+      console.log('Get user profile error:', error);
       throw error;
     }
   }

@@ -1,7 +1,7 @@
 // Application constants and configuration
 
 export const APP_CONFIG = {
-  name: 'Parenting App',
+  name: 'My Curated Haven',
   version: '1.0.0',
   description: 'AI-powered parenting companion app',
 } as const;
@@ -109,7 +109,8 @@ export const VALIDATION = {
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   password: {
     minLength: 8,
-    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, // At least 1 lowercase, 1 uppercase, 1 digit
+    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/, // At least 1 lowercase, 1 uppercase, 1 digit, 1 symbol
+    description: '8+ characters with uppercase, lowercase, number, and symbol (@$!%*?&)',
   },
   name: {
     minLength: 2,
