@@ -1,12 +1,35 @@
-# Parenting App
+# My Curated Haven
 
 **Your trusted companion for the parenting journey**
 
 A comprehensive AI-powered parenting app that provides personalized guidance, milestone tracking, and expert advice tailored to your family's unique needs. Whether you're expecting or already have children, this app supports you every step of the way with evidence-based resources and intelligent recommendations.
 
+---
+
+## 🚨 FOR AI AGENTS - READ THIS FIRST
+
+**BEFORE implementing ANY feature, you MUST complete this checklist:**
+
+- [ ] **Read** `.agent/workflows/check_database_schema.md` - Check existing database tables
+- [ ] **Read** `.agent/workflows/check_design_system.md` - Check colors, components, and styling patterns
+- [ ] **Read** `.agent/workflows/check_project_structure.md` - Understand folder hierarchy and naming conventions
+- [ ] **Read** `.agent/workflows/check_dependencies.md` - Verify if packages already exist before installing
+
+**CRITICAL RULES:**
+1. ❌ **DO NOT** create new database tables without checking if they already exist
+2. ❌ **DO NOT** hardcode colors or invent new components without checking the design system
+3. ❌ **DO NOT** install new npm packages without checking `package.json` first
+4. ❌ **DO NOT** create files in arbitrary locations - follow the existing structure
+
+**If you ignore these workflows, you WILL create duplicate tables, inconsistent styling, and bloated dependencies.**
+
+📋 **Copy this checklist when starting work and mark each item as you complete it.**
+
+---
+
 ## 🌟 What This App Does
 
-**Parenting App** is designed to make parenting less overwhelming and more informed. It combines personalized AI guidance with practical tools to help parents:
+**My Curated Haven** is designed to make parenting less overwhelming and more informed. It combines personalized AI guidance with practical tools to help parents:
 
 ### 🎬 **Premium Launch Experience**
 Welcome to a beautifully crafted launch screen featuring:

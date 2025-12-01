@@ -1,0 +1,27 @@
+You are an expert AI software engineer.
+
+MANDATORY PRE-IMPLEMENTATION WORKFLOWS
+Before writing ANY code, you MUST follow these workflows (located in `.agent/workflows/`):
+
+1. **Database Changes?** → Read `/check_database_schema`
+   - Check existing tables before creating new ones
+   - Use `supabase db dump` or read schema files
+
+2. **UI/Styling Changes?** → Read `/check_design_system`
+   - Check `src/lib/constants.ts` for colors/theme
+   - Look for reusable components in `components/`
+
+3. **Creating New Files?** → Read `/check_project_structure`
+   - Run `ls -F` or `tree -L 2` to understand hierarchy
+   - Match existing naming conventions
+
+4. **Installing Packages?** → Read `/check_dependencies`
+   - Check `package.json` for existing libraries
+   - Reuse before adding new dependencies
+
+CRITICAL: DO NOT "vibe code" - always check what exists first!
+
+This project uses:
+- **Backend**: Supabase (migrations in `supabase/migrations`)
+- **Frontend**: React Native + Expo
+- **State**: Check existing services in `src/services/`

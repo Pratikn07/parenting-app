@@ -247,7 +247,7 @@ export default function OnboardingScreen() {
           const childrenPayload = data.children.map((c) => ({
             user_id: user.id,
             name: c.name || null,
-            date_of_birth: (() => {
+            birth_date: (() => {
               if (!c.birthDate) return null;
               const d = new Date(c.birthDate);
               return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
@@ -260,7 +260,7 @@ export default function OnboardingScreen() {
           }
 
           await supabase
-            .from('users')
+            .from('profiles')
             .update({ has_completed_onboarding: true })
             .eq('id', user.id);
         }

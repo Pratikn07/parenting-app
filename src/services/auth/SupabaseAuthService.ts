@@ -345,7 +345,7 @@ class SupabaseAuthService {
       }
 
       const { data, error } = await supabase
-        .from('users')
+        .from('profiles')
         .update(updates)
         .eq('id', user.id)
         .select()
@@ -369,7 +369,7 @@ class SupabaseAuthService {
     try {
       // First try to get existing user profile
       const { data, error } = await supabase
-        .from('users')
+        .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
@@ -402,7 +402,7 @@ class SupabaseAuthService {
         };
 
         const { data: createdUser, error: createError } = await supabase
-          .from('users')
+          .from('profiles')
           .insert(newProfile)
           .select()
           .single();

@@ -9,7 +9,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool';
+  parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
   feeding_preference: 'breastfeeding' | 'formula' | 'mixed';
   has_completed_onboarding: boolean;
   avatar_url?: string;

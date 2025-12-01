@@ -29,7 +29,7 @@ Add this configuration to your MCP servers list:
     "supabase": {
       "command": "npx",
       "args": ["-y", "@supabase/mcp-server-supabase@latest"],
-      "description": "Supabase database operations and management for parenting app",
+      "description": "Supabase database operations and management for My Curated Haven",
       "env": {
         "SUPABASE_ACCESS_TOKEN": "sbp_04c7b064062d54e2b05dc0818ac576d091ab2925",
         "SUPABASE_PROJECT_REF": "ccrgvammglkvdlaojgzv"

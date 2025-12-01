@@ -1,5 +1,5 @@
 import { supabase } from '../../lib/supabase';
-import { 
+import {
   MilestoneTemplate,
   MilestoneTemplateInsert,
   UserMilestoneProgress,
@@ -16,18 +16,18 @@ export interface MilestonesServiceInterface {
   getMilestoneTemplates(filters?: MilestoneTemplateFilters): Promise<MilestoneTemplate[]>;
   getMilestoneTemplatesByAge(ageInMonths: number, parentingStage: ParentingStage): Promise<MilestoneTemplate[]>;
   getMilestoneTemplateById(id: string): Promise<MilestoneTemplate | null>;
-  
+
   // User milestone progress
   getUserMilestoneProgress(userId: string, childId?: string): Promise<UserMilestoneProgressWithTemplate[]>;
   getChildMilestoneProgress(childId: string): Promise<UserMilestoneProgressWithTemplate[]>;
   updateMilestoneProgress(userId: string, childId: string, milestoneTemplateId: string, updates: UserMilestoneProgressUpdate): Promise<UserMilestoneProgress>;
   completeMilestone(userId: string, childId: string, milestoneTemplateId: string, notes?: string): Promise<UserMilestoneProgress>;
   uncompleteMilestone(userId: string, childId: string, milestoneTemplateId: string): Promise<UserMilestoneProgress>;
-  
+
   // Progress tracking
   getMilestoneStats(userId: string, childId?: string): Promise<MilestoneStats>;
   getCompletionRate(userId: string, childId: string, milestoneType?: MilestoneType): Promise<number>;
-  
+
   // Utility functions
   calculateChildAgeInMonths(birthDate: string): number;
   getRelevantMilestones(child: Child): Promise<MilestoneTemplate[]>;
@@ -60,7 +60,7 @@ export interface MilestoneStats {
 }
 
 export class MilestonesService implements MilestonesServiceInterface {
-  
+
   /**
    * Get milestone templates with optional filters
    */
@@ -69,22 +69,18 @@ export class MilestonesService implements MilestonesServiceInterface {
       .from('milestone_templates')
       .select('*')
       .eq('is_active', filters?.isActive ?? true)
-      .order('min_age_months', { ascending: true });
+      .order('age_min_months', { ascending: true });
 
     if (filters?.milestoneType) {
-      query = query.eq('milestone_type', filters.milestoneType);
-    }
-
-    if (filters?.parentingStage) {
-      query = query.eq('parenting_stage', filters.parentingStage);
+      query = query.eq('category', filters.milestoneType);
     }
 
     if (filters?.minAge !== undefined) {
-      query = query.gte('min_age_months', filters.minAge);
+      query = query.gte('age_min_months', filters.minAge);
     }
 
     if (filters?.maxAge !== undefined) {
-      query = query.lte('max_age_months', filters.maxAge);
+      query = query.lte('age_max_months', filters.maxAge);
     }
 
     const { data, error } = await query;
@@ -105,10 +101,9 @@ export class MilestonesService implements MilestonesServiceInterface {
       .from('milestone_templates')
       .select('*')
       .eq('is_active', true)
-      .eq('parenting_stage', parentingStage)
-      .lte('min_age_months', ageInMonths)
-      .gte('max_age_months', ageInMonths)
-      .order('milestone_type', { ascending: true });
+      .lte('age_min_months', ageInMonths)
+      .gte('age_max_months', ageInMonths)
+      .order('category', { ascending: true });
 
     if (error) {
       console.error('Error fetching milestone templates by age:', error);
@@ -177,7 +172,7 @@ export class MilestonesService implements MilestonesServiceInterface {
         milestone_template:milestone_templates(*)
       `)
       .eq('child_id', childId)
-      .order('milestone_template.min_age_months', { ascending: true });
+      .order('milestone_template.age_min_months', { ascending: true });
 
     if (error) {
       console.error('Error fetching child milestone progress:', error);
@@ -191,9 +186,9 @@ export class MilestonesService implements MilestonesServiceInterface {
    * Update milestone progress
    */
   async updateMilestoneProgress(
-    userId: string, 
-    childId: string, 
-    milestoneTemplateId: string, 
+    userId: string,
+    childId: string,
+    milestoneTemplateId: string,
     updates: UserMilestoneProgressUpdate
   ): Promise<UserMilestoneProgress> {
     const { data, error } = await supabase
@@ -217,9 +212,9 @@ export class MilestonesService implements MilestonesServiceInterface {
    * Mark a milestone as completed
    */
   async completeMilestone(
-    userId: string, 
-    childId: string, 
-    milestoneTemplateId: string, 
+    userId: string,
+    childId: string,
+    milestoneTemplateId: string,
     notes?: string
   ): Promise<UserMilestoneProgress> {
     const updates: UserMilestoneProgressUpdate = {
@@ -240,10 +235,10 @@ export class MilestonesService implements MilestonesServiceInterface {
     if (existing) {
       // Update existing record
       const result = await this.updateMilestoneProgress(userId, childId, milestoneTemplateId, updates);
-      
+
       // Log the activity
       await this.logMilestoneActivity(userId, milestoneTemplateId, 'milestone_completed');
-      
+
       return result;
     } else {
       // Create new record
@@ -278,8 +273,8 @@ export class MilestonesService implements MilestonesServiceInterface {
    * Mark a milestone as not completed
    */
   async uncompleteMilestone(
-    userId: string, 
-    childId: string, 
+    userId: string,
+    childId: string,
     milestoneTemplateId: string
   ): Promise<UserMilestoneProgress> {
     const updates: UserMilestoneProgressUpdate = {
@@ -288,10 +283,10 @@ export class MilestonesService implements MilestonesServiceInterface {
     };
 
     const result = await this.updateMilestoneProgress(userId, childId, milestoneTemplateId, updates);
-    
+
     // Log the activity
     await this.logMilestoneActivity(userId, milestoneTemplateId, 'milestone_uncompleted');
-    
+
     return result;
   }
 
@@ -301,7 +296,7 @@ export class MilestonesService implements MilestonesServiceInterface {
   async getMilestoneStats(userId: string, childId?: string): Promise<MilestoneStats> {
     // Get all milestone progress for the user/child
     const progress = await this.getUserMilestoneProgress(userId, childId);
-    
+
     // Calculate overall stats
     const totalMilestones = progress.length;
     const completedMilestones = progress.filter(p => p.is_completed).length;
@@ -355,8 +350,8 @@ export class MilestonesService implements MilestonesServiceInterface {
     }
 
     // Filter by milestone type if specified
-    const filteredData = milestoneType 
-      ? data.filter(p => p.milestone_template.milestone_type === milestoneType)
+    const filteredData = milestoneType
+      ? data.filter(p => p.milestone_template.category === milestoneType)
       : data;
 
     const total = filteredData.length;
@@ -371,35 +366,44 @@ export class MilestonesService implements MilestonesServiceInterface {
   calculateChildAgeInMonths(birthDate: string): number {
     const birth = new Date(birthDate);
     const now = new Date();
-    
+
     const yearsDiff = now.getFullYear() - birth.getFullYear();
     const monthsDiff = now.getMonth() - birth.getMonth();
-    
+
     return yearsDiff * 12 + monthsDiff;
   }
 
   /**
-   * Get relevant milestones for a child based on their age and stage
+   * Get relevant milestones for a child based on their age
    */
   async getRelevantMilestones(child: Child): Promise<MilestoneTemplate[]> {
     if (!child.birth_date) {
-      // If no birth date, return milestones for newborn stage
-      return this.getMilestoneTemplates({ parentingStage: 'newborn' });
+      // If no birth date, return milestones for youngest age range (0-3 months)
+      const { data, error } = await supabase
+        .from('milestone_templates')
+        .select('*')
+        .eq('is_active', true)
+        .lte('age_min_months', 3)
+        .gte('age_max_months', 0)
+        .order('category', { ascending: true });
+
+      if (error) throw new Error(`Failed to fetch templates: ${error.message}`);
+      return data || [];
     }
 
     const ageInMonths = this.calculateChildAgeInMonths(child.birth_date);
-    
-    // Determine parenting stage based on age
-    let parentingStage: ParentingStage;
-    if (ageInMonths <= 3) {
-      parentingStage = 'newborn';
-    } else if (ageInMonths <= 12) {
-      parentingStage = 'infant';
-    } else {
-      parentingStage = 'toddler';
-    }
 
-    return this.getMilestoneTemplatesByAge(ageInMonths, parentingStage);
+    // Get milestones where child's age falls within the template's age range
+    const { data, error } = await supabase
+      .from('milestone_templates')
+      .select('*')
+      .eq('is_active', true)
+      .lte('age_min_months', ageInMonths)
+      .gte('age_max_months', ageInMonths)
+      .order('category', { ascending: true });
+
+    if (error) throw new Error(`Failed to fetch templates: ${error.message}`);
+    return data || [];
   }
 
   /**
@@ -445,7 +449,7 @@ export class MilestonesService implements MilestonesServiceInterface {
    * Calculate statistics for a specific milestone type
    */
   private calculateTypeStats(progress: UserMilestoneProgressWithTemplate[], type: MilestoneType) {
-    const typeProgress = progress.filter(p => p.milestone_template.milestone_type === type);
+    const typeProgress = progress.filter(p => p.milestone_template.category === type);
     const total = typeProgress.length;
     const completed = typeProgress.filter(p => p.is_completed).length;
     const rate = total > 0 ? Math.round((completed / total) * 100) : 0;

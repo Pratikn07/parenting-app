@@ -1,5 +1,5 @@
 {
-  "name": "parenting-app",
+  "name": "my-curated-haven",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "private": true,
@@ -60,6 +60,7 @@
     "@expo-google-fonts/nunito": "^0.4.2",
     "@expo/vector-icons": "^14.1.0",
     "@lucide/lab": "^0.1.2",
+    "@notionhq/client": "^5.4.0",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
@@ -94,6 +95,7 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
+    "react-native-svg-transformer": "^1.5.2",
     "react-native-web": "^0.20.0",
     "zod": "^4.1.13",
     "zustand": "^5.0.7"

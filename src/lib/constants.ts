@@ -68,6 +68,7 @@ export const PARENTING_STAGES = {
   infant: 'Infant (3-12 months)',
   toddler: 'Toddler (1-3 years)',
   preschool: 'Preschool (3-5 years)',
+  school: 'School Age (5+ years)',
 } as const;
 
 export const FEEDING_PREFERENCES = {

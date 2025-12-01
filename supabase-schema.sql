@@ -1,5 +1,5 @@
 -- =====================================================
--- PARENTING APP DATABASE SCHEMA
+-- MY CURATED HAVEN DATABASE SCHEMA
 -- =====================================================
 -- 
 -- This comprehensive database schema supports a parenting app with the following features:

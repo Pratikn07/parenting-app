@@ -12,10 +12,10 @@ export default function WizardScreen() {
   const { currentStep, setStep } = useWizardStore();
 
   const steps: WizardStep[] = ['parentName', 'intent', 'childProfile', 'challenge'];
-  const progress = ((steps.indexOf(currentStep) + 1) / steps.length) * 100;
+  const currentIndex = steps.indexOf(currentStep);
+  const progress = ((currentIndex + 1) / steps.length) * 100;
 
   const handleBack = () => {
-    const currentIndex = steps.indexOf(currentStep);
     if (currentIndex > 0) {
       setStep(steps[currentIndex - 1], 'back');
     } else {
@@ -34,10 +34,10 @@ export default function WizardScreen() {
   };
 
   return (
-    <WizardLayout 
-      progress={progress} 
+    <WizardLayout
+      progress={progress}
       onBack={handleBack}
-      showBack={true}
+      showBack={currentIndex > 0}
     >
       {renderStep()}
     </WizardLayout>

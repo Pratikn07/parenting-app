@@ -30,7 +30,7 @@
 
 7. **supabase** - `@supabase/mcp-server-supabase@latest`
    - Status: ✅ Installed (v0.4.5)
-   - Description: Supabase database operations and management for parenting app
+   - Description: Supabase database operations and management for My Curated Haven
    - Environment: SUPABASE_ACCESS_TOKEN and SUPABASE_PROJECT_REF configured
 
 8. **github** - `@modelcontextprotocol/server-github`
@@ -40,12 +40,12 @@
 
 9. **filesystem** - `@modelcontextprotocol/server-filesystem`
    - Status: ✅ Installed
-   - Description: File system operations for parenting app project structure
+   - Description: File system operations for My Curated Haven project structure
    - Path: `/Users/pratik.nandoskar/Documents/ios_app/parenting_app`
 
 10. **brave-search** - `@modelcontextprotocol/server-brave-search`
     - Status: ✅ Installed and running
-    - Description: Web search for React Native, Expo, and parenting app development resources
+    - Description: Web search for React Native, Expo, and My Curated Haven development resources
     - Environment: BRAVE_API_KEY configured
 
 11. **postgres** - `@modelcontextprotocol/server-postgres`
@@ -90,4 +90,4 @@ The following environment variables are properly configured for the installed se
 
 All available MCP servers have been successfully installed and are ready for use. The servers that are not available (`typescript` and `sqlite`) appear to not exist in the npm registry at this time.
 
-You can now use these MCP servers through the MCP protocol to enhance your development workflow for the parenting app project.
+You can now use these MCP servers through the MCP protocol to enhance your development workflow for the My Curated Haven project.

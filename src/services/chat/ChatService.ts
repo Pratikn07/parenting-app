@@ -164,7 +164,7 @@ export class ChatService {
         .from('children')
         .select('*')
         .eq('user_id', userId)
-        .order('date_of_birth', { ascending: true });
+        .order('birth_date', { ascending: true });
 
       if (error) {
         console.error('Error fetching children:', error);
@@ -186,8 +186,8 @@ export class ChatService {
    * Send a message to the AI chat
    */
   async sendMessage(
-    userId: string, 
-    message: string, 
+    userId: string,
+    message: string,
     childId?: string,
     sessionId?: string,
     imageUrl?: string

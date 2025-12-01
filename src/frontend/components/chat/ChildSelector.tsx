@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Child } from '../../../lib/database.types';
 import { THEME } from '../../../lib/constants';
+import { getFormattedAge, getDevelopmentalStage } from '../../../lib/dateUtils';
 
 interface ChildSelectorProps {
   children: Child[];
@@ -18,33 +19,17 @@ export const ChildSelector: React.FC<ChildSelectorProps> = ({
     return null;
   }
 
-  const getChildAge = (dateOfBirth: string): string => {
-    const birth = new Date(dateOfBirth);
-    const now = new Date();
-    const months = (now.getFullYear() - birth.getFullYear()) * 12 + 
-                   (now.getMonth() - birth.getMonth());
-    
-    if (months < 1) return 'Newborn';
-    if (months < 12) return `${months}mo`;
-    const years = Math.floor(months / 12);
-    const remainingMonths = months % 12;
-    if (remainingMonths === 0) return `${years}y`;
-    return `${years}y ${remainingMonths}mo`;
-  };
-
-  const getInitial = (name: string): string => {
-    return name.charAt(0).toUpperCase();
-  };
-
   return (
     <View style={styles.container}>
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
         {children.map((child) => {
           const isSelected = selectedChildId === child.id;
+          const stage = child.birth_date ? getDevelopmentalStage(child.birth_date) : { label: 'Unknown', icon: '❓' };
+
           return (
             <TouchableOpacity
               key={child.id}
@@ -56,16 +41,12 @@ export const ChildSelector: React.FC<ChildSelectorProps> = ({
               activeOpacity={0.7}
             >
               <View style={[
-                styles.avatar,
-                isSelected && styles.avatarSelected,
+                styles.iconContainer,
+                isSelected && styles.iconContainerSelected,
               ]}>
-                <Text style={[
-                  styles.avatarText,
-                  isSelected && styles.avatarTextSelected,
-                ]}>
-                  {getInitial(child.name)}
-                </Text>
+                <Text style={styles.iconText}>{stage.icon}</Text>
               </View>
+
               <View style={styles.childInfo}>
                 <Text style={[
                   styles.childName,
@@ -73,12 +54,14 @@ export const ChildSelector: React.FC<ChildSelectorProps> = ({
                 ]}>
                   {child.name}
                 </Text>
-                <Text style={[
-                  styles.childAge,
-                  isSelected && styles.childAgeSelected,
-                ]}>
-                  {getChildAge(child.date_of_birth)}
-                </Text>
+                <View style={styles.metaContainer}>
+                  <Text style={[
+                    styles.childMeta,
+                    isSelected && styles.childMetaSelected,
+                  ]}>
+                    {child.birth_date ? getFormattedAge(child.birth_date) : 'Age unknown'} • {stage.label}
+                  </Text>
+                </View>
               </View>
             </TouchableOpacity>
           );
@@ -91,19 +74,19 @@ export const ChildSelector: React.FC<ChildSelectorProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 12,
+    backgroundColor: '#FDFCF8',
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
-    backgroundColor: '#FDFCF8',
   },
   scrollContent: {
     paddingHorizontal: 16,
-    gap: 10,
+    gap: 12,
   },
   childChip: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    borderRadius: 16,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderWidth: 1,
@@ -113,48 +96,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
+    minWidth: 140,
   },
   childChipSelected: {
     backgroundColor: THEME.colors.primary,
     borderColor: THEME.colors.primary,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  iconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
+    marginRight: 10,
   },
-  avatarSelected: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  iconContainerSelected: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
-  avatarText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: THEME.colors.text.primary,
-  },
-  avatarTextSelected: {
-    color: '#FFFFFF',
+  iconText: {
+    fontSize: 18,
   },
   childInfo: {
     flexDirection: 'column',
   },
   childName: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     color: THEME.colors.text.primary,
+    marginBottom: 2,
   },
   childNameSelected: {
     color: '#FFFFFF',
   },
-  childAge: {
+  metaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  childMeta: {
     fontSize: 12,
     color: THEME.colors.text.secondary,
+    fontWeight: '500',
   },
-  childAgeSelected: {
-    color: 'rgba(255, 255, 255, 0.8)',
+  childMetaSelected: {
+    color: 'rgba(255, 255, 255, 0.9)',
   },
 });
 

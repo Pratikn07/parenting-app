@@ -1,5 +1,5 @@
 import { supabase } from '../../lib/supabase';
-import { 
+import {
   UserProgressStats,
   UserProgressStatsInsert,
   UserProgressStatsUpdate,
@@ -13,15 +13,19 @@ export interface ProgressServiceInterface {
   getWeekStats(userId: string, weekStartDate: string): Promise<UserProgressStats | null>;
   updateProgressStats(userId: string, updates: Partial<UserProgressStatsUpdate>): Promise<UserProgressStats>;
   incrementStat(userId: string, statType: keyof UserProgressStatsUpdate, amount?: number): Promise<UserProgressStats>;
-  
+
   // Activity aggregation
   calculateWeeklyStats(userId: string, weekStartDate: string): Promise<UserProgressStats>;
   getRecentActivity(userId: string, limit?: number): Promise<UserActivityLog[]>;
   getActivityByType(userId: string, activityType: ActivityType, limit?: number): Promise<UserActivityLog[]>;
-  
+
   // Utility functions
   getWeekStartDate(date?: Date): string;
   ensureWeekStatsExist(userId: string, weekStartDate?: string): Promise<UserProgressStats>;
+
+  // Activity logging
+  logActivity(userId: string, type: ActivityType, resourceId?: string, metadata?: any): Promise<void>;
+  logQuestionAsked(userId: string, question: string): Promise<void>;
 }
 
 export interface WeeklyProgressSummary {
@@ -39,7 +43,7 @@ export interface WeeklyProgressSummary {
 }
 
 export class ProgressService implements ProgressServiceInterface {
-  
+
   /**
    * Get current week's progress stats for a user
    */
@@ -75,7 +79,7 @@ export class ProgressService implements ProgressServiceInterface {
    */
   async updateProgressStats(userId: string, updates: Partial<UserProgressStatsUpdate>): Promise<UserProgressStats> {
     const weekStartDate = this.getWeekStartDate();
-    
+
     // Ensure stats record exists
     await this.ensureWeekStatsExist(userId, weekStartDate);
 
@@ -100,7 +104,7 @@ export class ProgressService implements ProgressServiceInterface {
    */
   async incrementStat(userId: string, statType: keyof UserProgressStatsUpdate, amount: number = 1): Promise<UserProgressStats> {
     const weekStartDate = this.getWeekStartDate();
-    
+
     // Get current stats or create if doesn't exist
     let currentStats = await this.getWeekStats(userId, weekStartDate);
     if (!currentStats) {
@@ -249,7 +253,7 @@ export class ProgressService implements ProgressServiceInterface {
    */
   async ensureWeekStatsExist(userId: string, weekStartDate?: string): Promise<UserProgressStats> {
     const weekStart = weekStartDate || this.getWeekStartDate();
-    
+
     // Check if record exists
     const existing = await this.getWeekStats(userId, weekStart);
     if (existing) {
@@ -304,12 +308,12 @@ export class ProgressService implements ProgressServiceInterface {
     };
 
     // Calculate total engagement score
-    const totalEngagement = currentWeek.questions_asked + 
-                           currentWeek.tips_received + 
-                           currentWeek.content_saved + 
-                           currentWeek.milestones_completed + 
-                           currentWeek.resources_viewed + 
-                           currentWeek.search_queries;
+    const totalEngagement = currentWeek.questions_asked +
+      currentWeek.tips_received +
+      currentWeek.content_saved +
+      currentWeek.milestones_completed +
+      currentWeek.resources_viewed +
+      currentWeek.search_queries;
 
     return {
       currentWeek,
@@ -327,6 +331,36 @@ export class ProgressService implements ProgressServiceInterface {
       return newValue > 0 ? 100 : 0;
     }
     return Math.round(((newValue - oldValue) / oldValue) * 100);
+  }
+
+  /**
+   * Log a user activity
+   */
+  async logActivity(userId: string, type: ActivityType, resourceId?: string, metadata?: any): Promise<void> {
+    const { error } = await supabase
+      .from('user_activity_log')
+      .insert({
+        user_id: userId,
+        activity_type: type,
+        resource_id: resourceId,
+        metadata
+      });
+
+    if (error) {
+      console.error('Error logging activity:', error);
+      // Don't throw, just log error to avoid disrupting user flow
+    }
+  }
+
+  /**
+   * Log a question asked by the user
+   */
+  async logQuestionAsked(userId: string, question: string): Promise<void> {
+    // 1. Log the activity
+    await this.logActivity(userId, 'question_asked', undefined, { question });
+
+    // 2. Increment the stat
+    await this.incrementStat(userId, 'questions_asked');
   }
 }
 

@@ -56,14 +56,14 @@ export default function SettingsScreen() {
         if (!user?.id) return;
         const { data, error } = await supabase
           .from('children')
-          .select('name,date_of_birth')
+          .select('name,birth_date')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle();
         if (!error && data) {
           setBabyName(data.name || '');
-          setBabyDob(data.date_of_birth || null);
+          setBabyDob(data.birth_date || null);
         }
       } catch (e) {
         console.log('Fetch baby error:', e);

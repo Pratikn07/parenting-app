@@ -6,6 +6,7 @@ import { THEME } from '@/src/lib/constants';
 import { Video, ResizeMode } from 'expo-av';
 import { useAuthStore } from '@/src/shared/stores/authStore';
 import { AntDesign } from '@expo/vector-icons';
+import AnimatedLogo from '@/components/AnimatedLogo';
 
 const { width, height } = Dimensions.get('window');
 
@@ -30,11 +31,11 @@ export default function LaunchScreen() {
 
       <SafeAreaView style={styles.content}>
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Text style={styles.logoText}>P</Text>
+          <View style={styles.logoWrapper}>
+            <AnimatedLogo width={180} height={180} />
           </View>
-          <Text style={styles.title}>Parenting, Simplified.</Text>
-          <Text style={styles.subtitle}>Your AI companion for every milestone.</Text>
+          <Text style={styles.title}>My Curated Haven</Text>
+          <Text style={styles.subtitle}>AI Curated for Family's Growth Journey</Text>
         </View>
 
         <View style={styles.footer}>
@@ -54,9 +55,9 @@ export default function LaunchScreen() {
               </>
             )}
           </TouchableOpacity>
-          
+
           {/* Email Login Link */}
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => router.push('/auth')}
             style={styles.loginLink}
           >
@@ -89,7 +90,11 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: 40, // Reduced margin since logo takes space
+    paddingHorizontal: 24,
+  },
+  logoWrapper: {
+    marginBottom: 10,
   },
   logoContainer: {
     width: 80,
@@ -108,21 +113,26 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   title: {
-    fontSize: 36,
+    fontSize: 42,
     fontFamily: THEME.fonts.header,
     color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 12,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    marginBottom: 20,
+    letterSpacing: -0.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
+    textShadowRadius: 8,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontFamily: THEME.fonts.body,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: 'rgba(255, 255, 255, 0.95)',
     textAlign: 'center',
-    lineHeight: 28,
+    lineHeight: 26,
+    maxWidth: '85%',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   footer: {
     gap: 16,

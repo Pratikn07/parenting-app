@@ -8,7 +8,7 @@ export interface User {
   email: string;
   babyName?: string;
   birthDate?: string;
-  parentingStage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+  parentingStage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
   feedingPreference: 'breastfeeding' | 'formula' | 'mixed';
   createdAt: string;
   updatedAt: string;

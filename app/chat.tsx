@@ -20,9 +20,11 @@ import { ChildSelector } from '../src/frontend/components/chat/ChildSelector';
 import { ChatSidebar } from '../src/frontend/components/chat/ChatSidebar';
 import { ImagePicker } from '../src/frontend/components/chat/ImagePicker';
 import { ChatImageBubble } from '../src/frontend/components/chat/ChatImageBubble';
+
 import { THEME } from '../src/lib/constants';
-import { ProgressService, chatService, imageService, GroupedSessions } from '../src/services';
+import { progressService, chatService, imageService, GroupedSessions } from '../src/services';
 import { ChatMessage, Child, ChatSession } from '../src/lib/database.types';
+import { getDevelopmentalStage } from '../src/lib/dateUtils';
 
 interface Message {
   id: string;
@@ -32,6 +34,7 @@ interface Message {
   isLoading?: boolean;
   isError?: boolean;
   imageUrl?: string;
+  isSystem?: boolean;
 }
 
 const WELCOME_MESSAGE = "Hi there! I'm Bloom, your parenting companion. I remember details about your little ones and our past conversations. You can also share photos for me to analyze - just tap the 📎 button. What's on your mind today?";
@@ -43,11 +46,11 @@ export default function ChatScreen() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
-  
+
   // Child context state
   const [children, setChildren] = useState<Child[]>([]);
   const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
-  
+
   // Session state
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [sessions, setSessions] = useState<GroupedSessions>({
@@ -58,19 +61,22 @@ export default function ChatScreen() {
   });
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
-  
+
   // Image state
   const [isImagePickerVisible, setIsImagePickerVisible] = useState(false);
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
-  
+
   const scrollViewRef = useRef<ScrollView>(null);
+
+  // Get selected child object
+  const selectedChild = children.find(c => c.id === selectedChildId);
 
   // Auto-send first message for Guests
   useEffect(() => {
     if (!user?.id && guestData && messages.length === 0) {
       const initialMessage = `Hi ${guestData.parentName}! I see you're navigating ${guestData.mainChallenge} with a ${guestData.childAge} old. How can I help you start?`;
-      
+
       setMessages([{
         id: 'welcome-guest',
         text: initialMessage,
@@ -92,6 +98,21 @@ export default function ChatScreen() {
     }
   }, [user?.id]);
 
+  // Update welcome message when child is selected (only if it's the very first load)
+  useEffect(() => {
+    if (messages.length === 0 && selectedChild && !isLoadingHistory) {
+      const stage = selectedChild.birth_date ? getDevelopmentalStage(selectedChild.birth_date) : { label: 'Unknown', icon: '❓' };
+      const personalizedWelcome = `Hi ${getUserFirstName()}! Ready to tackle ${stage.label.toLowerCase()} life with ${selectedChild.name}? What's on your mind?`;
+
+      setMessages([{
+        id: 'welcome',
+        text: personalizedWelcome,
+        isUser: false,
+        timestamp: new Date(),
+      }]);
+    }
+  }, [selectedChild, isLoadingHistory]);
+
   const loadChildren = async () => {
     if (!user?.id) return;
     try {
@@ -111,18 +132,22 @@ export default function ChatScreen() {
     try {
       const userSessions = await chatService.getSessions(user.id);
       setSessions(userSessions);
-      
+
       const allSessions = [
         ...userSessions.today,
         ...userSessions.yesterday,
         ...userSessions.lastWeek,
         ...userSessions.older,
       ];
-      
+
       if (allSessions.length > 0) {
         await loadSessionMessages(allSessions[0].id);
       } else {
-        setMessages([createWelcomeMessage()]);
+        // Don't set generic welcome message here if we have children, 
+        // let the personalized useEffect handle it
+        if (children.length === 0) {
+          setMessages([createWelcomeMessage()]);
+        }
         setIsLoadingHistory(false);
       }
     } catch (error) {
@@ -139,9 +164,12 @@ export default function ChatScreen() {
     try {
       const sessionMessages = await chatService.getSessionMessages(sessionId);
       setCurrentSessionId(sessionId);
-      
+
       if (sessionMessages.length === 0) {
-        setMessages([createWelcomeMessage()]);
+        // Don't set generic welcome message here if we have children
+        if (children.length === 0) {
+          setMessages([createWelcomeMessage()]);
+        }
       } else {
         const uiMessages: Message[] = sessionMessages.map((msg: ChatMessage) => ({
           id: msg.id,
@@ -170,8 +198,15 @@ export default function ChatScreen() {
   const handleNewChat = async () => {
     if (!user?.id) return;
     setCurrentSessionId(null);
-    setMessages([createWelcomeMessage()]);
+    // Don't reset to generic welcome immediately, let effect handle it or clear messages
+    setMessages([]);
     setSelectedImageUri(null);
+
+    // If we have a selected child, the effect will trigger a personalized welcome
+    // If not, we might need a fallback
+    if (children.length === 0) {
+      setMessages([createWelcomeMessage()]);
+    }
   };
 
   const handleSelectSession = async (session: ChatSession) => {
@@ -225,7 +260,7 @@ export default function ChatScreen() {
 
     const messageText = inputText.trim() || (selectedImageUri ? "What do you see in this image?" : "");
     const imageToSend = selectedImageUri;
-    
+
     setInputText('');
     setSelectedImageUri(null);
     setIsSending(true);
@@ -283,8 +318,8 @@ export default function ChatScreen() {
 
     try {
       const result = await chatService.sendMessage(
-        user.id, 
-        messageText, 
+        user.id,
+        messageText,
         selectedChildId || undefined,
         currentSessionId || undefined,
         uploadedImageUrl
@@ -292,13 +327,13 @@ export default function ChatScreen() {
 
       setMessages(prev => {
         const filtered = prev.filter(m => m.id !== 'typing');
-        
+
         if (result.success && result.data) {
           if (result.data.sessionId && result.data.sessionId !== currentSessionId) {
             setCurrentSessionId(result.data.sessionId);
             loadSessions();
           }
-          
+
           return [...filtered, {
             id: result.data.id,
             text: result.data.response,
@@ -317,14 +352,14 @@ export default function ChatScreen() {
       });
 
       try {
-        await ProgressService.logQuestionAsked(user.id, messageText);
+        await progressService.logQuestionAsked(user.id, messageText);
       } catch (error) {
         console.error('Error logging question:', error);
       }
 
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       setMessages(prev => {
         const filtered = prev.filter(m => m.id !== 'typing');
         return [...filtered, {
@@ -350,7 +385,22 @@ export default function ChatScreen() {
   };
 
   const handleChildSelect = (childId: string) => {
+    if (childId === selectedChildId) return;
+
     setSelectedChildId(childId);
+    const newChild = children.find(c => c.id === childId);
+
+    if (newChild) {
+      // Add system message for context switch
+      const stage = newChild.birth_date ? getDevelopmentalStage(newChild.birth_date) : { label: 'Unknown', icon: '❓' };
+      setMessages(prev => [...prev, {
+        id: `system-${Date.now()}`,
+        text: `✨ Switched context to ${newChild.name}. Asking about ${stage.label.toLowerCase()} sleep, feeding, and milestones.`,
+        isUser: false,
+        timestamp: new Date(),
+        isSystem: true,
+      }]);
+    }
   };
 
   const renderTypingIndicator = () => (
@@ -358,10 +408,22 @@ export default function ChatScreen() {
       <View style={styles.typingDot} />
       <View style={[styles.typingDot, styles.typingDotMiddle]} />
       <View style={styles.typingDot} />
+      {selectedChild && (
+        <Text style={styles.typingText}>Thinking about {selectedChild.name}...</Text>
+      )}
     </View>
   );
 
   const renderMessage = (message: Message) => {
+    // System message
+    if (message.isSystem) {
+      return (
+        <View style={styles.systemMessage}>
+          <Text style={styles.systemMessageText}>{message.text}</Text>
+        </View>
+      );
+    }
+
     // If message has an image, use ChatImageBubble
     if (message.imageUrl) {
       return (
@@ -395,7 +457,7 @@ export default function ChatScreen() {
     // Bot message
     return (
       <View style={[
-        styles.messageBubble, 
+        styles.messageBubble,
         styles.botMessage,
         message.isError && styles.errorMessage
       ]}>
@@ -432,9 +494,9 @@ export default function ChatScreen() {
           >
             <Menu size={24} color="#3D405B" strokeWidth={2} />
           </TouchableOpacity>
-          
+
           <Text style={styles.headerTitle}>{getTimeGreeting()}, {getUserFirstName()}</Text>
-          
+
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.headerButton}
@@ -450,6 +512,8 @@ export default function ChatScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
+
 
         {/* Child Selector */}
         {children.length > 0 && (
@@ -475,7 +539,8 @@ export default function ChatScreen() {
             {messages.map((message) => (
               <View key={message.id} style={[
                 styles.messageWrapper,
-                message.isUser ? styles.userMessageWrapper : styles.botMessageWrapper
+                message.isUser ? styles.userMessageWrapper :
+                  message.isSystem ? styles.systemMessageWrapper : styles.botMessageWrapper
               ]}>
                 {renderMessage(message)}
               </View>
@@ -486,7 +551,7 @@ export default function ChatScreen() {
           {selectedImageUri && (
             <View style={styles.imagePreviewContainer}>
               <Image source={{ uri: selectedImageUri }} style={styles.imagePreview} />
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.removeImageButton}
                 onPress={handleRemoveImage}
               >
@@ -536,7 +601,7 @@ export default function ChatScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    styles.sendButton, 
+                    styles.sendButton,
                     (!inputText.trim() && !selectedImageUri || isSending) && styles.sendButtonDisabled
                   ]}
                   onPress={sendMessage}
@@ -660,6 +725,11 @@ const styles = StyleSheet.create({
   botMessageWrapper: {
     alignSelf: 'flex-start',
   },
+  systemMessageWrapper: {
+    alignSelf: 'center',
+    maxWidth: '100%',
+    marginBottom: 12,
+  },
   messageBubble: {
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -677,6 +747,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+  },
+  systemMessage: {
+    backgroundColor: '#F3F4F6',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+  systemMessageText: {
+    fontSize: 12,
+    color: '#6B7280',
+    textAlign: 'center',
   },
   errorMessage: {
     backgroundColor: '#FEF2F2',
@@ -711,6 +792,12 @@ const styles = StyleSheet.create({
   },
   typingDotMiddle: {
     opacity: 0.7,
+  },
+  typingText: {
+    marginLeft: 8,
+    fontSize: 12,
+    color: '#9CA3AF',
+    fontStyle: 'italic',
   },
   imagePreviewContainer: {
     marginHorizontal: 20,
@@ -804,7 +891,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   micButtonActive: {
-    backgroundColor: '#EF4444',
+    backgroundColor: '#E07A5F',
   },
   sendButton: {
     width: 36,
@@ -815,7 +902,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sendButtonDisabled: {
-    backgroundColor: '#E5E7EB',
-    opacity: 0.5,
+    backgroundColor: '#9CA3AF',
   },
 });

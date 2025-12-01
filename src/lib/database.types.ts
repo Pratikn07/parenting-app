@@ -255,35 +255,32 @@ export interface Database {
           id: string;
           title: string;
           description: string;
-          milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
-          min_age_months: number;
-          max_age_months: number;
-          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          category: 'physical' | 'cognitive' | 'social' | 'emotional';
+          age_min_months: number;
+          age_max_months: number;
           is_active: boolean;
+          sort_order: number;
           created_at: string;
-          updated_at: string;
         };
         Insert: {
           id?: string;
           title: string;
           description: string;
-          milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
-          min_age_months: number;
-          max_age_months: number;
-          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          category: 'physical' | 'cognitive' | 'social' | 'emotional';
+          age_min_months: number;
+          age_max_months: number;
           is_active?: boolean;
+          sort_order?: number;
           created_at?: string;
-          updated_at?: string;
         };
         Update: {
           title?: string;
           description?: string;
-          milestone_type?: 'physical' | 'cognitive' | 'social' | 'emotional';
-          min_age_months?: number;
-          max_age_months?: number;
-          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          category?: 'physical' | 'cognitive' | 'social' | 'emotional';
+          age_min_months?: number;
+          age_max_months?: number;
           is_active?: boolean;
-          updated_at?: string;
+          sort_order?: number;
         };
       };
       user_milestone_progress: {
@@ -374,6 +371,48 @@ export interface Database {
           is_archived?: boolean;
         };
       };
+      articles: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          body_md: string;
+          age_min_days: number | null;
+          age_max_days: number | null;
+          tags: string[] | null;
+          locale: string;
+          last_reviewed_at: string | null;
+          reviewer: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          body_md: string;
+          age_min_days?: number | null;
+          age_max_days?: number | null;
+          tags?: string[] | null;
+          locale?: string;
+          last_reviewed_at?: string | null;
+          reviewer?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          slug?: string;
+          title?: string;
+          body_md?: string;
+          age_min_days?: number | null;
+          age_max_days?: number | null;
+          tags?: string[] | null;
+          locale?: string;
+          last_reviewed_at?: string | null;
+          reviewer?: string | null;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       // Add views if needed later
@@ -382,7 +421,7 @@ export interface Database {
       // Add stored procedures if needed later
     };
     Enums: {
-      parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+      parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
       feeding_preference: 'breastfeeding' | 'formula' | 'mixed';
       milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
       gender: 'male' | 'female' | 'other';
@@ -429,8 +468,13 @@ export type DailyTipUpdate = Database['public']['Tables']['daily_tips']['Update'
 export type MilestoneTemplateUpdate = Database['public']['Tables']['milestone_templates']['Update'];
 export type UserMilestoneProgressUpdate = Database['public']['Tables']['user_milestone_progress']['Update'];
 
+// Article types
+export type Article = Database['public']['Tables']['articles']['Row'];
+export type ArticleInsert = Database['public']['Tables']['articles']['Insert'];
+export type ArticleUpdate = Database['public']['Tables']['articles']['Update'];
+
 // Enum types
-export type ParentingStage = Database['public']['Enums']['parenting_stage'];
+export type ParentingStage = 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
 export type FeedingPreference = Database['public']['Enums']['feeding_preference'];
 export type MilestoneType = Database['public']['Enums']['milestone_type'];
 export type Gender = Database['public']['Enums']['gender'];

@@ -1,5 +1,5 @@
 import { supabase } from '../../lib/supabase';
-import { 
+import {
   DailyTip,
   DailyTipInsert,
   DailyTipUpdate,
@@ -15,11 +15,11 @@ export interface DailyTipsServiceInterface {
   getTipForDate(userId: string, date: string): Promise<DailyTip | null>;
   getUserTips(userId: string, limit?: number): Promise<DailyTip[]>;
   markTipAsViewed(userId: string, tipId: string): Promise<DailyTip>;
-  
+
   // Tip generation
   generateDailyTip(userId: string, date?: string): Promise<DailyTip>;
   generateTipsForWeek(userId: string, startDate?: string): Promise<DailyTip[]>;
-  
+
   // Utility functions
   getTodaysDate(): string;
   shouldGenerateNewTip(userId: string): Promise<boolean>;
@@ -36,7 +36,7 @@ export interface TipTemplate {
 }
 
 export class DailyTipsService implements DailyTipsServiceInterface {
-  
+
   // Predefined tip templates organized by category and parenting stage
   private tipTemplates: TipTemplate[] = [
     // Newborn tips (0-3 months)
@@ -256,7 +256,7 @@ export class DailyTipsService implements DailyTipsServiceInterface {
 
     // Get user profile and children to personalize the tip
     const { data: profile, error: profileError } = await supabase
-      .from('users')
+      .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
@@ -271,7 +271,7 @@ export class DailyTipsService implements DailyTipsServiceInterface {
       .from('children')
       .select('*')
       .eq('user_id', userId)
-      .order('date_of_birth', { ascending: false });
+      .order('birth_date', { ascending: false });
 
     // Select appropriate tip template
     const template = this.selectTipTemplate(profile, children || []);
@@ -340,7 +340,7 @@ export class DailyTipsService implements DailyTipsServiceInterface {
    */
   async shouldGenerateNewTip(userId: string): Promise<boolean> {
     const today = this.getTodaysDate();
-    
+
     const { data, error } = await supabase
       .from('daily_tips')
       .select('id')
@@ -364,7 +364,7 @@ export class DailyTipsService implements DailyTipsServiceInterface {
       const youngestChild = children[0]; // Already sorted by birth_date desc
       if (youngestChild.birth_date) {
         const ageInMonths = this.calculateAgeInMonths(youngestChild.birth_date);
-        
+
         // Filter templates by age appropriateness
         const ageAppropriateTemplates = this.tipTemplates.filter(template => {
           if (template.minAgeMonths !== undefined && template.maxAgeMonths !== undefined) {
@@ -381,7 +381,7 @@ export class DailyTipsService implements DailyTipsServiceInterface {
     }
 
     // Fallback to parenting stage from profile
-    const stageTemplates = this.tipTemplates.filter(template => 
+    const stageTemplates = this.tipTemplates.filter(template =>
       template.parentingStage === profile.parenting_stage
     );
 
@@ -399,10 +399,10 @@ export class DailyTipsService implements DailyTipsServiceInterface {
   private calculateAgeInMonths(birthDate: string): number {
     const birth = new Date(birthDate);
     const now = new Date();
-    
+
     const yearsDiff = now.getFullYear() - birth.getFullYear();
     const monthsDiff = now.getMonth() - birth.getMonth();
-    
+
     return yearsDiff * 12 + monthsDiff;
   }
 
@@ -411,10 +411,10 @@ export class DailyTipsService implements DailyTipsServiceInterface {
    */
   private getYoungestChildAge(children: Child[]): number | undefined {
     if (children.length === 0) return undefined;
-    
+
     const youngestChild = children[0]; // Already sorted by birth_date desc
     if (!youngestChild.birth_date) return undefined;
-    
+
     return this.calculateAgeInMonths(youngestChild.birth_date);
   }
 

@@ -67,12 +67,12 @@ class MilestoneServiceClass {
     const yearsDiff = now.getFullYear() - birth.getFullYear();
     const monthsDiff = now.getMonth() - birth.getMonth();
     let ageInMonths = yearsDiff * 12 + monthsDiff;
-    
+
     // Adjust if birthday hasn't occurred this month yet
     if (now.getDate() < birth.getDate()) {
       ageInMonths--;
     }
-    
+
     return Math.max(0, ageInMonths);
   }
 
@@ -101,7 +101,7 @@ class MilestoneServiceClass {
       .from('children')
       .select('*')
       .eq('user_id', userId)
-      .order('date_of_birth', { ascending: false });
+      .order('birth_date', { ascending: false });
 
     if (error) {
       console.error('Error fetching children:', error);
@@ -133,11 +133,11 @@ class MilestoneServiceClass {
    */
   async getTemplatesForChild(childId: string): Promise<MilestoneTemplate[]> {
     const child = await this.getChild(childId);
-    if (!child || !child.date_of_birth) {
+    if (!child || !child.birth_date) {
       return this.getAllTemplates();
     }
 
-    const ageInMonths = this.calculateAgeInMonths(child.date_of_birth);
+    const ageInMonths = this.calculateAgeInMonths(child.birth_date);
 
     const { data, error } = await supabase
       .from('milestone_templates')
@@ -179,7 +179,7 @@ class MilestoneServiceClass {
    */
   async getMilestonesBySection(childId: string): Promise<MilestonesBySection> {
     const child = await this.getChild(childId);
-    if (!child || !child.date_of_birth) {
+    if (!child || !child.birth_date) {
       return {
         past: [],
         current: [],
@@ -188,8 +188,8 @@ class MilestoneServiceClass {
       };
     }
 
-    const ageInMonths = this.calculateAgeInMonths(child.date_of_birth);
-    
+    const ageInMonths = this.calculateAgeInMonths(child.birth_date);
+
     // Fetch all templates and achieved milestones in parallel
     const [templates, achievedMilestones] = await Promise.all([
       this.getAllTemplates(),
@@ -385,7 +385,7 @@ class MilestoneServiceClass {
    */
   async getMilestoneProgress(childId: string): Promise<MilestoneProgress> {
     const sections = await this.getMilestonesBySection(childId);
-    
+
     // Calculate totals from past + current milestones (not upcoming)
     const relevantTemplates = [...sections.past, ...sections.current];
     const total = relevantTemplates.length;

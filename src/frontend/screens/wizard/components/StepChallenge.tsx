@@ -48,14 +48,14 @@ const getChallenges = (intent: WizardData['intent'], ageInMonths: number, stage?
       { challenge: 'Just exploring', emoji: '🔍' },
     ];
   }
-  
+
   // Age-based logic
   const isNewborn = stage === 'newborn' || ageInMonths < 4;
   const isInfant = stage === 'infant' || (ageInMonths >= 4 && ageInMonths < 12);
   const isToddler = stage === 'toddler' || (ageInMonths >= 12 && ageInMonths < 36);
   const isPreschool = stage === 'preschool' || (ageInMonths >= 36 && ageInMonths < 60);
   const isSchoolAge = stage === 'school' || ageInMonths >= 60;
-  
+
   // SLEEP challenges by age
   if (intent === 'sleep') {
     if (isNewborn) return [
@@ -88,7 +88,7 @@ const getChallenges = (intent: WizardData['intent'], ageInMonths: number, stage?
       { challenge: 'Staying in bed', emoji: '🛏️' },
     ];
   }
-  
+
   // FEEDING challenges by age
   if (intent === 'feeding') {
     if (isNewborn) return [
@@ -121,7 +121,7 @@ const getChallenges = (intent: WizardData['intent'], ageInMonths: number, stage?
       { challenge: 'Trying new foods', emoji: '🍽️' },
     ];
   }
-  
+
   // BEHAVIOR challenges by age
   if (intent === 'behavior') {
     if (isNewborn || isInfant) return [
@@ -154,7 +154,7 @@ const getChallenges = (intent: WizardData['intent'], ageInMonths: number, stage?
       { challenge: 'Screen time limits', emoji: '📱' },
     ];
   }
-  
+
   // DEVELOPMENT challenges by age
   if (intent === 'development') {
     if (isNewborn || isInfant) return [
@@ -180,7 +180,7 @@ const getChallenges = (intent: WizardData['intent'], ageInMonths: number, stage?
       { challenge: 'Problem solving', emoji: '🧠' },
     ];
   }
-  
+
   // HEALTH challenges by age
   if (intent === 'health') {
     if (isNewborn || isInfant) return [
@@ -206,7 +206,7 @@ const getChallenges = (intent: WizardData['intent'], ageInMonths: number, stage?
       { challenge: 'Building immunity', emoji: '💪' },
     ];
   }
-  
+
   // OTHER / General fallback
   return [
     { challenge: 'Daily routine', emoji: '📅' },
@@ -222,19 +222,29 @@ const getTitle = (intent: WizardData['intent'], stage?: string) => {
   if (stage === 'expecting') {
     return "What's on your mind?";
   }
-  
+
   const intentInfo = INTENT_INFO[intent || 'other'];
   return `${intentInfo.emoji} ${intentInfo.label} Challenge`;
 };
 
+// Helper to get display name for children
+const getChildrenDisplayName = (children?: any[]) => {
+  if (!children || children.length === 0) return 'your little one';
+  if (children.length === 1) return children[0].name || 'your little one';
+  const names = children.filter(c => c.name).map(c => c.name);
+  if (names.length === 0) return 'your little ones';
+  if (names.length === 1) return names[0];
+  return `${names[0]} and ${names[1]}`;
+};
+
 // Get contextual subtitle
-const getSubtitle = (intent: WizardData['intent'], childName: string, stage?: string) => {
-  const name = childName || 'your little one';
-  
+const getSubtitle = (intent: WizardData['intent'], children?: any[], stage?: string) => {
+  const name = getChildrenDisplayName(children);
+
   if (stage === 'expecting') {
     return `Let's prepare for ${name}'s arrival together.`;
   }
-  
+
   switch (intent) {
     case 'sleep':
       return `Let's tackle ${name}'s sleep together.`;
@@ -256,16 +266,19 @@ export const StepChallenge = () => {
   const { setGuestData, completeOnboarding } = useAuthStore();
   const [selected, setSelected] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  
-  const challenges = getChallenges(data.intent, data.childAgeInMonths || 0, data.childStage);
-  const title = getTitle(data.intent, data.childStage);
-  const subtitle = getSubtitle(data.intent, data.childName || '', data.childStage);
+
+  // Use first child for determining challenges and stage
+  const firstChild = data.children?.[0];
+  const intent = data.intent || 'other'; // Default to 'other' if somehow undefined
+  const challenges = getChallenges(intent, firstChild?.ageInMonths || 0, firstChild?.stage);
+  const title = getTitle(intent, firstChild?.stage);
+  const subtitle = getSubtitle(intent, data.children, firstChild?.stage);
 
   const saveOnboardingData = async (challenge: string) => {
     try {
       const { data: authData } = await supabase.auth.getUser();
       const userId = authData?.user?.id;
-      
+
       if (!userId) {
         console.log('No authenticated user, saving as guest data only');
         return false;
@@ -275,10 +288,10 @@ export const StepChallenge = () => {
 
       // 1. Update user profile with onboarding data
       const { error: userError } = await supabase
-        .from('users')
+        .from('profiles')
         .update({
           name: data.parentName,
-          parenting_stage: data.childStage || 'newborn',
+          parenting_stage: firstChild?.stage || 'newborn',
           primary_focus: data.intent,
           primary_challenge: challenge,
           has_completed_onboarding: true,
@@ -291,19 +304,26 @@ export const StepChallenge = () => {
         throw userError;
       }
 
-      // 2. Create child record (skip for expecting parents without a name)
-      if (data.childName && data.childName.trim()) {
-        const { error: childError } = await supabase
-          .from('children')
-          .insert({
-            user_id: userId,
-            name: data.childName,
-            // Use actual DOB if provided, otherwise null (don't fake it)
-            date_of_birth: data.childDateOfBirth || null,
-          });
+      // 2. Create child records (bulk insert, skip expecting parents without names)
+      if (data.children && data.children.length > 0) {
+        const validChildren = data.children.filter(c => c.name && c.name.trim());
 
-        if (childError) {
-          console.error('Error creating child:', childError);
+        if (validChildren.length > 0) {
+          const childrenPayload = validChildren.map(child => ({
+            user_id: userId,
+            name: child.name,
+            birth_date: child.dateOfBirth || null,
+          }));
+
+          const { error: childError } = await supabase
+            .from('children')
+            .insert(childrenPayload);
+
+          if (childError) {
+            console.error('Error creating children:', childError);
+          } else {
+            console.log(`✅ Created ${validChildren.length} child record(s)`);
+          }
         }
       }
 
@@ -311,8 +331,17 @@ export const StepChallenge = () => {
       const responses = [
         { question_key: 'parent_name', answer: { value: data.parentName } },
         { question_key: 'intent', answer: { value: data.intent, custom: data.customIntent } },
-        { question_key: 'child_name', answer: { value: data.childName } },
-        { question_key: 'child_age', answer: { value: data.childAge, months: data.childAgeInMonths, stage: data.childStage } },
+        {
+          question_key: 'children',
+          answer: {
+            count: data.children?.length || 0,
+            children: data.children?.map(c => ({
+              name: c.name,
+              stage: c.stage,
+              ageInMonths: c.ageInMonths
+            }))
+          }
+        },
         { question_key: 'main_challenge', answer: { value: challenge } },
       ];
 
@@ -334,23 +363,23 @@ export const StepChallenge = () => {
 
   const handleNext = async () => {
     if (!selected) return;
-    
+
     setIsSaving(true);
-    
+
     try {
       // Update local state
       updateData({ mainChallenge: selected });
-      
+
       // Save to database
       await saveOnboardingData(selected);
-      
+
       // Save to local state for immediate use in chat
       setGuestData({ ...data, mainChallenge: selected });
       completeOnboarding();
-      
+
       // Reset wizard state
       reset();
-      
+
       // Navigate directly to chat
       router.replace('/chat');
     } catch (error) {
@@ -362,8 +391,8 @@ export const StepChallenge = () => {
   };
 
   return (
-    <Animated.View 
-      entering={FadeInRight} 
+    <Animated.View
+      entering={FadeInRight}
       exiting={FadeOutLeft}
       style={styles.container}
     >
@@ -372,7 +401,7 @@ export const StepChallenge = () => {
         <Text style={styles.subtitle}>{subtitle}</Text>
       </View>
 
-      <ScrollView 
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.optionsContainer}
       >
@@ -393,7 +422,7 @@ export const StepChallenge = () => {
                 selected === item.challenge && styles.optionTextSelected
               ]}>{item.challenge}</Text>
             </View>
-            
+
             {selected === item.challenge && (
               <View style={styles.checkCircle}>
                 <View style={styles.checkInner} />
@@ -409,7 +438,6 @@ export const StepChallenge = () => {
           onPress={handleNext}
           style={[styles.button, (!selected || isSaving) && styles.buttonDisabled]}
           variant="primary"
-          disabled={!selected || isSaving}
         />
       </View>
     </Animated.View>

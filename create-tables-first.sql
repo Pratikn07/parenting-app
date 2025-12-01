@@ -1,5 +1,5 @@
 -- =====================================================
--- CREATE REQUIRED TABLES FOR PARENTING APP
+-- CREATE REQUIRED TABLES FOR MY CURATED HAVEN
 -- =====================================================
 -- Run this FIRST to create the basic table structure
 

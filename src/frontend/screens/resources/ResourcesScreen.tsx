@@ -13,16 +13,33 @@ import { router } from 'expo-router';
 import { X, Search, Bookmark, Share, Clock, Sparkles, TrendingUp, BookOpen, BarChart3, MessageCircle, Calendar, Heart, CheckCircle, Circle } from 'lucide-react-native';
 import { useAuthStore } from '../../../shared/stores';
 import { recommendationsService, RecommendedArticle, ActionItem, PersonalizedContent } from '../../../services';
+import { progressService } from '../../../services/progress/ProgressService';
+import { milestonesService } from '../../../services/milestones/MilestonesService';
+import type { MilestoneStats } from '../../../services/milestones/MilestonesService';
+import { UserProgressStats, UserActivityLog, Child, MilestoneTemplate, UserMilestoneProgress } from '../../../lib/database.types';
+import { THEME } from '../../../lib/constants';
 
 export default function ResourcesScreen() {
   const [activeTab, setActiveTab] = useState('nextsteps');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  
+
   // Dynamic data state
   const [personalizedContent, setPersonalizedContent] = useState<PersonalizedContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
+  // Progress tab state
+  const [progressStats, setProgressStats] = useState<UserProgressStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<UserActivityLog[]>([]);
+  const [progressLoading, setProgressLoading] = useState(false);
+
+  // Milestones tab state
+  const [children, setChildren] = useState<Child[]>([]);
+  const [milestoneStats, setMilestoneStats] = useState<MilestoneStats | null>(null);
+  const [milestones, setMilestones] = useState<MilestoneTemplate[]>([]);
+  const [milestoneProgress, setMilestoneProgress] = useState<Map<string, UserMilestoneProgress>>(new Map());
+  const [milestonesLoading, setMilestonesLoading] = useState(false);
+
   // Get current user
   const { user } = useAuthStore();
 
@@ -30,15 +47,19 @@ export default function ResourcesScreen() {
   useEffect(() => {
     if (user?.id && activeTab === 'nextsteps') {
       loadPersonalizedContent();
+    } else if (user?.id && activeTab === 'progress') {
+      loadProgressData();
+    } else if (user?.id && activeTab === 'milestones') {
+      loadMilestonesData();
     }
   }, [user?.id, activeTab]);
 
   const loadPersonalizedContent = async () => {
     if (!user?.id) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const content = await recommendationsService.getPersonalizedContent(user.id);
       setPersonalizedContent(content);
@@ -52,7 +73,7 @@ export default function ResourcesScreen() {
 
   const handleCompleteTip = async () => {
     if (!user?.id || !personalizedContent?.dailyTip) return;
-    
+
     try {
       await recommendationsService.completeTip(user.id, personalizedContent.dailyTip.id);
       // Reload content to reflect changes
@@ -65,7 +86,7 @@ export default function ResourcesScreen() {
 
   const handleSkipTip = async () => {
     if (!user?.id || !personalizedContent?.dailyTip) return;
-    
+
     try {
       await recommendationsService.skipTip(user.id, personalizedContent.dailyTip.id);
       // Reload content to reflect changes
@@ -73,6 +94,64 @@ export default function ResourcesScreen() {
     } catch (err) {
       console.error('Error skipping tip:', err);
       setError('Failed to skip tip');
+    }
+  };
+
+  const loadProgressData = async () => {
+    if (!user?.id) return;
+
+    setProgressLoading(true);
+
+    try {
+      // Load current week stats
+      const stats = await progressService.getCurrentWeekStats(user.id);
+      setProgressStats(stats);
+
+      // Load recent activity
+      const activity = await progressService.getRecentActivity(user.id, 10);
+      setRecentActivity(activity);
+    } catch (err) {
+      console.error('Error loading progress data:', err);
+    } finally {
+      setProgressLoading(false);
+    }
+  };
+
+  const loadMilestonesData = async () => {
+    if (!user?.id) return;
+
+    setMilestonesLoading(true);
+
+    try {
+      // Load children (using supabase directly since we need it here)
+      const { supabase } = await import('../../../lib/supabase');
+      const { data: childrenData } = await supabase
+        .from('children')
+        .select('*')
+        .eq('user_id', user.id);
+
+      setChildren(childrenData || []);
+
+      if (childrenData && childrenData.length > 0) {
+        const firstChild = childrenData[0];
+
+        // Load relevant milestones for child's age
+        const relevantMilestones = await milestonesService.getRelevantMilestones(firstChild);
+        setMilestones(relevantMilestones);
+
+        // Load progress
+        const userProgress = await milestonesService.getUserMilestoneProgress(user.id, firstChild.id);
+        const progressMap = new Map(userProgress.map(p => [p.milestone_template_id, p]));
+        setMilestoneProgress(progressMap);
+
+        // Load stats
+        const stats = await milestonesService.getMilestoneStats(user.id, firstChild.id);
+        setMilestoneStats(stats);
+      }
+    } catch (err) {
+      console.error('Error loading milestones data:', err);
+    } finally {
+      setMilestonesLoading(false);
     }
   };
 
@@ -106,37 +185,6 @@ export default function ResourcesScreen() {
       readTime: 6,
       title: 'Postpartum Self-Care for New Moms',
       summary: 'Taking care of yourself while caring for your newborn - practical tips for new mothers.',
-    },
-  ];
-
-  const milestones = [
-    {
-      id: '1',
-      title: 'Holds head up briefly',
-      description: 'Can lift and hold head up for short periods during tummy time',
-      category: 'Physical',
-      completed: true,
-    },
-    {
-      id: '2',
-      title: 'Follows objects with eyes',
-      description: 'Tracks moving objects and faces with their gaze',
-      category: 'Cognitive',
-      completed: true,
-    },
-    {
-      id: '3',
-      title: 'Responds to familiar voices',
-      description: 'Shows recognition and response to parent voices',
-      category: 'Social',
-      completed: false,
-    },
-    {
-      id: '4',
-      title: 'Makes cooing sounds',
-      description: 'Begins to make soft vowel sounds and coos',
-      category: 'Communication',
-      completed: false,
     },
   ];
 
@@ -209,104 +257,141 @@ export default function ResourcesScreen() {
     </ScrollView>
   );
 
-  const renderMilestonesTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Milestone Tracker</Text>
-        <Text style={styles.tabSubtitle}>Track your baby's developmental progress</Text>
-      </View>
-
-      <View style={styles.progressCard}>
-        <Text style={styles.progressCardTitle}>Overall Progress</Text>
-        <Text style={styles.progressCardSubtitle}>Your baby's milestone achievements</Text>
-        
-        <View style={styles.completedMilestones}>
-          <Text style={styles.completedLabel}>Completed Milestones</Text>
-          <Text style={styles.completedFraction}>3 of 6</Text>
+  const renderMilestonesTab = () => {
+    if (milestonesLoading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={THEME.colors.primary} />
+          <Text style={styles.loadingText}>Loading milestones...</Text>
         </View>
-        
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: '50%' }]} />
+      );
+    }
+
+    if (children.length === 0) {
+      return (
+        <View style={styles.emptyStateContainer}>
+          <Text style={styles.emptyStateTitle}>No Children Yet</Text>
+          <Text style={styles.emptyStateText}>Add a child to start tracking milestones</Text>
+        </View>
+      );
+    }
+
+    return (
+      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.tabHeader}>
+          <Text style={styles.tabTitle}>Milestone Tracker</Text>
+          <Text style={styles.tabSubtitle}>Track your baby's developmental progress</Text>
         </View>
 
-        <View style={styles.categoryStats}>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Physical</Text>
-            <Text style={styles.categoryStatCount}>1/2</Text>
-          </View>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Cognitive</Text>
-            <Text style={styles.categoryStatCount}>1/1</Text>
-          </View>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Social</Text>
-            <Text style={styles.categoryStatCount}>1/2</Text>
-          </View>
-          <View style={styles.categoryStat}>
-            <Circle size={16} color="#6B7280" strokeWidth={2} />
-            <Text style={styles.categoryStatLabel}>Communication</Text>
-            <Text style={styles.categoryStatCount}>0/1</Text>
-          </View>
-        </View>
-      </View>
+        {milestoneStats && (
+          <View style={styles.progressCard}>
+            <Text style={styles.progressCardTitle}>Overall Progress</Text>
+            <Text style={styles.progressCardSubtitle}>Your baby's milestone achievements</Text>
 
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {milestoneCategories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.filterChip,
-              selectedCategory === category && styles.filterChipActive
-            ]}
-            onPress={() => setSelectedCategory(category)}
-            activeOpacity={0.7}
-          >
-            <Text style={[
-              styles.filterChipText,
-              selectedCategory === category && styles.filterChipTextActive
-            ]}>
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+            <View style={styles.completedMilestones}>
+              <Text style={styles.completedLabel}>Completed Milestones</Text>
+              <Text style={styles.completedFraction}>
+                {milestoneStats.completedMilestones} of {milestoneStats.totalMilestones}
+              </Text>
+            </View>
 
-      <View style={styles.milestonesList}>
-        {milestones
-          .filter(milestone => selectedCategory === 'All' || milestone.category === selectedCategory)
-          .map((milestone) => (
-          <View key={milestone.id} style={styles.milestoneCard}>
-            <View style={styles.milestoneContent}>
-              <View style={styles.milestoneIcon}>
-                {milestone.completed ? (
-                  <CheckCircle size={24} color="#8BA888" strokeWidth={2} fill="#8BA888" />
-                ) : (
-                  <Circle size={24} color="#D1D5DB" strokeWidth={2} />
-                )}
-              </View>
-              <View style={styles.milestoneText}>
-                <Text style={[
-                  styles.milestoneTitle,
-                  milestone.completed && styles.milestoneTitleCompleted
-                ]}>
-                  {milestone.title}
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${milestoneStats.completionRate}%` }]} />
+            </View>
+
+            <View style={styles.categoryStats}>
+              <View style={styles.categoryStat}>
+                <Circle size={16} color="#6B7280" strokeWidth={2} />
+                <Text style={styles.categoryStatLabel}>Physical</Text>
+                <Text style={styles.categoryStatCount}>
+                  {milestoneStats.byType.physical.completed}/{milestoneStats.byType.physical.total}
                 </Text>
-                <Text style={styles.milestoneDescription}>{milestone.description}</Text>
+              </View>
+              <View style={styles.categoryStat}>
+                <Circle size={16} color="#6B7280" strokeWidth={2} />
+                <Text style={styles.categoryStatLabel}>Cognitive</Text>
+                <Text style={styles.categoryStatCount}>
+                  {milestoneStats.byType.cognitive.completed}/{milestoneStats.byType.cognitive.total}
+                </Text>
+              </View>
+              <View style={styles.categoryStat}>
+                <Circle size={16} color="#6B7280" strokeWidth={2} />
+                <Text style={styles.categoryStatLabel}>Social</Text>
+                <Text style={styles.categoryStatCount}>
+                  {milestoneStats.byType.social.completed}/{milestoneStats.byType.social.total}
+                </Text>
+              </View>
+              <View style={styles.categoryStat}>
+                <Circle size={16} color="#6B7280" strokeWidth={2} />
+                <Text style={styles.categoryStatLabel}>Emotional</Text>
+                <Text style={styles.categoryStatCount}>
+                  {milestoneStats.byType.emotional.completed}/{milestoneStats.byType.emotional.total}
+                </Text>
               </View>
             </View>
           </View>
-        ))}
-      </View>
-    </ScrollView>
-  );
+        )}
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filterContainer}
+          contentContainerStyle={styles.filterContent}
+        >
+          {milestoneCategories.map((category) => (
+            <TouchableOpacity
+              key={category}
+              style={[
+                styles.filterChip,
+                selectedCategory === category && styles.filterChipActive
+              ]}
+              onPress={() => setSelectedCategory(category)}
+              activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.filterChipText,
+                selectedCategory === category && styles.filterChipTextActive
+              ]}>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        <View style={styles.milestonesList}>
+          {milestones
+            .filter(milestone => selectedCategory === 'All' || milestone.category === selectedCategory)
+            .map((milestone) => {
+              const progress = milestoneProgress.get(milestone.id);
+              const isCompleted = progress?.is_completed || false;
+
+              return (
+                <View key={milestone.id} style={styles.milestoneCard}>
+                  <View style={styles.milestoneContent}>
+                    <View style={styles.milestoneIcon}>
+                      {isCompleted ? (
+                        <CheckCircle size={24} color="#8BA888" strokeWidth={2} fill="#8BA888" />
+                      ) : (
+                        <Circle size={24} color="#D1D5DB" strokeWidth={2} />
+                      )}
+                    </View>
+                    <View style={styles.milestoneText}>
+                      <Text style={[
+                        styles.milestoneTitle,
+                        isCompleted && styles.milestoneTitleCompleted
+                      ]}>
+                        {milestone.title}
+                      </Text>
+                      <Text style={styles.milestoneDescription}>{milestone.description}</Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+        </View>
+      </ScrollView>
+    );
+  };
 
   const renderLibraryTab = () => (
     <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
@@ -326,8 +411,8 @@ export default function ResourcesScreen() {
         </View>
       </View>
 
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.filterContainer}
         contentContainerStyle={styles.filterContent}
@@ -378,64 +463,97 @@ export default function ResourcesScreen() {
     </ScrollView>
   );
 
-  const renderProgressTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Weekly Progress</Text>
-        <Text style={styles.tabSubtitle}>Your parenting journey this week</Text>
-      </View>
+  const renderProgressTab = () => {
+    // Map database stats to UI format
+    const weeklyStats = progressStats ? [
+      { label: 'Questions Asked', value: progressStats.questions_asked, icon: MessageCircle },
+      { label: 'Tips Received', value: progressStats.tips_received, icon: Calendar },
+      { label: 'Content Saved', value: progressStats.content_saved, icon: Heart },
+      { label: 'Milestones', value: progressStats.milestones_completed, icon: TrendingUp },
+    ] : [];
 
-      <View style={styles.statsGrid}>
-        {weeklyStats.map((stat, index) => (
-          <View key={index} style={styles.statCard}>
-            <View style={styles.statIcon}>
-              <stat.icon size={20} color="#6B7280" strokeWidth={2} />
+    const totalEngagement = progressStats
+      ? progressStats.questions_asked + progressStats.tips_received + progressStats.content_saved + progressStats.milestones_completed
+      : 0;
+    const engagementGoal = 15;
+    const engagementPercentage = Math.min((totalEngagement / engagementGoal) * 100, 100);
+
+    return (
+      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.tabHeader}>
+          <Text style={styles.tabTitle}>Weekly Progress</Text>
+          <Text style={styles.tabSubtitle}>Your parenting journey this week</Text>
+        </View>
+
+        {progressLoading ? (
+          <View style={styles.tipLoadingCard}>
+            <ActivityIndicator size="small" color="#8BA888" />
+            <Text style={styles.tipLoadingText}>Loading your progress...</Text>
+          </View>
+        ) : (
+          <>
+            <View style={styles.statsGrid}>
+              {weeklyStats.map((stat, index) => (
+                <View key={index} style={styles.statCard}>
+                  <View style={styles.statIcon}>
+                    <stat.icon size={20} color="#6B7280" strokeWidth={2} />
+                  </View>
+                  <Text style={styles.statValue}>{stat.value}</Text>
+                  <Text style={styles.statLabel}>{stat.label}</Text>
+                </View>
+              ))}
             </View>
-            <Text style={styles.statValue}>{stat.value}</Text>
-            <Text style={styles.statLabel}>{stat.label}</Text>
-          </View>
-        ))}
-      </View>
 
-      <View style={styles.engagementCard}>
-        <Text style={styles.engagementTitle}>Weekly Engagement</Text>
-        <Text style={styles.engagementSubtitle}>Your learning and interaction progress</Text>
-        
-        <View style={styles.engagementProgress}>
-          <Text style={styles.engagementLabel}>Questions & Interactions</Text>
-          <Text style={styles.engagementCount}>12 of 15</Text>
-        </View>
-        
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: '80%' }]} />
-        </View>
-        
-        <Text style={styles.engagementMessage}>
-          Great job staying engaged! Keep asking questions and exploring resources.
-        </Text>
-      </View>
+            <View style={styles.engagementCard}>
+              <Text style={styles.engagementTitle}>Weekly Engagement</Text>
+              <Text style={styles.engagementSubtitle}>Your learning and interaction progress</Text>
 
-      <View style={styles.recentActivity}>
-        <Text style={styles.sectionTitle}>Recent Activity</Text>
-        <Text style={styles.activitySubtitle}>Your parenting journey highlights this week</Text>
-        
-        <View style={styles.activityList}>
-          <View style={styles.activityItem}>
-            <View style={styles.activityDot} />
-            <Text style={styles.activityText}>Completed milestone: Holds head up briefly</Text>
-          </View>
-          <View style={styles.activityItem}>
-            <View style={styles.activityDot} />
-            <Text style={styles.activityText}>Saved 3 new sleep tips to your collection</Text>
-          </View>
-          <View style={styles.activityItem}>
-            <View style={styles.activityDot} />
-            <Text style={styles.activityText}>Asked 5 questions about feeding schedules</Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
-  );
+              <View style={styles.engagementProgress}>
+                <Text style={styles.engagementLabel}>Questions & Interactions</Text>
+                <Text style={styles.engagementCount}>{totalEngagement} of {engagementGoal}</Text>
+              </View>
+
+              <View style={styles.progressBar}>
+                <View style={[styles.progressFill, { width: `${engagementPercentage}%` }]} />
+              </View>
+
+              <Text style={styles.engagementMessage}>
+                {totalEngagement >= engagementGoal
+                  ? 'Amazing! You\'ve exceeded your weekly goal!'
+                  : totalEngagement >= engagementGoal * 0.7
+                    ? 'Great job staying engaged! Keep asking questions and exploring resources.'
+                    : 'Keep going! Ask questions and explore resources to boost your progress.'}
+              </Text>
+            </View>
+
+            <View style={styles.recentActivity}>
+              <Text style={styles.sectionTitle}>Recent Activity</Text>
+              <Text style={styles.activitySubtitle}>Your parenting journey highlights this week</Text>
+
+              <View style={styles.activityList}>
+                {recentActivity.length > 0 ? (
+                  recentActivity.map((activity, index) => (
+                    <View key={activity.id} style={styles.activityItem}>
+                      <View style={styles.activityDot} />
+                      <Text style={styles.activityText}>
+                        {activity.activity_type === 'question_asked' && `Asked: "${activity.metadata?.question?.substring(0, 60)}..."`}
+                        {activity.activity_type === 'resource_saved' && 'Saved a resource to your collection'}
+                        {activity.activity_type === 'milestone_completed' && 'Completed a milestone'}
+                        {activity.activity_type === 'tip_viewed' && 'Viewed a daily tip'}
+                        {activity.activity_type === 'search_performed' && `Searched for: "${activity.metadata?.query}"`}
+                      </Text>
+                    </View>
+                  ))
+                ) : (
+                  <Text style={styles.activityText}>No activity yet this week. Start by asking a question or exploring resources!</Text>
+                )}
+              </View>
+            </View>
+          </>
+        )}
+      </ScrollView>
+    );
+  };
 
   const renderNextStepsTab = () => {
     const dailyTip = personalizedContent?.dailyTip;
@@ -459,9 +577,9 @@ export default function ResourcesScreen() {
         ) : error ? (
           <View style={styles.tipErrorCard}>
             <Text style={styles.tipErrorText}>Unable to load today's tip</Text>
-            <TouchableOpacity 
-              style={styles.smallRetryButton} 
-              onPress={loadPersonalizedContent} 
+            <TouchableOpacity
+              style={styles.smallRetryButton}
+              onPress={loadPersonalizedContent}
               activeOpacity={0.7}
             >
               <Text style={styles.smallRetryButtonText}>Try Again</Text>
@@ -510,8 +628,8 @@ export default function ResourcesScreen() {
 
             {/* Enhanced Tip Actions */}
             <View style={styles.tipFooter}>
-              <TouchableOpacity 
-                style={styles.primaryActionButton} 
+              <TouchableOpacity
+                style={styles.primaryActionButton}
                 onPress={handleCompleteTip}
                 activeOpacity={0.7}
               >
@@ -519,8 +637,8 @@ export default function ResourcesScreen() {
                 <Text style={styles.primaryActionText}>Mark as Complete</Text>
               </TouchableOpacity>
               <View style={styles.secondaryActions}>
-                <TouchableOpacity 
-                  style={styles.secondaryActionButton} 
+                <TouchableOpacity
+                  style={styles.secondaryActionButton}
                   onPress={handleSkipTip}
                   activeOpacity={0.7}
                 >
@@ -536,8 +654,8 @@ export default function ResourcesScreen() {
         ) : (
           <View style={styles.noTipCard}>
             <Text style={styles.noTipText}>No tip available for today</Text>
-            <TouchableOpacity 
-              style={styles.generateTipButton} 
+            <TouchableOpacity
+              style={styles.generateTipButton}
               onPress={loadPersonalizedContent}
               activeOpacity={0.7}
             >
@@ -551,9 +669,9 @@ export default function ResourcesScreen() {
           <View style={styles.recommendedSection}>
             <Text style={styles.sectionTitle}>Recommended for You</Text>
             <Text style={styles.sectionSubtitle}>Articles related to your current focus</Text>
-            
-            <ScrollView 
-              horizontal 
+
+            <ScrollView
+              horizontal
               showsHorizontalScrollIndicator={false}
               style={styles.recommendedScroll}
               contentContainerStyle={styles.recommendedContent}
@@ -587,7 +705,7 @@ export default function ResourcesScreen() {
           <View style={styles.actionItemsSection}>
             <Text style={styles.sectionTitle}>Your Action Items</Text>
             <Text style={styles.sectionSubtitle}>Things to focus on this week</Text>
-            
+
             <View style={styles.actionItemsList}>
               {actionItems.map((item) => (
                 <View key={item.id} style={styles.actionItem}>
@@ -617,7 +735,7 @@ export default function ResourcesScreen() {
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
               <Search size={20} color="#6B7280" strokeWidth={2} />
@@ -629,8 +747,8 @@ export default function ResourcesScreen() {
             </View>
           </View>
 
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.filterContainer}
             contentContainerStyle={styles.filterContent}
@@ -695,8 +813,8 @@ export default function ResourcesScreen() {
       </View>
 
       <View style={styles.tabsContainer}>
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabsContent}
         >
@@ -710,10 +828,10 @@ export default function ResourcesScreen() {
               onPress={() => setActiveTab(tab.id)}
               activeOpacity={0.7}
             >
-              <tab.icon 
-                size={16} 
-                color={activeTab === tab.id ? "#FFFFFF" : "#6B7280"} 
-                strokeWidth={2} 
+              <tab.icon
+                size={16}
+                color={activeTab === tab.id ? "#FFFFFF" : "#6B7280"}
+                strokeWidth={2}
               />
               <Text style={[
                 styles.tabText,
@@ -735,6 +853,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FDF7F3',
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  emptyStateTitle: {
+    fontSize: 24,
+    fontFamily: THEME.fonts.header,
+    color: THEME.colors.text.primary,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptyStateText: {
+    fontSize: 16,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.text.secondary,
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',

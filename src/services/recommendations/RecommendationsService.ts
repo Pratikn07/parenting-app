@@ -1,5 +1,5 @@
 import { supabase } from '../../lib/supabase';
-import { 
+import {
   DailyTip,
   Child,
   ParentingStage,
@@ -50,23 +50,23 @@ export interface PersonalizedContent {
 }
 
 export class RecommendationsService {
-  
+
   /**
    * Get personalized content for a user's Next Steps tab
    */
   async getPersonalizedContent(userId: string): Promise<PersonalizedContent> {
     // Get user's daily tip
     const dailyTip = await dailyTipsService.getTodaysTip(userId);
-    
+
     // Get recommended articles based on daily tip and user profile
     const recommendedArticles = await this.getRecommendedArticles(userId, dailyTip);
-    
+
     // Generate personalized action items
     const actionItems = await this.generateActionItems(userId);
-    
+
     // Get user progress stats
     const progressStats = await this.getUserProgressStats(userId);
-    
+
     return {
       dailyTip,
       recommendedArticles,
@@ -81,7 +81,7 @@ export class RecommendationsService {
   async getRecommendedArticles(userId: string, dailyTip: DailyTip | null): Promise<RecommendedArticle[]> {
     // Get user profile and children for context
     const { data: user } = await supabase
-      .from('users')
+      .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
@@ -90,13 +90,13 @@ export class RecommendationsService {
       .from('children')
       .select('*')
       .eq('user_id', userId)
-      .order('date_of_birth', { ascending: false });
+      .order('birth_date', { ascending: false });
 
     if (!user) return [];
 
     const youngestChild = children?.[0];
-    const childAgeInDays = youngestChild?.date_of_birth 
-      ? this.calculateAgeInDays(youngestChild.date_of_birth)
+    const childAgeInDays = youngestChild?.birth_date
+      ? this.calculateAgeInDays(youngestChild.birth_date)
       : null;
 
     // Build recommendation query
@@ -109,7 +109,7 @@ export class RecommendationsService {
     // Filter by child age if available
     if (childAgeInDays !== null) {
       query = query.or(`age_min_days.is.null,age_min_days.lte.${childAgeInDays}`)
-               .or(`age_max_days.is.null,age_max_days.gte.${childAgeInDays}`);
+        .or(`age_max_days.is.null,age_max_days.gte.${childAgeInDays}`);
     }
 
     const { data: articles, error } = await query;
@@ -146,10 +146,10 @@ export class RecommendationsService {
 
       // Age appropriateness bonus
       if (childAgeInDays !== null) {
-        const isAgeAppropriate = 
+        const isAgeAppropriate =
           (article.age_min_days === null || childAgeInDays >= article.age_min_days) &&
           (article.age_max_days === null || childAgeInDays <= article.age_max_days);
-        
+
         if (isAgeAppropriate) {
           score += 30;
           if (!reason) reason = `Age-appropriate for your child`;
@@ -188,12 +188,12 @@ export class RecommendationsService {
 
     if (children && children.length > 0) {
       for (const child of children) {
-        if (child.date_of_birth) {
-          const ageInMonths = this.calculateAgeInMonths(child.date_of_birth);
-          
+        if (child.birth_date) {
+          const ageInMonths = this.calculateAgeInMonths(child.birth_date);
+
           // Get upcoming milestones for this child
           const upcomingMilestones = await this.getUpcomingMilestones(userId, child.id, ageInMonths);
-          
+
           upcomingMilestones.forEach(milestone => {
             actionItems.push({
               id: `milestone-${milestone.id}`,
@@ -272,7 +272,7 @@ export class RecommendationsService {
       .eq('is_completed', true);
 
     const completedIds = completedMilestones?.map(m => m.milestone_template_id) || [];
-    
+
     return milestoneTemplates.filter(template => !completedIds.includes(template.id));
   }
 
@@ -300,7 +300,7 @@ export class RecommendationsService {
    */
   private async getUserProgressStats(userId: string) {
     const weekStart = this.getWeekStartDate();
-    
+
     const { data: stats } = await supabase
       .from('user_progress_stats')
       .select('*')
@@ -321,7 +321,7 @@ export class RecommendationsService {
   async completeTip(userId: string, tipId: string): Promise<void> {
     // Mark tip as viewed and completed
     await dailyTipsService.markTipAsViewed(userId, tipId);
-    
+
     // Log completion activity
     await resourcesService.logActivity({
       user_id: userId,
@@ -350,7 +350,7 @@ export class RecommendationsService {
    */
   private async incrementProgressStat(userId: string, statType: string): Promise<void> {
     const weekStart = this.getWeekStartDate();
-    
+
     // Upsert progress stats
     const { error } = await supabase
       .from('user_progress_stats')
@@ -384,10 +384,10 @@ export class RecommendationsService {
   private calculateAgeInMonths(birthDate: string): number {
     const birth = new Date(birthDate);
     const now = new Date();
-    
+
     const yearsDiff = now.getFullYear() - birth.getFullYear();
     const monthsDiff = now.getMonth() - birth.getMonth();
-    
+
     return yearsDiff * 12 + monthsDiff;
   }
 
@@ -396,10 +396,10 @@ export class RecommendationsService {
    */
   private extractCategoryFromTags(tags: string[] | null): string {
     if (!tags || tags.length === 0) return 'general';
-    
+
     const categoryTags = ['sleep', 'feeding', 'health', 'development', 'behavior', 'activities'];
     const foundCategory = tags.find(tag => categoryTags.includes(tag.toLowerCase()));
-    
+
     return foundCategory || tags[0] || 'general';
   }
 

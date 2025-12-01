@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { router } from 'expo-router';
 import { useAuthStore } from '../src/shared/stores/authStore';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, StyleSheet, Linking, ActivityIndicator } from 'react-native';
 
 export default function AppEntry() {
   const { isAuthenticated, hasCompletedOnboarding, isLoading, checkAuthState } = useAuthStore();
@@ -12,8 +12,22 @@ export default function AppEntry() {
     const initializeApp = async () => {
       try {
         console.log('App initializing...');
-        // Check authentication state on app startup
-        await checkAuthState();
+
+        // Check for initial URL (deep link)
+        const url = await Linking.getInitialURL();
+
+        if (url && (
+          url.includes('access_token') ||
+          url.includes('code=') ||
+          url.includes('oauth')
+        )) {
+          console.log('🔗 Initial URL detected with OAuth params:', url);
+          // If we have an OAuth URL, check auth state with it immediately
+          await checkAuthState(url);
+        } else {
+          // Normal startup check
+          await checkAuthState();
+        }
       } catch (error) {
         console.error('App initialization error:', error);
       } finally {
@@ -29,14 +43,14 @@ export default function AppEntry() {
     if (!isInitializing && !isLoading && !hasNavigated.current) {
       // Mark as navigated immediately to prevent double navigation
       hasNavigated.current = true;
-      
-      console.log('🚀 Navigation decision:', { 
-        isAuthenticated, 
-        hasCompletedOnboarding, 
-        isInitializing, 
-        isLoading 
+
+      console.log('🚀 Navigation decision:', {
+        isAuthenticated,
+        hasCompletedOnboarding,
+        isInitializing,
+        isLoading
       });
-      
+
       if (isAuthenticated && hasCompletedOnboarding) {
         // User is authenticated and has completed onboarding - go to chat
         console.log('📱 Navigating to chat (authenticated + onboarded)');
@@ -58,7 +72,6 @@ export default function AppEntry() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#D4635A" />
-        <Text style={styles.loadingText}>Initializing...</Text>
       </View>
     );
   }
@@ -73,10 +86,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FDF7F3',
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    color: '#6B7280',
   },
 });
