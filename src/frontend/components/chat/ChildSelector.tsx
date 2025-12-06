@@ -28,7 +28,7 @@ export const ChildSelector: React.FC<ChildSelectorProps> = ({
       >
         {children.map((child) => {
           const isSelected = selectedChildId === child.id;
-          const stage = child.birth_date ? getDevelopmentalStage(child.birth_date) : { label: 'Unknown', icon: '❓' };
+          const stage = child.birth_date ? getDevelopmentalStage(child.birth_date) : { label: 'Expecting', icon: '🤰' };
 
           return (
             <TouchableOpacity
@@ -59,7 +59,7 @@ export const ChildSelector: React.FC<ChildSelectorProps> = ({
                     styles.childMeta,
                     isSelected && styles.childMetaSelected,
                   ]}>
-                    {child.birth_date ? getFormattedAge(child.birth_date) : 'Age unknown'} • {stage.label}
+                    {child.birth_date ? getFormattedAge(child.birth_date) : 'Coming soon'} • {stage.label}
                   </Text>
                 </View>
               </View>
