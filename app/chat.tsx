@@ -13,18 +13,20 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Send, Mic, BookOpen, Paperclip, Menu, PenSquare, X } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useAuthStore } from '../src/shared/stores/authStore';
 import { ScreenBackground } from '../src/frontend/components/common/ScreenBackground';
 import { ChildSelector } from '../src/frontend/components/chat/ChildSelector';
 import { ChatSidebar } from '../src/frontend/components/chat/ChatSidebar';
 import { ImagePicker } from '../src/frontend/components/chat/ImagePicker';
 import { ChatImageBubble } from '../src/frontend/components/chat/ChatImageBubble';
+import { ProductCard, parseProductCards } from '../src/frontend/components/chat/ProductCard';
 
 import { THEME } from '../src/lib/constants';
-import { progressService, chatService, imageService, GroupedSessions } from '../src/services';
+import { progressService, chatService, imageService, GroupedSessions, affiliateService } from '../src/services';
 import { ChatMessage, Child, ChatSession } from '../src/lib/database.types';
 import { getDevelopmentalStage } from '../src/lib/dateUtils';
+import { useChildStore } from '../src/shared/stores/childStore';
 
 interface Message {
   id: string;
@@ -41,14 +43,15 @@ const WELCOME_MESSAGE = "Hi there! I'm Bloom, your parenting companion. I rememb
 
 export default function ChatScreen() {
   const { user, guestData } = useAuthStore();
+  const navigation = useNavigation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
 
-  // Child context state
-  const [children, setChildren] = useState<Child[]>([]);
+  // Child context from global store (loaded in _layout.tsx)
+  const { children, activeChild, setActiveChild } = useChildStore();
   const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   // Session state
@@ -60,6 +63,33 @@ export default function ChatScreen() {
     older: [],
   });
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  // Hide tab bar when sidebar is open
+  useEffect(() => {
+    try {
+      navigation.setOptions({
+        tabBarStyle: {
+          display: isSidebarVisible ? 'none' : 'flex'
+        }
+      });
+    } catch (error) {
+      console.log('Navigation setOptions error:', error);
+    }
+
+    // Cleanup function to ensure tab bar is visible when component unmounts
+    return () => {
+      try {
+        navigation.setOptions({
+          tabBarStyle: {
+            display: 'flex'
+          }
+        });
+      } catch (error) {
+        // Silent cleanup error
+      }
+    };
+  }, [isSidebarVisible, navigation]);
+
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
 
   // Image state
@@ -68,6 +98,15 @@ export default function ChatScreen() {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  // Sync selectedChildId with activeChild from store
+  useEffect(() => {
+    if (children.length > 0 && !selectedChildId) {
+      const firstChildId = children[0].id;
+      setSelectedChildId(firstChildId);
+      setActiveChild(firstChildId);
+    }
+  }, [children]);
 
   // Get selected child object
   const selectedChild = children.find(c => c.id === selectedChildId);
@@ -87,10 +126,9 @@ export default function ChatScreen() {
     }
   }, [user?.id, guestData]);
 
-  // Load children, sessions, and chat history on mount
+  // Load sessions and chat history on mount (children loaded globally)
   useEffect(() => {
     if (user?.id) {
-      loadChildren();
       loadSessions();
     } else if (!guestData) {
       setMessages([createWelcomeMessage()]);
@@ -112,19 +150,6 @@ export default function ChatScreen() {
       }]);
     }
   }, [selectedChild, isLoadingHistory]);
-
-  const loadChildren = async () => {
-    if (!user?.id) return;
-    try {
-      const userChildren = await chatService.getChildren(user.id);
-      setChildren(userChildren);
-      if (userChildren.length > 0 && !selectedChildId) {
-        setSelectedChildId(userChildren[0].id);
-      }
-    } catch (error) {
-      console.error('Error loading children:', error);
-    }
-  };
 
   const loadSessions = async () => {
     if (!user?.id) return;
@@ -388,6 +413,7 @@ export default function ChatScreen() {
     if (childId === selectedChildId) return;
 
     setSelectedChildId(childId);
+    setActiveChild(childId); // Sync with global store
     const newChild = children.find(c => c.id === childId);
 
     if (newChild) {
@@ -454,17 +480,67 @@ export default function ChatScreen() {
       );
     }
 
-    // Bot message
+    // Bot message - check for product cards
+    const { textParts, products } = parseProductCards(message.text);
+    const hasProducts = products.length > 0;
+
+    // Render bot message with inline product cards
+    const renderMessageContent = () => {
+      if (!hasProducts) {
+        return (
+          <Text style={[
+            styles.botMessageText,
+            message.isError && styles.errorMessageText
+          ]}>{message.text}</Text>
+        );
+      }
+
+      // Render text parts with product cards interspersed
+      return textParts.map((part, index) => {
+        // Check if this is a product placeholder
+        const productMatch = part.match(/__PRODUCT_(\d+)__/);
+        if (productMatch) {
+          const productIndex = parseInt(productMatch[1], 10);
+          const product = products[productIndex];
+          if (product) {
+            return (
+              <ProductCard
+                key={`product-${index}`}
+                product={product}
+                onPress={() => {
+                  if (user?.id) {
+                    affiliateService.trackClick(user.id, product.id, currentSessionId || undefined);
+                  }
+                }}
+              />
+            );
+          }
+        }
+        // Regular text
+        if (part.trim()) {
+          return (
+            <Text
+              key={`text-${index}`}
+              style={[
+                styles.botMessageText,
+                message.isError && styles.errorMessageText
+              ]}
+            >
+              {part}
+            </Text>
+          );
+        }
+        return null;
+      });
+    };
+
     return (
       <View style={[
         styles.messageBubble,
         styles.botMessage,
         message.isError && styles.errorMessage
       ]}>
-        <Text style={[
-          styles.botMessageText,
-          message.isError && styles.errorMessageText
-        ]}>{message.text}</Text>
+        {renderMessageContent()}
       </View>
     );
   };
@@ -634,7 +710,17 @@ export default function ChatScreen() {
         children={children}
         isLoading={isLoadingSessions}
         user={user}
-        onProfilePress={() => router.push('/settings')}
+        onProfilePress={() => {
+          console.log('📱  Profile/Settings button pressed');
+          console.log('📱 Sidebar visible:', isSidebarVisible);
+          console.log('📱 Closing sidebar...');
+          setIsSidebarVisible(false);
+          setTimeout(() => {
+            console.log('📱 Navigating to settings...');
+            router.push('/settings');
+            console.log('📱 Navigation complete');
+          }, 300); // Add delay to ensure sidebar closes first
+        }}
       />
 
       {/* Image Picker Modal */}
@@ -656,6 +742,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+    paddingBottom: 100, // More space for floating glassmorphic tab bar
   },
   loadingContainer: {
     flex: 1,
@@ -833,7 +920,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
     borderTopWidth: 1,
     borderTopColor: '#F3F4F6',
     backgroundColor: '#FDFCF8',

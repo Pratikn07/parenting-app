@@ -27,13 +27,44 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# ===================================
+# 🔒 SECURITY: Environment & Tokens
+# ===================================
+# All environment files
 .env
+.env.*
+.env.local
+.env.production
+.env.development
+.env.test
+*.env
+
+# Credential files
+credentials.json
+secrets.json
+tokens.json
+*-credentials.json
+*-secrets.json
+*-tokens.json
+
+# API keys and config
+.replicate
+.openai
+api-keys.txt
+*.key
+*.secret
+
+# Service account files
+service-account.json
+*-service-account.json
+firebase-adminsdk-*.json
 
 # MCP configuration with sensitive tokens
 .vscode/mcp.json
 
+# ===================================
+# END SECURITY SECTION
+# ===================================
+
 # typescript
 *.tsbuildinfo
-.vscode/mcp.json

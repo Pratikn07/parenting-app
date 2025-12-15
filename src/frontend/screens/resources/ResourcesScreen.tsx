@@ -18,6 +18,8 @@ import { milestonesService } from '../../../services/milestones/MilestonesServic
 import type { MilestoneStats } from '../../../services/milestones/MilestonesService';
 import { UserProgressStats, UserActivityLog, Child, MilestoneTemplate, UserMilestoneProgress } from '../../../lib/database.types';
 import { THEME } from '../../../lib/constants';
+import { supabase } from '../../../lib/supabase';
+import { Article } from '../../../lib/database.types';
 
 export default function ResourcesScreen() {
   const [activeTab, setActiveTab] = useState('nextsteps');
@@ -39,6 +41,11 @@ export default function ResourcesScreen() {
   const [milestones, setMilestones] = useState<MilestoneTemplate[]>([]);
   const [milestoneProgress, setMilestoneProgress] = useState<Map<string, UserMilestoneProgress>>(new Map());
   const [milestonesLoading, setMilestonesLoading] = useState(false);
+
+  // Library search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Article[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   // Get current user
   const { user } = useAuthStore();
@@ -63,6 +70,8 @@ export default function ResourcesScreen() {
     try {
       const content = await recommendationsService.getPersonalizedContent(user.id);
       setPersonalizedContent(content);
+      // Load initial articles for Quick Library Access
+      loadInitialArticles();
     } catch (err) {
       console.error('Error loading personalized content:', err);
       setError(err instanceof Error ? err.message : 'Failed to load content');
@@ -155,6 +164,89 @@ export default function ResourcesScreen() {
     }
   };
 
+  // Load initial articles for library section
+  const loadInitialArticles = async () => {
+    setIsSearching(true);
+    try {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) {
+        console.error('Error loading initial articles:', error);
+        return;
+      }
+
+      setSearchResults(data || []);
+    } catch (err) {
+      console.error('Error in initial articles load:', err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Search articles in the library
+  const searchArticles = async (query: string, category: string) => {
+    // If no query and All category, show recent articles
+    if (!query.trim() && category === 'All') {
+      loadInitialArticles();
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      let dbQuery = supabase
+        .from('articles')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (query.trim()) {
+        dbQuery = dbQuery.or(`title.ilike.%${query}%,body_md.ilike.%${query}%`);
+      }
+
+      if (category !== 'All') {
+        dbQuery = dbQuery.contains('tags', [category.toLowerCase()]);
+      }
+
+      const { data, error } = await dbQuery;
+
+      if (error) {
+        console.error('Error searching articles:', error);
+        return;
+      }
+
+      setSearchResults(data || []);
+    } catch (err) {
+      console.error('Error in article search:', err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Estimate read time from content
+  const estimateReadTime = (content: string): number => {
+    const wordsPerMinute = 200;
+    const wordCount = content.split(/\s+/).length;
+    return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+  };
+
+  // Handle search input change
+  const handleSearchChange = (text: string) => {
+    setSearchQuery(text);
+    searchArticles(text, selectedCategory);
+  };
+
+  // Handle category filter change  
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    if (searchQuery.trim() || category !== 'All') {
+      searchArticles(searchQuery, category);
+    }
+  };
+
   const tabs = [
     { id: 'nextsteps', label: 'Next Steps', icon: Sparkles },
     { id: 'progress', label: 'Progress', icon: BarChart3 },
@@ -163,37 +255,6 @@ export default function ResourcesScreen() {
 
   const categories = ['All', 'Sleep', 'Feeding', 'Health', 'Activities', 'Well-being', 'Daily Care'];
   const milestoneCategories = ['All', 'Physical', 'Cognitive', 'Social', 'Communication'];
-
-  const featuredArticles = [
-    {
-      id: '1',
-      category: 'sleep',
-      readTime: 5,
-      title: 'Understanding Your Baby\'s Sleep Patterns',
-      summary: 'Learn about newborn sleep cycles and how to establish healthy sleep habits from the start.',
-    },
-    {
-      id: '2',
-      category: 'feeding',
-      readTime: 8,
-      title: 'Breastfeeding: The First Few Weeks',
-      summary: 'A comprehensive guide to getting started with breastfeeding, including common challenges and solutions.',
-    },
-    {
-      id: '3',
-      category: 'emotional',
-      readTime: 6,
-      title: 'Postpartum Self-Care for New Moms',
-      summary: 'Taking care of yourself while caring for your newborn - practical tips for new mothers.',
-    },
-  ];
-
-  const weeklyStats = [
-    { label: 'Questions Asked', value: 12, icon: MessageCircle },
-    { label: 'Tips Received', value: 7, icon: Calendar },
-    { label: 'Content Saved', value: 5, icon: Heart },
-    { label: 'Milestones', value: 2, icon: TrendingUp },
-  ];
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -392,76 +453,6 @@ export default function ResourcesScreen() {
       </ScrollView>
     );
   };
-
-  const renderLibraryTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.tabHeader}>
-        <Text style={styles.tabTitle}>Educational Library</Text>
-        <Text style={styles.tabSubtitle}>Expert articles and guides for your parenting journey</Text>
-      </View>
-
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Search size={20} color="#6B7280" strokeWidth={2} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search articles..."
-            placeholderTextColor="#9CA3AF"
-          />
-        </View>
-      </View>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {categories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.filterChip,
-              selectedCategory === category && styles.filterChipActive
-            ]}
-            onPress={() => setSelectedCategory(category)}
-            activeOpacity={0.7}
-          >
-            <Text style={[
-              styles.filterChipText,
-              selectedCategory === category && styles.filterChipTextActive
-            ]}>
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <View style={styles.articlesSection}>
-        <Text style={styles.sectionTitle}>Featured Articles</Text>
-        <View style={styles.articlesList}>
-          {featuredArticles.map((article) => (
-            <View key={article.id} style={styles.articleCard}>
-              <View style={styles.articleHeader}>
-                <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(article.category) }]}>
-                  <Text style={styles.categoryPillText}>{article.category}</Text>
-                </View>
-                <View style={styles.readTimePill}>
-                  <Clock size={12} color="#6B7280" strokeWidth={2} />
-                  <Text style={styles.readTimePillText}>{article.readTime} min read</Text>
-                </View>
-              </View>
-              <Text style={styles.articleTitle}>{article.title}</Text>
-              <Text style={styles.articleSummary}>{article.summary}</Text>
-              <TouchableOpacity style={styles.readButton} activeOpacity={0.7}>
-                <Text style={styles.readButtonText}>Read Article</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-      </View>
-    </ScrollView>
-  );
 
   const renderProgressTab = () => {
     // Map database stats to UI format
@@ -743,7 +734,14 @@ export default function ResourcesScreen() {
                 style={styles.searchInput}
                 placeholder="Search articles..."
                 placeholderTextColor="#9CA3AF"
+                value={searchQuery}
+                onChangeText={handleSearchChange}
               />
+              {searchQuery.length > 0 && (
+                <TouchableOpacity onPress={() => { setSearchQuery(''); setSearchResults([]); }}>
+                  <X size={18} color="#9CA3AF" strokeWidth={2} />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
 
@@ -760,7 +758,7 @@ export default function ResourcesScreen() {
                   styles.filterChip,
                   selectedCategory === category && styles.filterChipActive
                 ]}
-                onPress={() => setSelectedCategory(category)}
+                onPress={() => handleCategoryChange(category)}
                 activeOpacity={0.7}
               >
                 <Text style={[
@@ -772,6 +770,42 @@ export default function ResourcesScreen() {
               </TouchableOpacity>
             ))}
           </ScrollView>
+
+          {/* Search Results */}
+          {isSearching ? (
+            <View style={styles.searchLoadingContainer}>
+              <ActivityIndicator size="small" color={THEME.colors.primary} />
+              <Text style={styles.searchLoadingText}>Searching...</Text>
+            </View>
+          ) : searchResults.length > 0 ? (
+            <View style={styles.searchResultsList}>
+              {searchResults.map((article) => (
+                <View key={article.id} style={styles.searchResultCard}>
+                  <View style={styles.searchResultHeader}>
+                    <View style={[styles.categoryPill, { backgroundColor: getCategoryColor(article.tags?.[0] || 'general') }]}>
+                      <Text style={styles.categoryPillText}>{article.tags?.[0] || 'general'}</Text>
+                    </View>
+                    <View style={styles.readTimePill}>
+                      <Clock size={10} color="#6B7280" strokeWidth={2} />
+                      <Text style={styles.readTimePillText}>{estimateReadTime(article.body_md)}m</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.searchResultTitle}>{article.title}</Text>
+                  <Text style={styles.searchResultSummary} numberOfLines={2}>
+                    {article.body_md.substring(0, 100)}...
+                  </Text>
+                  <TouchableOpacity style={styles.compactReadButton} activeOpacity={0.7}>
+                    <Text style={styles.compactReadButtonText}>Read</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          ) : (searchQuery.length > 0 || selectedCategory !== 'All') && (
+            <View style={styles.noResultsContainer}>
+              <Text style={styles.noResultsText}>No articles found</Text>
+              <Text style={styles.noResultsSubtext}>Try a different search or category</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     );
@@ -1684,5 +1718,63 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  // Search results styles
+  searchLoadingContainer: {
+    paddingVertical: 24,
+    alignItems: 'center',
+  },
+  searchLoadingText: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 8,
+  },
+  searchResultsList: {
+    marginTop: 16,
+    gap: 12,
+  },
+  searchResultCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  searchResultHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  searchResultTitle: {
+    fontSize: 16,
+    fontFamily: THEME.fonts.bodySemiBold,
+    color: THEME.colors.text.primary,
+    marginBottom: 4,
+  },
+  searchResultSummary: {
+    fontSize: 14,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.text.secondary,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  noResultsContainer: {
+    paddingVertical: 32,
+    alignItems: 'center',
+  },
+  noResultsText: {
+    fontSize: 16,
+    fontFamily: THEME.fonts.bodySemiBold,
+    color: THEME.colors.text.primary,
+    marginBottom: 4,
+  },
+  noResultsSubtext: {
+    fontSize: 14,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.text.secondary,
   },
 });

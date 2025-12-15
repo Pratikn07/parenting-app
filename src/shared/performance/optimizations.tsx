@@ -1,21 +1,23 @@
-import React, { memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback, useRef, useState, useEffect } from 'react';
 
 // Performance optimization utilities
 
 /**
  * Enhanced memo with custom comparison function
  */
-export const createMemoComponent = <T extends React.ComponentType<any>>(
+export function createMemoComponent<T extends React.ComponentType<any>>(
   Component: T,
   areEqual?: (prevProps: Readonly<React.ComponentProps<T>>, nextProps: Readonly<React.ComponentProps<T>>) => boolean
-) => {
-  return memo(Component as React.FunctionComponent<any>, areEqual);
-};
+) {
+  return memo(Component as any, areEqual);
+}
 
 /**
  * Shallow comparison for props
  */
 export const shallowEqual = (obj1: any, obj2: any): boolean => {
+  if (!obj1 || !obj2) return obj1 === obj2;
+
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
 
@@ -35,27 +37,27 @@ export const shallowEqual = (obj1: any, obj2: any): boolean => {
 /**
  * Custom hook for memoized callbacks with dependencies
  */
-export const useStableCallback = <T extends (...args: any[]) => any>(
+export function useStableCallback<T extends (...args: any[]) => any>(
   callback: T,
   deps: React.DependencyList
-): T => {
+): T {
   return useCallback(callback, deps);
-};
+}
 
 /**
  * Custom hook for memoized values with dependencies
  */
-export const useStableValue = <T>(
+export function useStableValue<T>(
   factory: () => T,
   deps: React.DependencyList
-): T => {
+): T {
   return useMemo(factory, deps);
-};
+}
 
 /**
  * Debounce hook for performance optimization
  */
-export const useDebounce = <T>(value: T, delay: number): T => {
+export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
 
   React.useEffect(() => {
@@ -69,12 +71,12 @@ export const useDebounce = <T>(value: T, delay: number): T => {
   }, [value, delay]);
 
   return debouncedValue;
-};
+}
 
 /**
  * Throttle hook for performance optimization
  */
-export const useThrottle = <T>(value: T, limit: number): T => {
+export function useThrottle<T>(value: T, limit: number): T {
   const [throttledValue, setThrottledValue] = React.useState<T>(value);
   const lastRan = React.useRef<number>(Date.now());
 
@@ -92,16 +94,16 @@ export const useThrottle = <T>(value: T, limit: number): T => {
   }, [value, limit]);
 
   return throttledValue;
-};
+}
 
 /**
  * Lazy loading hook for components
  */
-export const useLazyComponent = <T extends React.ComponentType<any>>(
+export function useLazyComponent<T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>
-) => {
+) {
   return React.lazy(importFunc);
-};
+}
 
 /**
  * Virtual list optimization for large datasets
@@ -111,12 +113,12 @@ export interface VirtualListItem {
   height?: number;
 }
 
-export const useVirtualList = <T extends VirtualListItem>(
+export function useVirtualList<T extends VirtualListItem>(
   items: T[],
   containerHeight: number,
   itemHeight: number = 50,
   overscan: number = 5
-) => {
+) {
   const [scrollTop, setScrollTop] = React.useState(0);
 
   const visibleItems = useMemo(() => {
@@ -139,7 +141,7 @@ export const useVirtualList = <T extends VirtualListItem>(
     visibleItems,
     setScrollTop,
   };
-};
+}
 
 /**
  * Image loading optimization
@@ -149,8 +151,13 @@ export const useImagePreloader = (sources: string[]) => {
   const [failedImages, setFailedImages] = React.useState<Set<string>>(new Set());
 
   React.useEffect(() => {
+    // Note: This Image constructor is browser standard. React Native needs 'Image.prefetch'
+    // For now we keep this generic but it might need platform specific adjustments.
     const preloadImage = (src: string) => {
       return new Promise<void>((resolve, reject) => {
+        // In React Native environment this might not work as expected without 'Image.prefetch'
+        // But keeping as is for generic TS utility structure
+        // If this causes runtime issues in RN we might need to mock Image or use RN Image.prefetch
         const img = new Image();
         img.onload = () => {
           setLoadedImages(prev => new Set(prev).add(src));
@@ -219,7 +226,7 @@ export const usePerformanceMonitor = (componentName: string) => {
 
   React.useEffect(() => {
     const renderTime = performance.now() - renderStart.current;
-    
+
     if (__DEV__ && renderTime > 16) { // 16ms = 60fps threshold
       console.warn(
         `[Performance] ${componentName} render took ${renderTime.toFixed(2)}ms (render #${renderCount.current})`
@@ -235,15 +242,15 @@ export const usePerformanceMonitor = (componentName: string) => {
 /**
  * Bundle splitting utilities
  */
-export const createAsyncComponent = <T extends React.ComponentType<any>>(
+export function createAsyncComponent<T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: React.ComponentType
-) => {
+) {
   const LazyComponent = React.lazy(importFunc);
-  
+
   return (props: React.ComponentProps<T>) => (
     <React.Suspense fallback={fallback ? React.createElement(fallback) : null}>
       <LazyComponent {...props} />
     </React.Suspense>
   );
-};
+}

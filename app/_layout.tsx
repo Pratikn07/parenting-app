@@ -5,15 +5,19 @@ import { Linking, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useAuthStore } from '@/src/shared/stores/authStore';
+import { useChildStore } from '@/src/shared/stores/childStore';
+import { chatService } from '@/src/services';
 import { useFonts, Nunito_700Bold } from '@expo-google-fonts/nunito';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Updates from 'expo-updates';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { checkAuthState, isAuthenticated } = useAuthStore();
+  const { checkAuthState, isAuthenticated, user } = useAuthStore();
+  const { setChildren } = useChildStore();
   const [fontsLoaded] = useFonts({
     Nunito_700Bold,
     Inter_400Regular,
@@ -22,6 +26,55 @@ export default function RootLayout() {
   });
 
   useFrameworkReady();
+
+  // Check for OTA updates on app startup
+  useEffect(() => {
+    async function checkForUpdates() {
+      if (__DEV__) {
+        // Skip update checks in development mode
+        return;
+      }
+
+      try {
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+          console.log('📦 OTA update available, downloading...');
+          await Updates.fetchUpdateAsync();
+          console.log('✅ OTA update downloaded, will apply on next restart');
+          // The update will be applied on the next app restart
+        } else {
+          console.log('✅ App is up to date');
+        }
+      } catch (error) {
+        console.error('❌ Error checking for updates:', error);
+      }
+    }
+
+    checkForUpdates();
+  }, []);
+
+  // Load children globally when user is authenticated
+  useEffect(() => {
+    const loadChildren = async () => {
+      if (!user?.id) {
+        console.log('👶 No user, skipping children load');
+        return;
+      }
+
+      console.log('👶 [Global] Loading children for user:', user.email);
+      try {
+        const userChildren = await chatService.getChildren(user.id);
+        console.log('👶 [Global] Loaded', userChildren.length, 'children');
+        setChildren(userChildren);
+      } catch (error) {
+        console.error('❌ [Global] Error loading children:', error);
+      }
+    };
+
+    if (isAuthenticated && user?.id) {
+      loadChildren();
+    }
+  }, [isAuthenticated, user?.id]);
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -92,7 +145,7 @@ export default function RootLayout() {
         if (authed) {
           if (hasCompletedOnboarding) {
             console.log('📱 OAuth: Navigating to chat');
-            router.replace('/chat');
+            router.replace('/(tabs)/chat');
           } else {
             console.log('📝 OAuth: Navigating to onboarding');
             router.replace('/onboarding');
@@ -123,6 +176,7 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="resources"
           options={{

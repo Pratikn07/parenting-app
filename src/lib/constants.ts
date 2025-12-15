@@ -119,3 +119,13 @@ export const VALIDATION = {
     pattern: /^[a-zA-Z\s'-]+$/, // Letters, spaces, hyphens, apostrophes
   },
 } as const;
+
+export const FEEDING_TYPES_DATA = [
+  { key: 'pregnancyNutrition', label: 'Pregnancy Nutrition', description: 'Healthy recipes for expecting mothers' },
+  { key: 'babyPurees', label: 'Baby Purees', description: 'Smooth textures for 4-10mo' },
+  { key: 'fingerFoods', label: 'Finger Foods', description: 'Self-feeding bites for 8-24mo' },
+  { key: 'toddlerMeals', label: 'Toddler Meals', description: 'Balanced meals for 12mo-4yr' },
+  { key: 'familyDinners', label: 'Family Dinners', description: 'One meal for everyone (12mo+)' },
+  { key: 'lunchboxIdeas', label: 'Lunchbox Ideas', description: 'Packable meals for 3yr+' },
+  { key: 'treatsSnacks', label: 'Treats & Snacks', description: 'Occasional goodies' },
+];

@@ -14,6 +14,8 @@ interface ChatRequest {
   childId?: string;
   sessionId?: string;
   imageUrl?: string; // For vision analysis
+  messageType?: 'general' | 'recipe';
+  recipeMode?: 'ingredient' | 'progress';  // NEW: Mode for recipe assistance
 }
 
 interface ChatResponse {
@@ -163,7 +165,13 @@ Scan the message for these trigger categories:
 GUIDELINES:
 - Base advice on AAP (American Academy of Pediatrics) recommendations
 - End with encouragement or offer to help with follow-up questions
-- If you don't know something, say so honestly`;
+- If you don't know something, say so honestly
+
+PRODUCT MENTIONS:
+- When recommending products, use the **full product name** in bold
+- Example: "The **Hatch Rest Sound Machine** is great for sleep"
+- Only mention products that genuinely help - never force recommendations
+- Recommend what's BEST for the parent, even if it's a DIY solution or no product at all`;
 
 
 const VISION_SYSTEM_PROMPT = `You are a warm, empathetic parenting assistant named "Bloom" with visual analysis capabilities. You help parents by analyzing photos related to their children.
@@ -202,6 +210,84 @@ RESPONSE FORMAT:
 - Provide observations, not diagnoses
 - Include relevant safety recommendations
 - End with supportive guidance`;
+
+// Recipe Mode-Specific Prompts
+const INGREDIENT_HELP_PROMPT = `
+You are a helpful cooking assistant specializing in ingredient substitutions.
+
+CONTEXT: The user is preparing a recipe and needs help finding alternatives for missing ingredients.
+
+GUIDELINES:
+1. Suggest 2-3 practical substitutes, ranked by how well they match the original
+2. Explain how each substitute affects taste, texture, or nutrition
+3. For baby food recipes (ages 0-3), prioritize:
+   - Safety (no honey for under 12mo, no choking hazards)
+   - Age-appropriate textures
+   - Common allergens (mention if substitute contains milk, eggs, nuts, etc.)
+4. Be concise - they're actively cooking and need quick answers
+5. If the recipe context includes cuisine preference, suggest culturally appropriate alternatives
+
+FORMAT:
+- Keep responses short and actionable (3-4 sentences per substitute)
+- Use bullet points for multiple options
+- Always mention key differences (e.g., "Yogurt works but makes it tangier")
+
+SAFETY RULES:
+- ALWAYS warn about allergens in substitutes
+- For baby food, mention if texture needs adjustment for age
+- If unsure about baby food safety, recommend consulting pediatrician
+
+IMPORTANT: DO NOT ask follow-up questions about child development, sleep, behavior, or parenting topics.
+Focus ONLY on recipe and cooking help.
+`;
+
+const PROGRESS_CHECK_PROMPT = `
+You are a supportive cooking coach providing feedback on cooking progress.
+
+CONTEXT: The user is actively cooking and wants to verify their progress or get guidance.
+
+GUIDELINES:
+1. If they share a photo, analyze:
+   - Color (is it browning correctly, is baby food the right shade?)
+   - Texture (chunky vs smooth, crispy vs soggy)
+   - Consistency (too thick/thin, properly mixed)
+   - Safety concerns (undercooked, burning, choking hazards for baby food)
+
+2. Provide specific, actionable next steps:
+   - "Cook 3-5 more minutes until golden"
+   - "Blend another 30 seconds for smoother texture"
+   - "Add 2 tbsp water if too thick"
+
+3. For baby food, emphasize:
+   - Temperature safety (let cool before serving)
+   - Texture appropriate for age (puree for 6mo, soft chunks for 10mo+)
+   - Portion sizes
+   - Storage safety if making batches
+
+4. Be encouraging but honest about issues:
+   - Start with validation: "This looks great so far!"
+   - Then guide: "Just needs a bit more time to..."
+   - End positively: "You're doing awesome!"
+
+5. Ask clarifying questions if needed:
+   - "What step are you on?"
+   - "How long has it been cooking?"
+   - "What's the texture like when you stir?"
+
+FORMAT:
+- Start with assessment (what you observe)
+- Give 1-2 specific actions
+- End with encouragement or next milestone
+
+SAFETY RULES:
+- For baby food, ALWAYS mention temperature checking
+- Warn about choking hazards (hard pieces, round foods)
+- If food looks unsafe, clearly state concerns
+
+IMPORTANT: DO NOT ask follow-up questions about child development, sleep, behavior, or parenting topics.
+Focus ONLY on recipe and cooking help.
+`;
+
 
 // Enhanced: Get developmental stage based on precise age
 function getDevelopmentalStage(ageInMonths: number): string {
@@ -756,6 +842,7 @@ async function callDeepSeek(
 
 // Vision analysis using OpenAI GPT-4 Vision
 async function callOpenAIVision(
+  systemPrompt: string,  // NEW: Accept custom system prompt
   contextPrompt: string,
   userMessage: string,
   imageUrl: string
@@ -769,7 +856,7 @@ async function callOpenAIVision(
   const messages = [
     {
       role: "system",
-      content: `${VISION_SYSTEM_PROMPT}\n\nCURRENT CONTEXT:\n${contextPrompt}`
+      content: `${systemPrompt}\n\nCURRENT CONTEXT:\n${contextPrompt}`  // Use provided systemPrompt
     },
     {
       role: "user",
@@ -849,6 +936,169 @@ async function saveMessage(
   return data.id;
 }
 
+// =====================================================
+// AFFILIATE PRODUCT ENRICHMENT
+// =====================================================
+
+interface AffiliateProduct {
+  id: string;
+  product_name: string;
+  name_variants: string[];
+  affiliate_url: string;
+  image_url: string | null;
+  price: number | null;
+  category: string | null;
+}
+
+interface ProductMatch {
+  originalText: string;
+  productName: string;
+  affiliate: AffiliateProduct | null;
+}
+
+/**
+ * Extract bold product names from AI response
+ * Matches patterns like **Product Name** or **Product Name Here**
+ */
+function extractBoldProductNames(response: string): string[] {
+  const regex = /\*\*([^*]+)\*\*/g;
+  const matches: string[] = [];
+  let match;
+  while ((match = regex.exec(response)) !== null) {
+    const text = match[1].trim();
+    // Filter out non-product bold text (short phrases, common headers)
+    if (text.length > 3 && !text.includes(':') && !text.match(/^(pro tip|important|note|warning)/i)) {
+      matches.push(text);
+    }
+  }
+  return matches;
+}
+
+/**
+ * Find matching affiliate product for a product name
+ */
+async function findAffiliateMatch(
+  supabase: any,
+  productName: string
+): Promise<AffiliateProduct | null> {
+  const normalizedName = productName.toLowerCase().trim();
+
+  // First, try exact match on product_name
+  const { data: exactMatch } = await supabase
+    .from('affiliate_products')
+    .select('id, product_name, name_variants, affiliate_url, image_url, price, category')
+    .eq('is_active', true)
+    .ilike('product_name', `%${normalizedName}%`)
+    .limit(1)
+    .single();
+
+  if (exactMatch) return exactMatch;
+
+  // Try matching against name_variants using array contains
+  const { data: variantMatches } = await supabase
+    .from('affiliate_products')
+    .select('id, product_name, name_variants, affiliate_url, image_url, price, category')
+    .eq('is_active', true);
+
+  if (variantMatches) {
+    for (const product of variantMatches) {
+      const variants = product.name_variants || [];
+      for (const variant of variants) {
+        if (normalizedName.includes(variant.toLowerCase()) ||
+          variant.toLowerCase().includes(normalizedName)) {
+          return product;
+        }
+      }
+      // Also check if product_name is contained in the mention
+      if (normalizedName.includes(product.product_name.toLowerCase())) {
+        return product;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Log product mention for analytics (which products are mentioned most)
+ */
+async function logProductMention(
+  supabase: any,
+  productName: string,
+  hadAffiliate: boolean,
+  sessionId: string,
+  userId: string
+): Promise<void> {
+  try {
+    await supabase.from('product_mentions_log').insert({
+      product_name: productName,
+      had_affiliate: hadAffiliate,
+      session_id: sessionId,
+      user_id: userId,
+    });
+  } catch (error) {
+    console.error('Error logging product mention:', error);
+  }
+}
+
+/**
+ * Enrich AI response with affiliate product data
+ * Returns modified response with product markers for frontend
+ */
+async function enrichWithAffiliateProducts(
+  supabase: any,
+  response: string,
+  sessionId: string,
+  userId: string
+): Promise<{ enrichedResponse: string; products: ProductMatch[] }> {
+  const boldNames = extractBoldProductNames(response);
+  const products: ProductMatch[] = [];
+
+  for (const productName of boldNames) {
+    const affiliate = await findAffiliateMatch(supabase, productName);
+
+    products.push({
+      originalText: productName,
+      productName: affiliate?.product_name || productName,
+      affiliate,
+    });
+
+    // Log for analytics
+    await logProductMention(supabase, productName, !!affiliate, sessionId, userId);
+  }
+
+  // If we have affiliate matches, add product markers to response
+  // Format: [PRODUCT_CARD|id|name|price|url|image] (using pipe to avoid URL conflicts)
+  let enrichedResponse = response;
+
+  for (const product of products) {
+    if (product.affiliate) {
+      const marker = `\n[PRODUCT_CARD|${product.affiliate.id}|${product.affiliate.product_name}|${product.affiliate.price || ''}|${product.affiliate.affiliate_url}|${product.affiliate.image_url || ''}]`;
+      // Add marker after the bold product name
+      const boldPattern = `**${product.originalText}**`;
+      const insertIndex = enrichedResponse.indexOf(boldPattern);
+      if (insertIndex !== -1) {
+        const insertPoint = insertIndex + boldPattern.length;
+        // Find end of current sentence or line
+        let sentenceEnd = enrichedResponse.indexOf('.', insertPoint);
+        const lineEnd = enrichedResponse.indexOf('\n', insertPoint);
+        if (sentenceEnd === -1 || (lineEnd !== -1 && lineEnd < sentenceEnd)) {
+          sentenceEnd = lineEnd;
+        }
+        if (sentenceEnd === -1) sentenceEnd = enrichedResponse.length;
+
+        // Insert marker after the sentence containing the product
+        enrichedResponse =
+          enrichedResponse.slice(0, sentenceEnd + 1) +
+          marker +
+          enrichedResponse.slice(sentenceEnd + 1);
+      }
+    }
+  }
+
+  return { enrichedResponse, products };
+}
+
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -876,7 +1126,7 @@ Deno.serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const body: ChatRequest = await req.json();
-    const { userId, message, childId, sessionId, imageUrl } = body;
+    const { userId, message, childId, sessionId, imageUrl, messageType, recipeMode } = body;
 
     if (!userId) {
       return new Response(JSON.stringify({ error: "userId is required" }), {
@@ -940,12 +1190,29 @@ Deno.serve(async (req: Request) => {
     // Call appropriate AI based on whether image is present
     let aiResponse: string;
 
+    // Select system prompt based on message type and recipe mode
+    let systemPrompt = SYSTEM_PROMPT;
+    if (messageType === 'recipe' && recipeMode) {
+      const modePrompt = recipeMode === 'progress'
+        ? PROGRESS_CHECK_PROMPT
+        : INGREDIENT_HELP_PROMPT;
+      systemPrompt = SYSTEM_PROMPT + "\n\n" + modePrompt;
+      console.log(`Using ${recipeMode} mode prompt for recipe assistance`);
+    }
+
     if (hasImage) {
       console.log("Processing vision request with image");
-      aiResponse = await callOpenAIVision(contextPrompt, userMessageText, imageUrl);
+      // For images, use vision prompt + mode-specific guidance
+      const visionSystemPrompt = messageType === 'recipe' && recipeMode
+        ? VISION_SYSTEM_PROMPT + "\n\n" + (recipeMode === 'progress'
+          ? PROGRESS_CHECK_PROMPT
+          : INGREDIENT_HELP_PROMPT)
+        : VISION_SYSTEM_PROMPT;
+
+      aiResponse = await callOpenAIVision(visionSystemPrompt, contextPrompt, userMessageText, imageUrl);
     } else {
       aiResponse = await callDeepSeek(
-        SYSTEM_PROMPT,
+        systemPrompt,
         contextPrompt,
         conversationHistory,
         userMessageText
@@ -953,11 +1220,28 @@ Deno.serve(async (req: Request) => {
     }
 
 
-    // Save AI response
+    // Enrich AI response with affiliate product data (for general chat, not recipe mode)
+    let finalResponse = aiResponse;
+    if (messageType !== 'recipe') {
+      try {
+        const { enrichedResponse } = await enrichWithAffiliateProducts(
+          supabase,
+          aiResponse,
+          session.id,
+          userId
+        );
+        finalResponse = enrichedResponse;
+      } catch (enrichError) {
+        console.error("Affiliate enrichment error (non-fatal):", enrichError);
+        // Continue with original response if enrichment fails
+      }
+    }
+
+    // Save AI response (save enriched version)
     const responseId = await saveMessage(
       supabase,
       userId,
-      aiResponse,
+      finalResponse,
       false,
       session.id,
       childId
@@ -984,7 +1268,7 @@ Deno.serve(async (req: Request) => {
     const response: ChatResponse = {
       id: responseId,
       message: userMessageText,
-      response: aiResponse,
+      response: finalResponse,
       createdAt: new Date().toISOString(),
       sessionId: session.id,
       sessionTitle: sessionTitle || undefined,

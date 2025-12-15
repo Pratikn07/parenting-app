@@ -1,0 +1,2904 @@
+# 🍌 Nano Banana Pro - Premium Recipe Image Prompts
+Generated: 12/9/2025
+
+These prompts are crafted using techniques from the Nano Banana Pro prompt library:
+- Hyper-realistic lighting setups (3-point lighting)
+- Professional camera settings (Canon EOS R5, Sony A7III)
+- Category-specific scene styling
+- Micro-texture and detail emphasis
+
+---
+
+
+## 📂 Baby Purees
+
+### 1. Silky Carrot Apple Starter Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Silky Carrot Apple Starter Purée".
+
+SUBJECT:
+- Main dish: Silky Carrot Apple Starter Purée made with medium carrot, sweet apple, water, breast milk
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 2. Comforting Sweet Potato Lentil Khichdi Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Comforting Sweet Potato Lentil Khichdi Purée".
+
+SUBJECT:
+- Main dish: Comforting Sweet Potato Lentil Khichdi Purée made with uncooked white rice, red lentils (masoor dal), sweet potato, turmeric powder
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 3. Banana Avocado Breakfast Purée with Yogurt
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Banana Avocado Breakfast Purée with Yogurt".
+
+SUBJECT:
+- Main dish: Banana Avocado Breakfast Purée with Yogurt made with ripe banana, ripe avocado, plain whole milk yogurt (unsweetened), breast milk or prepared formula for thinning (optional)
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 4. Zucchini Chickpea Mediterranean Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Zucchini Chickpea Mediterranean Purée".
+
+SUBJECT:
+- Main dish: Zucchini Chickpea Mediterranean Purée made with zucchini, cooked, water, extra virgin olive oil (for babies over 6 months)
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 5. Italian Tomato Vegetable Purée with Tiny Pasta
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Italian Tomato Vegetable Purée with Tiny Pasta".
+
+SUBJECT:
+- Main dish: Italian Tomato Vegetable Purée with Tiny Pasta made with small pasta shapes such as pastina or tiny stars, ripe tomato, carrot, zucchini
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 6. Mild Mexican Black Bean Sweet Corn Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Mild Mexican Black Bean Sweet Corn Purée".
+
+SUBJECT:
+- Main dish: Mild Mexican Black Bean Sweet Corn Purée made with no-salt cooked black beans, frozen or fresh sweet corn kernels, small tomato, ground cumin
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 7. Asian Pear Rice Congee Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Asian Pear Rice Congee Purée".
+
+SUBJECT:
+- Main dish: Asian Pear Rice Congee Purée made with short grain white rice, ripe Asian pear, water
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 8. Mediterranean Red Lentil Carrot Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Mediterranean Red Lentil Carrot Purée".
+
+SUBJECT:
+- Main dish: Mediterranean Red Lentil Carrot Purée made with red lentils, carrot, water or low-sodium vegetable broth, extra virgin olive oil
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 9. Apple Prune Fiber Friendly Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Apple Prune Fiber Friendly Purée".
+
+SUBJECT:
+- Main dish: Apple Prune Fiber Friendly Purée made with dried prunes (pitted), apple, water
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 10. Indian Rice Mung Dal Spinach Purée
+**Category:** babyPurees
+
+```
+Create a professional food photography image of "Indian Rice Mung Dal Spinach Purée".
+
+SUBJECT:
+- Main dish: Indian Rice Mung Dal Spinach Purée made with uncooked white rice, split mung dal (moong dal), fresh baby spinach leaves, turmeric powder
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: smooth, silky puree with slight sheen
+
+SCENE SETUP:
+- Setting: A clean, minimalist Scandinavian-style kitchen counter
+- Props: small ceramic baby bowl in soft white, tiny silicone spoon, scattered fresh ingredients nearby, soft linen napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft diffused window light from the left, creating gentle shadows and a warm, nurturing atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Sony A7III with 90mm macro lens f/2.8, extreme close-up detail, creamy background blur
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: tender, wholesome, nurturing, clean
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+
+## 📂 Finger Foods
+
+### 11. Sweet Potato & Spinach Frittata Fingers
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Sweet Potato & Spinach Frittata Fingers".
+
+SUBJECT:
+- Main dish: Sweet Potato & Spinach Frittata Fingers made with eggs, sweet potato, fresh spinach, milk (dairy or breastmilk)
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 12. Mini Turkey & Apple Meatloaf Muffins
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Mini Turkey & Apple Meatloaf Muffins".
+
+SUBJECT:
+- Main dish: Mini Turkey & Apple Meatloaf Muffins made with ground turkey, apple, breadcrumbs (panko or regular), egg
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 13. Soft-Baked Blueberry & Oat Bars
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Soft-Baked Blueberry & Oat Bars".
+
+SUBJECT:
+- Main dish: Soft-Baked Blueberry & Oat Bars made with rolled oats, ripe bananas, blueberries (fresh or frozen), coconut oil
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 14. Cheesy Broccoli & Quinoa Bites
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Cheesy Broccoli & Quinoa Bites".
+
+SUBJECT:
+- Main dish: Cheesy Broccoli & Quinoa Bites made with cooked quinoa, broccoli florets, shredded cheddar cheese, eggs
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 15. Avocado & Black Bean Quesadilla Strips
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Avocado & Black Bean Quesadilla Strips".
+
+SUBJECT:
+- Main dish: Avocado & Black Bean Quesadilla Strips made with soft flour or corn tortilla, canned black beans, ripe avocado, mild shredded cheese
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 16. Mild Curried Red Lentil Cakes
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Mild Curried Red Lentil Cakes".
+
+SUBJECT:
+- Main dish: Mild Curried Red Lentil Cakes made with red lentils, water, carrot, chickpea flour (besan)
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 17. Salmon & Pea Fish Cakes
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Salmon & Pea Fish Cakes".
+
+SUBJECT:
+- Main dish: Salmon & Pea Fish Cakes made with fresh salmon fillet, potatoes, frozen peas, lemon juice
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 18. Sesame Tofu & Veggie Cubes
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Sesame Tofu & Veggie Cubes".
+
+SUBJECT:
+- Main dish: Sesame Tofu & Veggie Cubes made with firm tofu, sesame oil, garlic powder, cornstarch
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 19. Zucchini & Feta Fritters
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Zucchini & Feta Fritters".
+
+SUBJECT:
+- Main dish: Zucchini & Feta Fritters made with zucchini, egg, all-purpose flour, feta cheese
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 20. Pumpkin & Ricotta Gnocchi Pillows
+**Category:** fingerFoods
+
+```
+Create a professional food photography image of "Pumpkin & Ricotta Gnocchi Pillows".
+
+SUBJECT:
+- Main dish: Pumpkin & Ricotta Gnocchi Pillows made with pumpkin puree (canned or homemade), ricotta cheese, all-purpose flour, parmesan cheese
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A rustic wooden serving board on a light marble countertop
+- Props: colorful finger foods arranged in an appetizing pattern, small dipping sauce in a ramekin, fresh herb garnish, toddler-sized plate nearby
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, airy natural daylight with soft fill, emphasizing textures and colors
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: playful, inviting, colorful, fun
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+
+## 📂 Toddler Meals
+
+### 21. Apple Cinnamon Oat Toddler Porridge
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Apple Cinnamon Oat Toddler Porridge".
+
+SUBJECT:
+- Main dish: Apple Cinnamon Oat Toddler Porridge made with rolled oats, milk or fortified plant milk, water, small apple
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 22. Rainbow Pesto Pasta Salad
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Rainbow Pesto Pasta Salad".
+
+SUBJECT:
+- Main dish: Rainbow Pesto Pasta Salad made with fusilli or rotini pasta, cherry tomatoes, mild basil pesto (nut-free if needed for school), fresh mozzarella pearls
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 23. Turkey & Hummus Pinwheels
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Turkey & Hummus Pinwheels".
+
+SUBJECT:
+- Main dish: Turkey & Hummus Pinwheels made with whole wheat tortilla (large), hummus (classic or red pepper), deli turkey slices (low sodium), fresh spinach leaves
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 24. Soft Chicken Veggie Rice Bowl
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Soft Chicken Veggie Rice Bowl".
+
+SUBJECT:
+- Main dish: Soft Chicken Veggie Rice Bowl made with boneless skinless chicken breast, white rice, finely chopped carrot, finely chopped broccoli florets
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 25. Spinach & Cheese Pizza Scrolls
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Spinach & Cheese Pizza Scrolls".
+
+SUBJECT:
+- Main dish: Spinach & Cheese Pizza Scrolls made with pizza dough (store-bought or homemade), marinara sauce, shredded mozzarella cheese, frozen spinach
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 26. Mini Baked Chicken Nuggets
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Mini Baked Chicken Nuggets".
+
+SUBJECT:
+- Main dish: Mini Baked Chicken Nuggets made with ground chicken, oat flour or breadcrumbs, egg, garlic powder
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 27. Cold Sesame Noodle Salad
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Cold Sesame Noodle Salad".
+
+SUBJECT:
+- Main dish: Cold Sesame Noodle Salad made with spaghetti or soba noodles, smooth peanut butter or tahini (for school safe), soy sauce (low sodium) or tamari, maple syrup
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 28. Savory Corn & Cheddar Muffins
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Savory Corn & Cheddar Muffins".
+
+SUBJECT:
+- Main dish: Savory Corn & Cheddar Muffins made with all-purpose flour, cornmeal, sugar, baking powder
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 29. Veggie Lentil Pancakes
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Veggie Lentil Pancakes".
+
+SUBJECT:
+- Main dish: Veggie Lentil Pancakes made with red lentils, water for soaking, finely grated zucchini, finely grated carrot
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 30. Mini Bean & Cheese Burritos
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Mini Bean & Cheese Burritos".
+
+SUBJECT:
+- Main dish: Mini Bean & Cheese Burritos made with small flour tortillas (taco size), refried beans (vegetarian), mild cheddar cheese, mild salsa (optional)
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 31. Baked Samosa Puffs
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Baked Samosa Puffs".
+
+SUBJECT:
+- Main dish: Baked Samosa Puffs made with frozen puff pastry sheet, potato, frozen peas, mild curry powder
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 32. Onigiri Rice Triangles
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Onigiri Rice Triangles".
+
+SUBJECT:
+- Main dish: Onigiri Rice Triangles made with sushi rice (short grain white rice), water, canned tuna or cooked salmon, mayonnaise
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 33. Greek Pita Bento Box
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Greek Pita Bento Box".
+
+SUBJECT:
+- Main dish: Greek Pita Bento Box made with mini pita bread or pita sliced into wedges, hummus, cucumber slices (rounds cut in half), feta cheese cubes
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 34. Cheesy Veggie Quinoa Toddler Bites
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Cheesy Veggie Quinoa Toddler Bites".
+
+SUBJECT:
+- Main dish: Cheesy Veggie Quinoa Toddler Bites made with quinoa, water, finely grated carrot, finely chopped spinach
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 35. Salmon Potato Veggie Mash
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Salmon Potato Veggie Mash".
+
+SUBJECT:
+- Main dish: Salmon Potato Veggie Mash made with boneless skinless salmon fillet, medium potato, frozen peas, unsalted butter
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 36. Deconstructed Soft Taco Toddler Bowl
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Deconstructed Soft Taco Toddler Bowl".
+
+SUBJECT:
+- Main dish: Deconstructed Soft Taco Toddler Bowl made with sweet potato, cooked low-sodium black beans, small soft flour or corn tortilla, mild shredded cheese
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 37. Soft Tofu Veggie Stir Fry with Rice
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Soft Tofu Veggie Stir Fry with Rice".
+
+SUBJECT:
+- Main dish: Soft Tofu Veggie Stir Fry with Rice made with firm tofu, cooked white rice, finely chopped carrot, finely chopped green beans
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 38. Turkey Veggie Mini Meatballs with Pasta
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Turkey Veggie Mini Meatballs with Pasta".
+
+SUBJECT:
+- Main dish: Turkey Veggie Mini Meatballs with Pasta made with lean ground turkey, finely grated zucchini, finely grated carrot, breadcrumbs
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 39. Creamy Hummus Yogurt Veggie Dippers
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Creamy Hummus Yogurt Veggie Dippers".
+
+SUBJECT:
+- Main dish: Creamy Hummus Yogurt Veggie Dippers made with plain hummus, plain whole milk yogurt, steamed carrot sticks, steamed broccoli florets
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 40. Banana Peanut Butter Chia Pudding
+**Category:** toddlerMeals
+
+```
+Create a professional food photography image of "Banana Peanut Butter Chia Pudding".
+
+SUBJECT:
+- Main dish: Banana Peanut Butter Chia Pudding made with ripe banana, plain whole milk yogurt, smooth peanut butter, chia seeds
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A colorful kid-friendly plate on a high chair tray
+- Props: sippy cup nearby, scattered cheerios for realism, tiny fork, bib visible at edge
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Bright, cheerful natural light with soft shadows, capturing the messy joy of toddler meals
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: adorable, messy-cute, realistic, everyday
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+
+## 📂 Pregnancy Nutrition
+
+### 41. Folate-Rich Lentil and Spinach Soup
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Folate-Rich Lentil and Spinach Soup".
+
+SUBJECT:
+- Main dish: Folate-Rich Lentil and Spinach Soup made with red lentils, fresh spinach, diced tomatoes, vegetable broth
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 42. Greek Yogurt Parfait with Berries and Almonds
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Greek Yogurt Parfait with Berries and Almonds".
+
+SUBJECT:
+- Main dish: Greek Yogurt Parfait with Berries and Almonds made with plain Greek yogurt, fresh blueberries, fresh strawberries, sliced almonds
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 43. Salmon and Sweet Potato Bowl with Avocado
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Salmon and Sweet Potato Bowl with Avocado".
+
+SUBJECT:
+- Main dish: Salmon and Sweet Potato Bowl with Avocado made with wild salmon fillets, sweet potatoes, avocado, baby kale
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 44. Quinoa and Black Bean Burrito Bowl
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Quinoa and Black Bean Burrito Bowl".
+
+SUBJECT:
+- Main dish: Quinoa and Black Bean Burrito Bowl made with quinoa, water, black beans, bell peppers
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 45. Spinach and Feta Egg Muffins
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Spinach and Feta Egg Muffins".
+
+SUBJECT:
+- Main dish: Spinach and Feta Egg Muffins made with large eggs, fresh spinach, feta cheese, cherry tomatoes
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 46. Chicken and Vegetable Stir-Fry with Brown Rice
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Chicken and Vegetable Stir-Fry with Brown Rice".
+
+SUBJECT:
+- Main dish: Chicken and Vegetable Stir-Fry with Brown Rice made with boneless skinless chicken breast, broccoli florets, snap peas, carrots
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 47. Overnight Oats with Chia and Berries
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Overnight Oats with Chia and Berries".
+
+SUBJECT:
+- Main dish: Overnight Oats with Chia and Berries made with rolled oats, milk or unsweetened almond milk, plain Greek yogurt, chia seeds
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 48. Lentil and Vegetable Curry with Coconut Milk
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Lentil and Vegetable Curry with Coconut Milk".
+
+SUBJECT:
+- Main dish: Lentil and Vegetable Curry with Coconut Milk made with red lentils, coconut milk, cauliflower florets, sweet potato
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 49. Mediterranean Chicken and Chickpea Salad
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Mediterranean Chicken and Chickpea Salad".
+
+SUBJECT:
+- Main dish: Mediterranean Chicken and Chickpea Salad made with rotisserie chicken, chickpeas, cucumber, cherry tomatoes
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 50. Baked Sweet Potato with Black Beans and Avocado
+**Category:** pregnancyNutrition
+
+```
+Create a professional food photography image of "Baked Sweet Potato with Black Beans and Avocado".
+
+SUBJECT:
+- Main dish: Baked Sweet Potato with Black Beans and Avocado made with large sweet potatoes, black beans, ripe avocados, corn kernels
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: An elegant ceramic plate on a natural linen tablecloth
+- Props: artisanal dinnerware, fresh flowers in a small vase nearby, sparkling water glass, folded cloth napkin
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Golden hour warm light streaming through sheer curtains, creating a relaxing spa-like atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: nourishing, elegant, calming, self-care
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+
+## 📂 Family Meals
+
+### 51. One-Pot Chicken and Vegetable Rice
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "One-Pot Chicken and Vegetable Rice".
+
+SUBJECT:
+- Main dish: One-Pot Chicken and Vegetable Rice made with boneless chicken thighs, long-grain rice, carrots, peas
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 52. Vegetable Pasta Primavera
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Vegetable Pasta Primavera".
+
+SUBJECT:
+- Main dish: Vegetable Pasta Primavera made with whole wheat pasta, zucchini, bell peppers, cherry tomatoes
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 53. Bean and Veggie Burrito Bowl
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Bean and Veggie Burrito Bowl".
+
+SUBJECT:
+- Main dish: Bean and Veggie Burrito Bowl made with black beans, brown rice, avocado, corn
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 54. Veggie-Packed Lasagna
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Veggie-Packed Lasagna".
+
+SUBJECT:
+- Main dish: Veggie-Packed Lasagna made with lasagna noodles, spinach, zucchini, ricotta cheese
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 55. Mild Vegetable Curry with Rice
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Mild Vegetable Curry with Rice".
+
+SUBJECT:
+- Main dish: Mild Vegetable Curry with Rice made with potatoes, carrots, peas, coconut milk
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 56. Tofu and Vegetable Stir-Fry
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Tofu and Vegetable Stir-Fry".
+
+SUBJECT:
+- Main dish: Tofu and Vegetable Stir-Fry made with firm tofu, broccoli, carrots, soy sauce
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 57. Mediterranean Baked Chicken with Quinoa
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Mediterranean Baked Chicken with Quinoa".
+
+SUBJECT:
+- Main dish: Mediterranean Baked Chicken with Quinoa made with chicken breast, quinoa, cherry tomatoes, kalamata olives
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 58. Slow Cooker Beef and Vegetable Stew
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Slow Cooker Beef and Vegetable Stew".
+
+SUBJECT:
+- Main dish: Slow Cooker Beef and Vegetable Stew made with beef chuck, potatoes, carrots, celery
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 59. Baked Fish Tacos with Slaw
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Baked Fish Tacos with Slaw".
+
+SUBJECT:
+- Main dish: Baked Fish Tacos with Slaw made with white fish fillets, corn tortillas, cabbage, lime
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 60. Vegetable Noodle Soup
+**Category:** familyMeals
+
+```
+Create a professional food photography image of "Vegetable Noodle Soup".
+
+SUBJECT:
+- Main dish: Vegetable Noodle Soup made with rice noodles, carrots, bok choy, vegetable broth
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A large family-style serving dish on a warm wooden dining table
+- Props: matching dinner plates stacked nearby, serving spoons, cloth napkins, wine glasses with water
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Warm tungsten-mixed ambient light with candle glow, creating an intimate dinner atmosphere
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon 35mm f/1.4 lens, slightly wide composition showing context, balanced depth
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: cozy, gathering, hearty, comforting
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+
+## 📂 Treats Snacks
+
+### 61. Soft Banana Oat Toddler Cookies
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Soft Banana Oat Toddler Cookies".
+
+SUBJECT:
+- Main dish: Soft Banana Oat Toddler Cookies made with ripe banana, rolled oats, neutral oil or melted coconut oil, ground cinnamon
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 62. Mini Berry Yogurt Pops
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Mini Berry Yogurt Pops".
+
+SUBJECT:
+- Main dish: Mini Berry Yogurt Pops made with plain whole milk yogurt, mixed berries, ripe banana, milk or water
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 63. Cinnamon Sweet Potato Snack Fries with Yogurt Dip
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Cinnamon Sweet Potato Snack Fries with Yogurt Dip".
+
+SUBJECT:
+- Main dish: Cinnamon Sweet Potato Snack Fries with Yogurt Dip made with medium sweet potato, neutral oil, ground cinnamon, plain whole milk yogurt
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 64. Cheesy Veggie Mini Muffins
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Cheesy Veggie Mini Muffins".
+
+SUBJECT:
+- Main dish: Cheesy Veggie Mini Muffins made with all-purpose flour, baking powder, finely grated carrot, finely chopped spinach
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 65. Mango Lassi Chia Pudding Cups
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Mango Lassi Chia Pudding Cups".
+
+SUBJECT:
+- Main dish: Mango Lassi Chia Pudding Cups made with ripe mango, plain whole milk yogurt, milk, chia seeds
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 66. Soft Peanut Butter Oat Energy Balls
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Soft Peanut Butter Oat Energy Balls".
+
+SUBJECT:
+- Main dish: Soft Peanut Butter Oat Energy Balls made with rolled oats, smooth peanut butter, ripe banana, ground flaxseed (optional)
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 67. Apple Sunflower Snack Rounds
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Apple Sunflower Snack Rounds".
+
+SUBJECT:
+- Main dish: Apple Sunflower Snack Rounds made with crisp apple, sunflower seed butter, finely ground oat cereal or plain oat crumbs
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 68. Chickpea Cookie Dough Fruit Dip
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Chickpea Cookie Dough Fruit Dip".
+
+SUBJECT:
+- Main dish: Chickpea Cookie Dough Fruit Dip made with cooked chickpeas, plain whole milk yogurt, smooth peanut butter or almond butter, ripe banana or soft dates
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 69. Veggie Rice Snack Fritters
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Veggie Rice Snack Fritters".
+
+SUBJECT:
+- Main dish: Veggie Rice Snack Fritters made with cooked white rice, finely grated carrot, finely chopped spinach, large egg
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+### 70. Soft Date Almond Cocoa Bites
+**Category:** treatsSnacks
+
+```
+Create a professional food photography image of "Soft Date Almond Cocoa Bites".
+
+SUBJECT:
+- Main dish: Soft Date Almond Cocoa Bites made with pitted soft dates, fine almond flour, unsweetened cocoa powder, neutral oil or coconut oil
+- The food should look freshly prepared, appetizing, and photorealistic
+- Visible texture details: crisp edges, natural colors, steam or moisture where appropriate
+
+SCENE SETUP:
+- Setting: A beautiful dessert plate on a styled coffee table or picnic blanket
+- Props: scattered crumbs for authenticity, glass of milk or fruit nearby, decorative napkin, natural elements like flowers or leaves
+- Arrangement: Balanced composition with the main dish as hero, props adding context without distraction
+
+LIGHTING:
+- Soft, dreamy backlighting creating a slight glow, with warm fill light
+- Three-point lighting setup: soft key light, subtle fill, gentle rim light for food separation
+- No harsh shadows, no blown-out highlights
+
+CAMERA:
+- Shot on Canon EOS R5 with 50mm f/1.8 lens, shallow depth of field, soft natural bokeh
+- Focus point: center of the main dish
+- Background: naturally blurred, complementary colors
+
+MOOD & STYLE:
+- Overall feel: indulgent, sweet, treat-yourself, joyful
+- Color palette: warm, inviting, appetizing
+- hyper-realistic, 8k resolution, micro-details of food texture visible, natural skin on fruits and vegetables, visible steam or moisture where appropriate, photorealistic commercial food photography, high dynamic range, calibrated color grading
+
+NEGATIVE:
+- No artificial-looking food, no plastic textures, no distorted proportions
+- No cluttered backgrounds, no distracting elements
+- No oversaturated colors, no unrealistic lighting
+```
+
+---
+
+
+# 🚀 Quick-Copy Prompts (Simplified)
+
+If the detailed prompts above don't work well, try these shorter versions:
+
+1. `Silky Carrot Apple Starter Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+2. `Comforting Sweet Potato Lentil Khichdi Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+3. `Banana Avocado Breakfast Purée with Yogurt, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+4. `Zucchini Chickpea Mediterranean Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+5. `Italian Tomato Vegetable Purée with Tiny Pasta, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+6. `Mild Mexican Black Bean Sweet Corn Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+7. `Asian Pear Rice Congee Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+8. `Mediterranean Red Lentil Carrot Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+9. `Apple Prune Fiber Friendly Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+10. `Indian Rice Mung Dal Spinach Purée, professional food photography, tender, wholesome, nurturing, clean, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+11. `Sweet Potato & Spinach Frittata Fingers, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+12. `Apple Cinnamon Oat Toddler Porridge, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+13. `Mini Turkey & Apple Meatloaf Muffins, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+14. `Soft-Baked Blueberry & Oat Bars, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+15. `Cheesy Broccoli & Quinoa Bites, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+16. `Avocado & Black Bean Quesadilla Strips, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+17. `Mild Curried Red Lentil Cakes, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+18. `Salmon & Pea Fish Cakes, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+19. `Sesame Tofu & Veggie Cubes, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+20. `Zucchini & Feta Fritters, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+21. `Pumpkin & Ricotta Gnocchi Pillows, professional food photography, playful, inviting, colorful, fun, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+22. `Folate-Rich Lentil and Spinach Soup, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+23. `Greek Yogurt Parfait with Berries and Almonds, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+24. `Salmon and Sweet Potato Bowl with Avocado, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+25. `Quinoa and Black Bean Burrito Bowl, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+26. `Spinach and Feta Egg Muffins, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+27. `Chicken and Vegetable Stir-Fry with Brown Rice, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+28. `Overnight Oats with Chia and Berries, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+29. `Lentil and Vegetable Curry with Coconut Milk, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+30. `Mediterranean Chicken and Chickpea Salad, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+31. `Baked Sweet Potato with Black Beans and Avocado, professional food photography, nourishing, elegant, calming, self-care, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+32. `One-Pot Chicken and Vegetable Rice, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+33. `Vegetable Pasta Primavera, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+34. `Bean and Veggie Burrito Bowl, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+35. `Veggie-Packed Lasagna, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+36. `Mild Vegetable Curry with Rice, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+37. `Tofu and Vegetable Stir-Fry, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+38. `Mediterranean Baked Chicken with Quinoa, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+39. `Slow Cooker Beef and Vegetable Stew, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+40. `Baked Fish Tacos with Slaw, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+41. `Vegetable Noodle Soup, professional food photography, cozy, gathering, hearty, comforting, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+42. `Rainbow Pesto Pasta Salad, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+43. `Turkey & Hummus Pinwheels, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+44. `Soft Chicken Veggie Rice Bowl, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+45. `Spinach & Cheese Pizza Scrolls, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+46. `Mini Baked Chicken Nuggets, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+47. `Cold Sesame Noodle Salad, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+48. `Savory Corn & Cheddar Muffins, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+49. `Veggie Lentil Pancakes, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+50. `Mini Bean & Cheese Burritos, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+51. `Baked Samosa Puffs, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+52. `Onigiri Rice Triangles, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+53. `Greek Pita Bento Box, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+54. `Cheesy Veggie Quinoa Toddler Bites, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+55. `Salmon Potato Veggie Mash, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+56. `Deconstructed Soft Taco Toddler Bowl, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+57. `Soft Tofu Veggie Stir Fry with Rice, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+58. `Turkey Veggie Mini Meatballs with Pasta, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+59. `Creamy Hummus Yogurt Veggie Dippers, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+60. `Banana Peanut Butter Chia Pudding, professional food photography, adorable, messy-cute, realistic, everyday, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+61. `Soft Banana Oat Toddler Cookies, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+62. `Mini Berry Yogurt Pops, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+63. `Cinnamon Sweet Potato Snack Fries with Yogurt Dip, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+64. `Cheesy Veggie Mini Muffins, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+65. `Mango Lassi Chia Pudding Cups, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+66. `Soft Peanut Butter Oat Energy Balls, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+67. `Apple Sunflower Snack Rounds, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+68. `Chickpea Cookie Dough Fruit Dip, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+69. `Veggie Rice Snack Fritters, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+
+70. `Soft Date Almond Cocoa Bites, professional food photography, indulgent, sweet, treat-yourself, joyful, soft natural lighting, shallow depth of field, 8k, hyper-realistic, Canon 50mm f/1.8`
+

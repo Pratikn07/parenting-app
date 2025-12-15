@@ -1,0 +1,426 @@
+{
+"recipes": [
+{
+"title": "Silky Carrot Apple Starter Purée",
+"description": "This smooth orange purée brings together the gentle sweetness of carrots and apples for a first spoon feed. Parents will appreciate the short ingredient list and soft flavor that eases babies into solids.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch"],
+"cuisine": "american",
+"age_range_min": 4,
+"age_range_max": 12,
+"ingredients": [
+{"item": "medium carrot, peeled and sliced into 1/4 inch coins", "amount": "1"},
+{"item": "sweet apple, peeled, cored, chopped into 1/2 inch cubes", "amount": "1 small"},
+{"item": "water", "amount": "1/2 cup, plus more as needed"},
+{"item": "breast milk, formula, or water for thinning (optional)", "amount": "1–3 tablespoons"}
+],
+"instructions": [
+"Wash hands with soap and water for at least 20 seconds before handling ingredients.",
+"Peel the carrot and apple, then chop the carrot into 1/4 inch coins and the apple into 1/2 inch cubes so pieces cook evenly.",
+"Place a small saucepan (about 1 to 2 quarts) on the stove, add 1/2 cup water, carrots, and apples.",
+"Bring to a gentle simmer over medium heat, then reduce to low and cover with a lid.",
+"Cook for 12 to 15 minutes until carrot slices pierce easily with a fork and look soft around the edges, with no firm center.",
+"Remove from heat and allow the mixture to cool for 5 to 10 minutes until warm, not hot, to protect blender safety and baby’s mouth.",
+"Transfer cooked carrots, apples, and any remaining cooking liquid to a blender or food processor.",
+"Blend on high for 30 to 60 seconds until the purée looks silky and shows no visible lumps, stopping to scrape down the sides if needed.",
+"If a thinner texture is preferred for younger babies, add 1 tablespoon of warm water, breast milk, or prepared formula at a time and blend again until the purée coats a spoon in a thin, even layer.",
+"Pour the purée into a shallow bowl and check texture by pressing a small spoonful between your fingers; no chunks should remain for early feeders.",
+"IMPORTANT: Always test the temperature on the inside of your wrist before serving; the purée should feel room temperature or slightly warm, never hot.",
+"Always seat baby upright in a highchair or supported seat and stay close during feeding."
+],
+"tips": [
+"Steam extra carrot and apple, then blend in separate batches to freeze individual servings for busy weekdays.",
+"Use silicone freezer trays or ice cube trays to portion purée, then move frozen cubes to a labeled freezer bag for easy thawing."
+],
+"time_minutes": 25,
+"difficulty": "easy",
+"servings": 4,
+"calories": 45,
+"allergens": [],
+"storage": "Refrigerate in an airtight container for up to 3 days. Freeze in small portions for up to 2 months."
+},
+{
+"title": "Comforting Sweet Potato Lentil Khichdi Purée",
+"description": "This Indian inspired purée combines soft rice, red lentils, and sweet potato for a filling meal in one bowl. Parents will like the mild flavor and smooth texture that works for both lunch and dinner.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch", "dinner"],
+"cuisine": "indian",
+"age_range_min": 6,
+"age_range_max": 18,
+"ingredients": [
+{"item": "uncooked white rice, rinsed", "amount": "2 tablespoons"},
+{"item": "red lentils (masoor dal), rinsed until water runs clear", "amount": "2 tablespoons"},
+{"item": "sweet potato, peeled and chopped into 1/2 inch cubes", "amount": "1/2 cup"},
+{"item": "turmeric powder", "amount": "1 small pinch (optional)"},
+{"item": "water", "amount": "1 1/2 cups"},
+{"item": "ghee or neutral oil (optional, for older babies)", "amount": "1/2 teaspoon"}
+],
+"instructions": [
+"Wash hands thoroughly before you start and clean the work surface.",
+"Rinse the rice and red lentils in a fine mesh strainer under cool running water until the water looks mostly clear to remove excess starch.",
+"Peel the sweet potato and chop into even 1/2 inch cubes so pieces cook at the same speed.",
+"Place rice, lentils, sweet potato, turmeric, and water into a small saucepan or baby-sized pressure cooker (about 2 quarts).",
+"For stovetop: bring mixture to a gentle boil over medium heat, then reduce heat to low, cover with a tight lid, and simmer for 20 to 25 minutes, stirring once halfway, until rice breaks easily and sweet potato cubes mash with gentle pressure.",
+"For pressure cooker: cook on low pressure for 5 minutes, then allow pressure to release naturally for 5 to 10 minutes before opening lid carefully.",
+"Let the cooked mixture cool for 10 minutes until warm but not steaming hot to protect blender safety.",
+"Transfer mixture to a blender or use an immersion blender directly in the pot.",
+"Blend for 30 to 60 seconds until the purée looks thick, smooth, and uniform with no visible grains of rice or lentil skins.",
+"If needed, add 1 tablespoon of warm boiled water at a time and blend again until the purée drips slowly from a spoon rather than clumping.",
+"For babies older than 9 months, stir in a tiny amount of ghee or oil for richness once the purée cools to warm.",
+"IMPORTANT: Test the temperature on the inside of your wrist before serving to your baby; food should feel comfortably warm, never hot.",
+"Seat baby upright and avoid feeding while baby lies back or walks around."
+],
+"tips": [
+"Prepare a double batch and freeze in small portions so you have quick lunches and dinners ready.",
+"Label each container with the cooking date so you rotate older portions first."
+],
+"time_minutes": 35,
+"difficulty": "easy",
+"servings": 5,
+"calories": 80,
+"allergens": [],
+"storage": "Refrigerate in an airtight container for up to 3 days. Freeze in small, baby-sized portions for up to 1 month."
+},
+{
+"title": "Banana Avocado Breakfast Purée with Yogurt",
+"description": "This creamy breakfast bowl brings together banana, avocado, and yogurt for healthy fats and energy. Parents will like the no-cook method and quick prep on busy mornings.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["gluten-free", "nut-free", "vegetarian", "egg-free"],
+"kitchen_style_tags": ["quick", "picky"],
+"meal_types": ["breakfast", "snack"],
+"cuisine": "american",
+"age_range_min": 6,
+"age_range_max": 18,
+"ingredients": [
+{"item": "ripe banana, peeled and sliced", "amount": "1/2 medium"},
+{"item": "ripe avocado, peeled and pitted", "amount": "1/4 medium"},
+{"item": "plain whole milk yogurt (unsweetened)", "amount": "2 tablespoons"},
+{"item": "breast milk or prepared formula for thinning (optional)", "amount": "1–2 tablespoons"}
+],
+"instructions": [
+"Wash hands and make sure the bowl, spoon, and fork are clean and dry.",
+"Peel the banana and slice into rounds about 1/4 inch thick so mashing stays easy.",
+"Scoop 1/4 of the avocado from the peel and place it in a small bowl with the banana slices.",
+"Mash banana and avocado together with the back of a fork for 1 to 2 minutes until no separate chunks remain and the mixture looks smooth and pale green.",
+"Add plain whole milk yogurt to the bowl.",
+"Stir with a small spoon until the texture looks uniform and creamy, with no streaks of banana or yogurt.",
+"If your baby prefers a thinner purée, add 1 tablespoon of breast milk or prepared formula at a time and mix until the mixture drips smoothly from a spoon.",
+"For extra safety with younger babies, press the purée through a fine mesh strainer using the back of a spoon to remove any remaining small fibers.",
+"Transfer to a baby bowl.",
+"IMPORTANT: Serve at cool or room temperature only; avoid microwave heating for this no-cook recipe to keep texture stable and prevent hot spots.",
+"Always feed while baby sits upright in a safe highchair or supported seat."
+],
+"tips": [
+"Use a fork with a wide base for faster mashing when mornings feel busy.",
+"Mix the purée right before serving, since avocado darkens over time even in the fridge."
+],
+"time_minutes": 10,
+"difficulty": "easy",
+"servings": 2,
+"calories": 90,
+"allergens": ["milk"],
+"storage": "Refrigerate leftovers in a covered container for up to 24 hours; press plastic wrap directly on the surface to reduce browning. Stir well before serving and discard if color or smell changes."
+},
+{
+"title": "Zucchini Chickpea Mediterranean Purée",
+"description": "This green purée blends soft zucchini with protein rich chickpeas and a hint of olive oil. Parents will like the smooth texture and gentle taste that introduces legumes in a baby friendly way.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch", "dinner"],
+"cuisine": "mediterranean",
+"age_range_min": 7,
+"age_range_max": 18,
+"ingredients": [
+{"item": "zucchini, washed and chopped into 1/2 inch pieces", "amount": "1 small (about 1 cup)"},
+{"item": "cooked, no-salt chickpeas, rinsed well", "amount": "1/3 cup"},
+{"item": "water", "amount": "1/2 cup"},
+{"item": "extra virgin olive oil (for babies over 6 months)", "amount": "1/2 teaspoon"}
+],
+"instructions": [
+"Wash hands and clean the cutting board, knife, and saucepan.",
+"Rinse zucchini under cool water, trim the ends, and chop into even 1/2 inch pieces for even cooking.",
+"Place zucchini, chickpeas, and water into a small saucepan.",
+"Set heat to medium and bring mixture to a gentle simmer with small bubbles around the edges.",
+"Reduce heat to low, cover with a lid, and cook for 10 to 12 minutes until zucchini pieces look translucent and soft and chickpeas press flat easily with a spoon.",
+"Take the pan off the heat and let the mixture cool for 5 to 10 minutes until warm but not steaming.",
+"Transfer zucchini, chickpeas, and the cooking liquid to a blender or food processor.",
+"Add olive oil.",
+"Blend on high for 45 to 60 seconds until the purée looks smooth and pale green with no visible skins from chickpeas.",
+"If the purée looks thicker than yogurt, add 1 tablespoon of warm boiled water and blend again until it reaches a smooth, slightly pourable texture.",
+"For younger babies around 7 to 8 months, pass the purée through a fine mesh strainer to remove any tiny skins that remain.",
+"IMPORTANT: Check the temperature on the inside of your wrist; the purée should feel lukewarm before feeding.",
+"Seat baby upright and offer small spoonfuls, watching closely for baby’s cues to stop or continue."
+],
+"tips": [
+"Use canned low-sodium chickpeas for speed, rinsing under running water for at least 30 seconds to reduce extra salt.",
+"Freeze extra portions in ice cube trays so you have ready single servings for fast lunches."
+],
+"time_minutes": 25,
+"difficulty": "easy",
+"servings": 4,
+"calories": 70,
+"allergens": [],
+"storage": "Refrigerate in an airtight container for up to 3 days. Freeze in small cubes or containers for up to 2 months."
+},
+{
+"title": "Italian Tomato Vegetable Purée with Tiny Pasta",
+"description": "This Italian inspired bowl blends soft vegetables with tiny pasta for a comforting spoon meal. Parents will like the way this purée helps babies explore new flavors while still staying smooth.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["nut-free", "vegetarian", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch", "dinner"],
+"cuisine": "italian",
+"age_range_min": 9,
+"age_range_max": 24,
+"ingredients": [
+{"item": "small pasta shapes such as pastina or tiny stars", "amount": "2 tablespoons"},
+{"item": "ripe tomato, peeled and chopped (or no-salt canned crushed tomato)", "amount": "1/2 cup"},
+{"item": "carrot, peeled and chopped into 1/4 inch pieces", "amount": "1/4 cup"},
+{"item": "zucchini, chopped into 1/2 inch pieces", "amount": "1/4 cup"},
+{"item": "low-sodium vegetable broth or water", "amount": "1 cup"},
+{"item": "dried basil", "amount": "1 small pinch"},
+{"item": "grated Parmesan cheese (optional for older babies)", "amount": "1 teaspoon"}
+],
+"instructions": [
+"Wash hands and clean all utensils before starting.",
+"Peel and chop the tomato, carrot, and zucchini into the listed sizes so everything softens evenly.",
+"Place tomato, carrot, zucchini, basil, and broth or water in a small saucepan and set heat to medium.",
+"Bring to a gentle simmer, then reduce heat to low and cover with a lid.",
+"Cook for 12 to 15 minutes, stirring once or twice, until carrots pierce easily with a fork and vegetables look tender.",
+"Add the small pasta shapes to the pot, stir, and cook uncovered for another 5 to 7 minutes, stirring often so pasta does not stick to the bottom.",
+"Check pasta by pressing a piece between your fingers; it should squish flat and look fully cooked with no hard center.",
+"Remove the pan from heat and allow mixture to cool for 10 minutes until warm.",
+"Transfer vegetables, pasta, and cooking liquid to a blender.",
+"Blend on high for 45 to 60 seconds until the purée looks smooth and orange, with no visible pasta pieces.",
+"If you plan to add Parmesan for an older baby, stir it in after the purée cools slightly and blend again for a few seconds.",
+"Adjust thickness with 1 tablespoon of warm water at a time until the purée drops slowly from a spoon.",
+"IMPORTANT: Always test the final temperature on your wrist before serving; discard any portion that feels too hot and wait until it cools.",
+"Feed while your baby sits upright in a supported seat, never in a reclined position."
+],
+"tips": [
+"Cook a larger batch of the vegetable base without pasta, freeze in portions, and cook fresh pasta to blend in on serving days.",
+"For younger babies closer to 9 months, blend slightly longer to keep the texture silky."
+],
+"time_minutes": 35,
+"difficulty": "medium",
+"servings": 4,
+"calories": 95,
+"allergens": ["wheat", "milk"],
+"storage": "Refrigerate purée in a sealed container for up to 2 days. Freeze in small portions for up to 1 month."
+},
+{
+"title": "Mild Mexican Black Bean Sweet Corn Purée",
+"description": "This hearty purée combines black beans, sweet corn, and a hint of mild spice for a smooth meal with fiber and protein. Parents will like the familiar taco night flavors in a gentle, baby ready form.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch", "dinner"],
+"cuisine": "mexican",
+"age_range_min": 8,
+"age_range_max": 24,
+"ingredients": [
+{"item": "no-salt cooked black beans, rinsed well", "amount": "1/2 cup"},
+{"item": "frozen or fresh sweet corn kernels", "amount": "1/4 cup"},
+{"item": "small tomato, seeded and chopped", "amount": "1/4 cup"},
+{"item": "ground cumin", "amount": "1 small pinch"},
+{"item": "water or low-sodium vegetable broth", "amount": "3/4 cup"}
+],
+"instructions": [
+"Wash hands and rinse beans, corn, and tomato under cool water where needed.",
+"Place black beans, corn, tomato, cumin, and water or broth into a small saucepan.",
+"Set heat to medium and bring mixture to a gentle simmer with small bubbles, stirring once or twice.",
+"Reduce heat to low, cover with a lid, and cook for 12 to 15 minutes until corn kernels look plump and tomato pieces have softened and broken down.",
+"Stir and check a bean by pressing it with the back of a spoon; it should spread easily with no firm center.",
+"Remove from heat and let cool for 10 minutes so steam reduces.",
+"Transfer the mixture and cooking liquid to a blender or food processor.",
+"Blend on high for 60 to 90 seconds until the purée looks thick and completely smooth; no bean skins or corn skins should be visible.",
+"If the mixture seems too thick for your baby, add 1 tablespoon of warm water at a time and blend again until it reaches a yogurt-like flow.",
+"For extra smoothness, push the purée through a fine mesh strainer with the back of a spoon to remove any remaining skins.",
+"IMPORTANT: Always test a small spoonful on your wrist to confirm the purée feels lukewarm before serving.",
+"Seat baby upright, and offer small spoonfuls while watching for signs of fullness."
+],
+"tips": [
+"Use canned low-sodium beans on busy nights, rinsing for at least 30 seconds to lower sodium.",
+"Pair this purée with a simple fruit purée for a complete meal with sweet and savory flavors."
+],
+"time_minutes": 30,
+"difficulty": "easy",
+"servings": 4,
+"calories": 80,
+"allergens": [],
+"storage": "Refrigerate in a sealed container for up to 3 days. Freeze in ice cube trays or small jars for up to 2 months."
+},
+{
+"title": "Asian Pear Rice Congee Purée",
+"description": "This gentle Asian style rice porridge purée soothes small tummies with soft rice and sweet pear. Parents will like the simple ingredient list and how well it works for breakfast or a light dinner.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["breakfast", "dinner"],
+"cuisine": "asian",
+"age_range_min": 6,
+"age_range_max": 18,
+"ingredients": [
+{"item": "short grain white rice, rinsed", "amount": "2 tablespoons"},
+{"item": "ripe Asian pear, peeled, cored, and chopped", "amount": "1/2 cup"},
+{"item": "water", "amount": "1 1/2 cups"}
+],
+"instructions": [
+"Wash hands, rinse rice in a fine mesh strainer until water looks mostly clear, and peel and chop the pear.",
+"Place rice, pear, and water into a small saucepan.",
+"Bring to a gentle boil over medium heat, stirring once to prevent rice from sticking to the bottom.",
+"Reduce heat to low, cover with a tight lid, and simmer for 25 to 30 minutes, stirring every 8 to 10 minutes.",
+"Cook until rice grains split and look soft and pear pieces mash easily with the back of a spoon; the mix should look like thick soup.",
+"Remove from heat and allow to cool for 10 minutes so steam reduces.",
+"Transfer to a blender or use an immersion blender directly in the pot.",
+"Blend on high for 45 to 60 seconds until the purée looks creamy and smooth with no whole grains or pear pieces.",
+"If you want a thinner consistency, add 1 tablespoon of warm boiled water at a time and blend again until the purée slowly pours from a spoon.",
+"For younger babies around 6 to 7 months, strain through a fine mesh sieve for an extra smooth finish.",
+"IMPORTANT: Check temperature before serving by placing a small amount on your wrist; food should feel warm, not hot.",
+"Place baby in an upright seat and offer small spoonfuls, watching for swallowing rather than pushing food out."
+],
+"tips": [
+"Prepare congee as part of family breakfast, then blend a portion for baby to reduce extra cooking.",
+"Thin leftovers with a little warm water when reheating, since rice thickens in the fridge."
+],
+"time_minutes": 40,
+"difficulty": "easy",
+"servings": 4,
+"calories": 70,
+"allergens": [],
+"storage": "Refrigerate in a closed container for up to 3 days. Freeze blended portions in small containers for up to 1 month."
+},
+{
+"title": "Mediterranean Red Lentil Carrot Purée",
+"description": "This bright orange purée blends soft red lentils, carrot, and a touch of olive oil. Parents will like the smooth, hearty texture that works well for lunch or dinner.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch", "dinner"],
+"cuisine": "mediterranean",
+"age_range_min": 7,
+"age_range_max": 24,
+"ingredients": [
+{"item": "red lentils, rinsed until water looks mostly clear", "amount": "1/4 cup"},
+{"item": "carrot, peeled and chopped into 1/4 inch pieces", "amount": "1/2 cup"},
+{"item": "water or low-sodium vegetable broth", "amount": "1 1/4 cups"},
+{"item": "extra virgin olive oil", "amount": "1/2 teaspoon"}
+],
+"instructions": [
+"Wash hands and rinse lentils in a fine mesh strainer under running water.",
+"Peel and chop the carrot into even 1/4 inch pieces to promote even cooking.",
+"Place lentils, carrot, and water or broth into a small saucepan.",
+"Bring to a gentle boil over medium heat, then reduce heat to low and cover with a lid.",
+"Simmer for 15 to 18 minutes, stirring once or twice, until lentils look soft and begin to fall apart and carrot pieces mash easily.",
+"Remove from heat and stir in olive oil.",
+"Allow mixture to cool for about 10 minutes until warm, not steaming.",
+"Transfer to a blender or use an immersion blender.",
+"Blend on high for 45 to 60 seconds until the purée looks smooth and thick with no visible lentil skins.",
+"If the purée looks too thick for your baby, add 1 tablespoon of warm water and blend again until it reaches a soft, spoonable texture.",
+"For younger babies, push the purée through a fine mesh strainer to remove any remaining skins.",
+"IMPORTANT: Test on your wrist before serving to your baby; food should feel comfortably warm.",
+"Keep baby seated upright during feeding and offer small spoonfuls at a slow pace."
+],
+"tips": [
+"Double the recipe and freeze in silicone trays for quick protein rich meals on busy days.",
+"Serve a slightly thicker version for older babies to help them practice new textures."
+],
+"time_minutes": 30,
+"difficulty": "easy",
+"servings": 4,
+"calories": 85,
+"allergens": [],
+"storage": "Refrigerate in a sealed container for up to 3 days. Freeze in portioned containers for up to 2 months."
+},
+{
+"title": "Apple Prune Fiber Friendly Purée",
+"description": "This sweet purée pairs apples and prunes for gentle digestive support. Parents will like the simple prep and natural sweetness that needs no added sugar.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["picky"],
+"meal_types": ["snack"],
+"cuisine": "american",
+"age_range_min": 6,
+"age_range_max": 24,
+"ingredients": [
+{"item": "dried prunes (pitted)", "amount": "1/4 cup"},
+{"item": "apple, peeled, cored, and chopped", "amount": "1/2 cup"},
+{"item": "water", "amount": "3/4 cup"}
+],
+"instructions": [
+"Wash hands and peel and chop the apple into 1/2 inch cubes.",
+"Place prunes in a small bowl and cover with hot tap water; soak for 10 minutes to soften while you prepare the apple.",
+"Drain prunes and place them with the apple and 3/4 cup fresh water in a small saucepan.",
+"Bring mixture to a gentle simmer over medium heat.",
+"Reduce heat to low, cover, and cook for 10 minutes, stirring once or twice, until apple pieces look soft and prunes feel plump and tender.",
+"Remove from heat and cool for 5 to 10 minutes until warm.",
+"Transfer fruit and cooking liquid to a blender.",
+"Blend on high for 45 to 60 seconds until the purée looks glossy and smooth with a deep chestnut color.",
+"If the texture looks thicker than applesauce, add 1 tablespoon of warm water and blend again until it reaches a smooth, spoonable texture.",
+"For younger babies, press the purée through a fine mesh sieve to remove any stray skins.",
+"IMPORTANT: Always test the temperature on the inside of your wrist before serving; serve warm or cool, never hot.",
+"Offer small amounts at first and check with your pediatrician if your baby has ongoing tummy concerns."
+],
+"tips": [
+"Keep a small container of soaked, softened prunes in the fridge to speed up prep.",
+"Serve this purée mixed into baby oatmeal for extra fiber when your baby feels backed up."
+],
+"time_minutes": 25,
+"difficulty": "easy",
+"servings": 4,
+"calories": 60,
+"allergens": [],
+"storage": "Refrigerate in a sealed container for up to 3 days. Freeze in small containers for up to 2 months."
+},
+{
+"title": "Indian Rice Mung Dal Spinach Purée",
+"description": "This Indian style purée blends soft rice, mung dal, and spinach for a green, iron friendly bowl. Parents will like the balanced mix of grains, lentils, and greens for a filling meal.",
+"feeding_types": ["babyPurees"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["lunch", "dinner"],
+"cuisine": "indian",
+"age_range_min": 7,
+"age_range_max": 24,
+"ingredients": [
+{"item": "uncooked white rice, rinsed", "amount": "2 tablespoons"},
+{"item": "split mung dal (moong dal), rinsed", "amount": "2 tablespoons"},
+{"item": "fresh baby spinach leaves, tightly packed", "amount": "1/2 cup"},
+{"item": "turmeric powder", "amount": "1 small pinch (optional)"},
+{"item": "water", "amount": "1 3/4 cups"},
+{"item": "ghee or neutral oil (optional for older babies)", "amount": "1/2 teaspoon"}
+],
+"instructions": [
+"Wash hands and rinse rice and mung dal in a fine mesh strainer until water looks mostly clear.",
+"Place rice, mung dal, turmeric, and water in a small saucepan.",
+"Bring to a gentle boil over medium heat, stirring once to prevent sticking.",
+"Reduce heat to low, cover with a lid, and simmer for 20 minutes, stirring every 7 to 8 minutes.",
+"After 20 minutes, stir in spinach leaves, pressing them down into the liquid.",
+"Cook for another 5 to 7 minutes until spinach wilts and turns dark green and rice and dal mash easily with the back of a spoon.",
+"Remove from heat and stir in ghee or oil if using for an older baby.",
+"Allow mixture to cool for about 10 minutes until warm.",
+"Transfer mixture to a blender or use an immersion blender directly in the pot.",
+"Blend on high for 45 to 60 seconds until the purée looks smooth and pale green with no visible grains or spinach pieces.",
+"If the texture looks thicker than mashed potatoes, add 1 tablespoon of warm water at a time and blend again until it reaches a soft, spoonable texture.",
+"For early eaters near 7 months, push the purée through a fine mesh sieve to remove any remaining fibers.",
+"IMPORTANT: Test temperature on your wrist before serving; food should feel warm but never hot.",
+"Seat baby upright and feed slowly, watching for signs of fullness or discomfort."
+],
+"tips": [
+"Make this recipe in a small pressure cooker to save time, then blend portions for baby.",
+"Serve a thicker version for toddlers while keeping a smoother batch for younger siblings."
+],
+"time_minutes": 35,
+"difficulty": "medium",
+"servings": 5,
+"calories": 90,
+"allergens": [],
+"storage": "Refrigerate in an airtight container for up to 3 days. Freeze in portioned containers for up to 1 month."
+}
+]
+}

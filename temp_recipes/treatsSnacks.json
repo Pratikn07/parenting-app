@@ -1,0 +1,416 @@
+{
+"recipes": [
+{
+"title": "Soft Banana Oat Toddler Cookies",
+"description": "These soft cookies use mashed banana and oats for a lightly sweet snack. Parents will like the no sugar recipe and freezer friendly texture for busy afternoons.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch", "picky"],
+"meal_types": ["snack", "breakfast"],
+"cuisine": "american",
+"age_range_min": 12,
+"age_range_max": 48,
+"ingredients": [
+{"item": "ripe banana, peeled", "amount": "1 large"},
+{"item": "rolled oats", "amount": "3/4 cup"},
+{"item": "neutral oil or melted coconut oil", "amount": "1 tablespoon"},
+{"item": "ground cinnamon", "amount": "1/4 teaspoon"},
+{"item": "vanilla extract (optional)", "amount": "1/4 teaspoon"}
+],
+"instructions": [
+"Wash hands and heat oven to 350°F (180°C). Line a baking sheet with parchment paper so cookies release easily.",
+"Place oats in a blender or food processor and blend for 20 to 30 seconds until they look like a coarse flour.",
+"In a medium mixing bowl, mash the banana with a fork for 1 to 2 minutes until no visible chunks remain and the mixture looks smooth and glossy.",
+"Add oat flour, oil, cinnamon, and vanilla if using.",
+"Stir with a spoon until the dough looks thick and holds its shape. The dough should scoop like thick oatmeal and not pour.",
+"Use a tablespoon measure to scoop dough onto the lined baking sheet. Place scoops about 2 inches apart.",
+"Press each scoop with the back of a damp spoon until cookies reach about 1/2 inch thickness and 2 inches width. Thinner cookies bake more evenly for toddlers.",
+"Bake at 350°F (180°C) for 10 to 12 minutes until edges look light golden and centers feel firm but soft when pressed lightly with a finger.",
+"Remove the baking sheet from the oven and let cookies cool on the sheet for 5 minutes so they firm up.",
+"Transfer cookies to a wire rack and cool to room temperature. The texture should feel soft and bend easily without cracking.",
+"Before serving, break cookies into small pieces about 1/2 inch for newer eaters.",
+"IMPORTANT: Always serve cookies once they cool fully and test texture between your fingers to confirm a soft, squishable texture while your toddler sits upright."
+],
+"tips": [
+"Freeze cookies in a single layer, then move to a freezer bag for quick snacks.",
+"Serve cookie pieces with fruit slices or yogurt for a more filling snack plate."
+],
+"time_minutes": 30,
+"difficulty": "easy",
+"servings": 10,
+"calories": 55,
+"allergens": [],
+"storage": "Refrigerate in an airtight container for up to 3 days. Freeze for up to 2 months and thaw at room temperature before serving."
+},
+{
+"title": "Mini Berry Yogurt Pops",
+"description": "These mini pops taste like ice cream but rely on yogurt and fruit for sweetness. Parents will like the built in portion control and simple ingredient list.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["nut-free", "vegetarian", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["snack", "dessert"],
+"cuisine": "american",
+"age_range_min": 12,
+"age_range_max": 48,
+"ingredients": [
+{"item": "plain whole milk yogurt", "amount": "1 cup"},
+{"item": "mixed berries, fresh or frozen, chopped if large", "amount": "1/2 cup"},
+{"item": "ripe banana, sliced", "amount": "1/2 medium"},
+{"item": "milk or water", "amount": "2 to 3 tablespoons"}
+],
+"instructions": [
+"Wash hands and rinse berries under cool water if using fresh fruit.",
+"Add yogurt, berries, banana, and 2 tablespoons milk or water to a blender.",
+"Blend on high for 30 to 45 seconds until the mixture looks smooth and pale pink with no visible fruit chunks.",
+"Check thickness. The mixture should pour slowly from the blender. If it feels too thick to pour, add 1 more tablespoon liquid and blend again.",
+"Place silicone mini popsicle molds or a silicone ice cube tray on a small tray or plate for easy transfer to the freezer.",
+"Pour the mixture into molds, leaving about 1/4 inch space at the top for expansion.",
+"Insert short popsicle sticks or toddler friendly handles into each mold.",
+"Freeze for at least 3 hours until pops feel firm all the way through.",
+"To serve, run the outside of each mold under warm water for 5 to 10 seconds and gently wiggle the stick until the pop loosens.",
+"For newer eaters, slide the pop into a small silicone feeder or serve in a bowl by scraping small shavings off with a spoon.",
+"IMPORTANT: Always supervise closely during frozen treats. Offer small licks or thin shavings for toddlers who bite aggressively."
+],
+"tips": [
+"Prepare pops the night before so snacks sit ready in the freezer.",
+"Use single fruit flavors for toddlers who prefer simple tastes, such as only strawberry or only blueberry."
+],
+"time_minutes": 15,
+"difficulty": "easy",
+"servings": 8,
+"calories": 45,
+"allergens": ["milk"],
+"storage": "Keep frozen in the molds or in a freezer bag for up to 1 month. Serve straight from the freezer."
+},
+{
+"title": "Cinnamon Sweet Potato Snack Fries with Yogurt Dip",
+"description": "These baked sweet potato sticks taste like fries but bake soft inside for safer chewing. Parents will like the simple sheet pan method and quick yogurt dip.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["nut-free", "vegetarian", "egg-free"],
+"kitchen_style_tags": ["batch", "picky"],
+"meal_types": ["snack", "side"],
+"cuisine": "american",
+"age_range_min": 12,
+"age_range_max": 48,
+"ingredients": [
+{"item": "medium sweet potato, peeled", "amount": "1"},
+{"item": "neutral oil", "amount": "1 tablespoon"},
+{"item": "ground cinnamon", "amount": "1/4 teaspoon"},
+{"item": "plain whole milk yogurt", "amount": "1/3 cup"},
+{"item": "water", "amount": "1 tablespoon"}
+],
+"instructions": [
+"Wash hands and heat oven to 400°F (200°C). Line a large baking sheet with parchment paper.",
+"Peel the sweet potato and cut into thick sticks about 1/2 inch wide and 2 to 3 inches long so they soften well in the oven.",
+"Place sweet potato sticks in a bowl. Add oil and cinnamon and stir until every piece looks lightly coated.",
+"Spread sticks in a single layer on the lined baking sheet with space between pieces. Crowding leads to steaming instead of baking.",
+"Bake at 400°F (200°C) for 15 minutes.",
+"Flip each stick with tongs or a spatula and bake for another 8 to 10 minutes until edges look light golden and centers feel soft when pressed with tongs.",
+"Remove tray from the oven and let fries cool on the tray for 5 to 10 minutes until warm.",
+"While fries cool, stir yogurt and water in a small bowl. The dip should look smooth and slightly thinner than yogurt alone.",
+"Place a small portion of fries in a toddler bowl and serve yogurt dip on the side.",
+"For newer eaters, cut each fry into shorter pieces or thinner sticks so length stays under 2 inches.",
+"IMPORTANT: Press fry pieces between your fingers to confirm a soft interior and test temperature on your wrist before serving."
+],
+"tips": [
+"Serve leftovers with scrambled eggs or beans for a fast mini meal.",
+"Use this snack during family snack time so your toddler practices dipping skills."
+],
+"time_minutes": 35,
+"difficulty": "easy",
+"servings": 3,
+"calories": 110,
+"allergens": ["milk"],
+"storage": "Refrigerate fries and dip in separate containers for up to 2 days. Reheat fries at 350°F (180°C) for 5 to 7 minutes until warm and soft."
+},
+{
+"title": "Cheesy Veggie Mini Muffins",
+"description": "These mini muffins tuck vegetables and cheese into a soft, easy to hold shape. Parents will like serving them as a snack or side for soup and salads.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["nut-free", "vegetarian"],
+"kitchen_style_tags": ["batch", "picky"],
+"meal_types": ["snack", "lunch"],
+"cuisine": "american",
+"age_range_min": 12,
+"age_range_max": 48,
+"ingredients": [
+{"item": "all-purpose flour", "amount": "3/4 cup"},
+{"item": "baking powder", "amount": "1 teaspoon"},
+{"item": "finely grated carrot", "amount": "1/3 cup"},
+{"item": "finely chopped spinach", "amount": "1/3 cup"},
+{"item": "shredded mild cheddar cheese", "amount": "1/2 cup"},
+{"item": "milk", "amount": "1/2 cup"},
+{"item": "large egg", "amount": "1"},
+{"item": "neutral oil", "amount": "2 tablespoons"}
+],
+"instructions": [
+"Wash hands and heat oven to 375°F (190°C). Lightly grease a 24 cup mini muffin pan or use silicone liners.",
+"In a medium bowl, whisk flour and baking powder until no lumps remain.",
+"In a separate bowl, whisk egg, milk, and oil until the mixture looks smooth.",
+"Add grated carrot, chopped spinach, and shredded cheese to the wet ingredients and stir until vegetables and cheese look evenly spread.",
+"Pour wet mixture into the flour mixture.",
+"Stir gently with a spoon until no dry flour streaks remain. The batter should look thick but scoopable.",
+"Use a tablespoon to fill each mini muffin cup about three quarters full.",
+"Bake at 375°F (190°C) for 12 to 15 minutes until tops look set and light golden and a toothpick inserted in the center comes out clean.",
+"Remove the pan from the oven and cool on a wire rack for 5 minutes.",
+"Lift muffins out of the pan and cool fully on the rack. Muffins should feel soft and spring back when pressed lightly.",
+"Before serving, cut muffins into halves or quarters for toddlers who still learn chewing skills.",
+"IMPORTANT: Test temperature on your wrist and press pieces between your fingers to confirm a soft, moist texture before serving while your child sits upright."
+],
+"tips": [
+"Freeze half the batch for lunchbox snacks on busy days.",
+"Serve muffin pieces with cucumber slices or fruit for a more balanced snack plate."
+],
+"time_minutes": 35,
+"difficulty": "easy",
+"servings": 18,
+"calories": 65,
+"allergens": ["milk", "eggs", "wheat"],
+"storage": "Refrigerate in an airtight container for up to 3 days. Freeze for up to 2 months and reheat at 300°F (150°C) for 5 to 7 minutes."
+},
+{
+"title": "Mango Lassi Chia Pudding Cups",
+"description": "These pudding cups taste like mango lassi in spoon form with chia seeds for gentle fiber. Parents will like prepping the cups the night before for ready to eat snacks.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["gluten-free", "nut-free", "vegetarian", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["snack", "breakfast"],
+"cuisine": "indian",
+"age_range_min": 12,
+"age_range_max": 48,
+"ingredients": [
+{"item": "ripe mango, peeled and chopped", "amount": "1 cup"},
+{"item": "plain whole milk yogurt", "amount": "3/4 cup"},
+{"item": "milk", "amount": "1/2 cup"},
+{"item": "chia seeds", "amount": "3 tablespoons"},
+{"item": "ground cardamom (optional)", "amount": "1 pinch"}
+],
+"instructions": [
+"Wash hands and peel the mango. Chop the flesh into 1 inch chunks.",
+"Add mango, yogurt, and milk to a blender. Add cardamom if you use spice.",
+"Blend on high for 30 to 45 seconds until the mixture looks smooth and bright yellow.",
+"Pour mixture into a medium bowl.",
+"Stir chia seeds into the mango mixture until seeds look evenly spread, with no clumps.",
+"Pour into 4 to 6 small toddler friendly containers or jars, filling each about three quarters full.",
+"Cover containers with lids and place them in the refrigerator.",
+"Chill for at least 2 hours, or overnight, until the pudding thickens and chia seeds swell.",
+"Before serving, stir each cup with a small spoon so texture feels even from top to bottom.",
+"If the pudding feels thicker than yogurt, stir in 1 to 2 teaspoons milk until it reaches a soft, spoonable texture.",
+"IMPORTANT: Serve pudding cool and always seat toddlers upright. Offer small spoonfuls and watch swallowing for comfort."
+],
+"tips": [
+"Portion pudding in reusable yogurt pouches for toddlers who enjoy sucking smooth textures.",
+"Top with tiny soft mango cubes or banana slices for older toddlers who handle small pieces with confidence."
+],
+"time_minutes": 15,
+"difficulty": "easy",
+"servings": 4,
+"calories": 120,
+"allergens": ["milk"],
+"storage": "Refrigerate in sealed containers for up to 3 days. Stir well before each serving."
+},
+{
+"title": "Soft Peanut Butter Oat Energy Balls",
+"description": "These no bake balls mix oats, peanut butter, and banana into a soft, chewy snack. Parents will like the fridge friendly format for quick afternoon energy.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["gluten-free", "vegetarian"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["snack"],
+"cuisine": "american",
+"age_range_min": 18,
+"age_range_max": 60,
+"ingredients": [
+{"item": "rolled oats", "amount": "1 cup"},
+{"item": "smooth peanut butter", "amount": "1/3 cup"},
+{"item": "ripe banana, mashed", "amount": "1/2 medium"},
+{"item": "ground flaxseed (optional)", "amount": "1 tablespoon"},
+{"item": "vanilla extract", "amount": "1/4 teaspoon"},
+{"item": "water", "amount": "1 to 2 tablespoons"}
+],
+"instructions": [
+"Wash hands and line a small tray with parchment paper.",
+"Mash banana in a medium bowl with a fork for 1 to 2 minutes until smooth with no visible chunks.",
+"Add peanut butter and vanilla to the bowl and stir until the mixture looks creamy and uniform.",
+"Add oats and flaxseed if using. Stir until oats look fully coated and the mixture feels thick.",
+"If the mixture feels too dry to hold together, add water 1 teaspoon at a time and stir again until it presses into a ball without cracking.",
+"Scoop small portions with a teaspoon and roll between clean hands into balls about 1 inch wide.",
+"Place balls on the lined tray. For younger toddlers, press each ball into a small disc about 1/2 inch thick to lower choking risk.",
+"Cover the tray and chill in the refrigerator for at least 1 hour so oats soften and texture turns chewy.",
+"Before serving, press a piece between your fingers to confirm it feels soft and easy to squish.",
+"IMPORTANT: Serve only to toddlers who manage soft solids well and always flatten snacks for toddlers who stuff food into the mouth."
+],
+"tips": [
+"Store discs in a snack box for outings, packing an ice pack on warm days.",
+"Offer half pieces at first for toddlers who feel unsure about new textures."
+],
+"time_minutes": 25,
+"difficulty": "easy",
+"servings": 14,
+"calories": 80,
+"allergens": ["peanuts"],
+"storage": "Refrigerate in an airtight container with parchment between layers for up to 5 days. Freeze for up to 2 months and thaw in the fridge before serving."
+},
+{
+"title": "Apple Sunflower Snack Rounds",
+"description": "These apple rounds stack sunflower seed spread between thin slices for a fun sandwich style snack. Parents will like the mix of crunch from apple with soft spread for balanced texture.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["quick", "picky"],
+"meal_types": ["snack"],
+"cuisine": "american",
+"age_range_min": 18,
+"age_range_max": 48,
+"ingredients": [
+{"item": "crisp apple, washed", "amount": "1 medium"},
+{"item": "sunflower seed butter, smooth and unsweetened", "amount": "3 tablespoons"},
+{"item": "finely ground oat cereal or plain oat crumbs", "amount": "2 tablespoons"}
+],
+"instructions": [
+"Wash hands and rinse the apple under cool water.",
+"Place apple on a cutting board and slice from top to bottom into thin rounds about 1/4 inch thick.",
+"Use a small round cookie cutter or knife to remove any core pieces or seeds from each slice so only soft flesh remains.",
+"Lay apple rounds flat on the board.",
+"Spread a thin layer of sunflower seed butter, about 1 teaspoon, on half of the apple slices.",
+"Sprinkle a light layer of finely ground oat cereal over the sunflower butter for gentle texture.",
+"Place a second apple slice on top of each spread slice to form small sandwiches.",
+"For younger toddlers, cut each sandwich into quarters so pieces measure around 1 inch across.",
+"Check each piece and remove any bits with tough peel if your toddler struggles with peel.",
+"IMPORTANT: Serve while your toddler sits upright. Offer one piece at a time and watch for slow chewing."
+],
+"tips": [
+"Use pre ground oat cereal in place of granola so texture stays soft and safe.",
+"Prepare the spread and cereal in advance so assembly moves faster during snack time."
+],
+"time_minutes": 10,
+"difficulty": "easy",
+"servings": 3,
+"calories": 90,
+"allergens": [],
+"storage": "Serve soon after slicing for best texture. If needed, refrigerate prepared rounds in an airtight container for up to 4 hours and pat away extra moisture before serving."
+},
+{
+"title": "Chickpea Cookie Dough Fruit Dip",
+"description": "This dip tastes like cookie dough but uses chickpeas, yogurt, and nut butter for a creamy snack. Parents will like pairing it with soft fruit for a fun dessert style plate.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["vegetarian"],
+"kitchen_style_tags": ["quick"],
+"meal_types": ["snack", "dessert"],
+"cuisine": "mediterranean",
+"age_range_min": 18,
+"age_range_max": 60,
+"ingredients": [
+{"item": "cooked chickpeas, no salt, rinsed", "amount": "1 cup"},
+{"item": "plain whole milk yogurt", "amount": "1/2 cup"},
+{"item": "smooth peanut butter or almond butter", "amount": "2 tablespoons"},
+{"item": "ripe banana or soft dates, chopped", "amount": "1/3 cup"},
+{"item": "vanilla extract", "amount": "1/2 teaspoon"},
+{"item": "soft fruit for dipping, such as banana slices or steamed apple slices", "amount": "1 cup"}
+],
+"instructions": [
+"Wash hands and rinse chickpeas under cool water in a strainer.",
+"Add chickpeas, yogurt, peanut or almond butter, banana or dates, and vanilla to a food processor or blender.",
+"Blend for 45 to 60 seconds, stopping once or twice to scrape down the sides, until the mixture looks smooth and thick like cookie dough.",
+"If the dip feels thicker than hummus and does not scoop easily, add 1 to 2 teaspoons yogurt and blend again.",
+"Transfer dip to a shallow toddler bowl.",
+"Slice fruit into soft, easy to chew pieces no larger than 1/2 inch for banana and 1 inch for steamed apple.",
+"Arrange fruit pieces around the dip.",
+"Press a bit of dip between your fingers to confirm texture feels smooth with no tough skins.",
+"IMPORTANT: Seat your toddler upright and show how to scoop a small amount of dip with fruit to support slow eating."
+],
+"tips": [
+"Serve this dip on days when you plan a lighter dinner, since the snack feels filling.",
+"Use leftover dip as a spread on toast fingers for a quick breakfast."
+],
+"time_minutes": 15,
+"difficulty": "easy",
+"servings": 6,
+"calories": 110,
+"allergens": ["milk", "peanuts", "tree_nuts"],
+"storage": "Refrigerate dip in a sealed container for up to 3 days. Prepare fresh fruit on the day of serving and discard any fruit pieces left on the plate."
+},
+{
+"title": "Veggie Rice Snack Fritters",
+"description": "These pan cooked fritters mix rice and vegetables into soft, hand held pieces. Parents will like serving leftovers as a quick snack or side for soup.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["dairy-free", "gluten-free", "nut-free", "vegetarian"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["snack", "side"],
+"cuisine": "asian",
+"age_range_min": 12,
+"age_range_max": 48,
+"ingredients": [
+{"item": "cooked white rice, cooled", "amount": "1 cup"},
+{"item": "finely grated carrot", "amount": "1/4 cup"},
+{"item": "finely chopped spinach", "amount": "1/4 cup"},
+{"item": "large egg", "amount": "1"},
+{"item": "rice flour", "amount": "2 tablespoons"},
+{"item": "neutral oil", "amount": "2 teaspoons"}
+],
+"instructions": [
+"Wash hands and place cooked rice in a medium bowl, breaking up clumps with a fork.",
+"Add grated carrot and chopped spinach and stir until vegetables look spread through the rice.",
+"Crack egg into a small bowl and whisk until smooth, then pour over the rice mixture.",
+"Add rice flour and stir until the mixture holds together when pressed with a spoon. The mix should feel sticky, not runny.",
+"Heat 1 teaspoon oil in a nonstick skillet over medium heat for 1 to 2 minutes.",
+"Scoop the mixture with a tablespoon and drop into the pan, pressing lightly with the back of the spoon into small patties about 2 inches wide and 1/2 inch thick.",
+"Cook fritters for 3 to 4 minutes on the first side until edges look set and the underside looks golden.",
+"Flip with a thin spatula and cook for another 3 to 4 minutes until the second side looks golden and the center feels firm but soft.",
+"Remove fritters to a plate lined with paper towel and cool until warm.",
+"Repeat with remaining batter, adding the second teaspoon oil to the pan if needed.",
+"Before serving, cut fritters into halves or quarters so pieces measure about 1 to 1 1/2 inches.",
+"IMPORTANT: Press pieces between your fingers to confirm a soft interior and serve only while your toddler sits upright."
+],
+"tips": [
+"Use leftover plain rice from dinner to speed up preparation.",
+"Pack cooled fritter pieces in lunchboxes with fruit and yogurt for variety."
+],
+"time_minutes": 25,
+"difficulty": "easy",
+"servings": 10,
+"calories": 55,
+"allergens": ["eggs"],
+"storage": "Refrigerate fritters in a sealed container for up to 3 days. Reheat in a skillet over low heat for 2 to 3 minutes per side or in the oven at 325°F (165°C) for 8 to 10 minutes."
+},
+{
+"title": "Soft Date Almond Cocoa Bites",
+"description": "These cocoa bites feel like brownie truffles with dates and almonds for sweetness and chew. Parents will like using them as a special treat with simple ingredients.",
+"feeding_types": ["treatsSnacks"],
+"dietary_tags": ["dairy-free", "gluten-free", "vegetarian", "vegan", "egg-free"],
+"kitchen_style_tags": ["batch"],
+"meal_types": ["snack", "dessert"],
+"cuisine": "indian",
+"age_range_min": 24,
+"age_range_max": 72,
+"ingredients": [
+{"item": "pitted soft dates", "amount": "1 cup, packed"},
+{"item": "fine almond flour", "amount": "1/2 cup"},
+{"item": "unsweetened cocoa powder", "amount": "2 tablespoons"},
+{"item": "neutral oil or coconut oil, melted", "amount": "1 tablespoon"},
+{"item": "water", "amount": "1 to 2 tablespoons"}
+],
+"instructions": [
+"Wash hands and line a small tray with parchment paper.",
+"Check dates for any remaining pits and chop roughly for easier blending.",
+"Place dates, almond flour, cocoa powder, and oil in a food processor.",
+"Blend for 30 to 45 seconds until the mixture clumps together. If the mixture looks dry and crumbly, add 1 tablespoon water and blend again.",
+"Continue blending in short bursts until the mixture feels like soft dough and holds its shape when pressed between your fingers.",
+"Scoop small portions with a teaspoon and roll into balls about 1 inch wide.",
+"For toddlers, press each ball into a disc about 1/2 inch thick and 1 1/2 inches wide to reduce choking risk.",
+"Place discs on the lined tray.",
+"Chill in the refrigerator for at least 30 minutes so they firm slightly while staying soft inside.",
+"Before serving, test one piece by breaking it in half. The center should look moist and soft with no dry pockets.",
+"IMPORTANT: Serve only to toddlers who chew well and always offer flattened pieces while your child sits upright."
+],
+"tips": [
+"Serve one or two discs alongside fruit rather than alone to keep portions moderate.",
+"Use these bites as a special weekend dessert to keep them feeling unique."
+],
+"time_minutes": 25,
+"difficulty": "easy",
+"servings": 12,
+"calories": 90,
+"allergens": ["tree_nuts"],
+"storage": "Refrigerate in an airtight container for up to 1 week with parchment between layers. Freeze for up to 2 months and thaw in the fridge before serving."
+}
+]
+}

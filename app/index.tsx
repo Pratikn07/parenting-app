@@ -52,9 +52,9 @@ export default function AppEntry() {
       });
 
       if (isAuthenticated && hasCompletedOnboarding) {
-        // User is authenticated and has completed onboarding - go to chat
-        console.log('📱 Navigating to chat (authenticated + onboarded)');
-        router.replace('/chat');
+        // User is authenticated and has completed onboarding - go to chat tab
+        console.log('📱 Navigating to chat tab (authenticated + onboarded)');
+        router.replace('/(tabs)/chat');
       } else if (isAuthenticated && !hasCompletedOnboarding) {
         // User is authenticated but hasn't completed onboarding
         console.log('📝 Navigating to onboarding (authenticated but not onboarded)');

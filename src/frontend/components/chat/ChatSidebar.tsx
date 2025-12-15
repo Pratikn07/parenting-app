@@ -9,6 +9,7 @@ import {
   Dimensions,
   TextInput,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { X, Search, Trash2, MessageSquare, User } from 'lucide-react-native';
 import { THEME } from '../../../lib/constants';
@@ -88,7 +89,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const filterSessions = (sessionList: ChatSession[]): ChatSession[] => {
     if (!searchQuery.trim()) return sessionList;
     const query = searchQuery.toLowerCase();
-    return sessionList.filter(session => 
+    return sessionList.filter(session =>
       session.title?.toLowerCase().includes(query)
     );
   };
@@ -96,7 +97,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const renderSessionItem = (session: ChatSession) => {
     const isActive = session.id === currentSessionId;
     const childName = getChildName(session.child_id);
-    
+
     return (
       <TouchableOpacity
         key={session.id}
@@ -111,8 +112,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           <MessageSquare size={18} color={isActive ? THEME.colors.primary : THEME.colors.text.secondary} />
         </View>
         <View style={styles.sessionContent}>
-          <Text 
-            style={[styles.sessionTitle, isActive && styles.sessionTitleActive]} 
+          <Text
+            style={[styles.sessionTitle, isActive && styles.sessionTitleActive]}
             numberOfLines={1}
           >
             {session.title || 'New conversation'}
@@ -137,7 +138,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const renderSessionGroup = (title: string, sessionList: ChatSession[]) => {
     const filtered = filterSessions(sessionList);
     if (filtered.length === 0) return null;
-    
+
     return (
       <View style={styles.sessionGroup}>
         <Text style={styles.groupTitle}>{title}</Text>
@@ -146,10 +147,10 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
     );
   };
 
-  const hasAnySessions = 
-    sessions.today.length > 0 || 
-    sessions.yesterday.length > 0 || 
-    sessions.lastWeek.length > 0 || 
+  const hasAnySessions =
+    sessions.today.length > 0 ||
+    sessions.yesterday.length > 0 ||
+    sessions.lastWeek.length > 0 ||
     sessions.older.length > 0;
 
   const getUserInitials = (): string => {
@@ -164,97 +165,104 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   if (!visible) return null;
 
   return (
-    <View style={styles.container}>
-      {/* Backdrop */}
-      <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]}>
-        <TouchableOpacity 
-          style={styles.backdropTouchable} 
-          onPress={onClose} 
-          activeOpacity={1}
-        />
-      </Animated.View>
-
-      {/* Sidebar */}
-      <Animated.View 
-        style={[
-          styles.sidebar,
-          { transform: [{ translateX: slideAnim }] }
-        ]}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Chat History</Text>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <X size={24} color={THEME.colors.text.primary} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Search */}
-        <View style={styles.searchContainer}>
-          <Search size={18} color={THEME.colors.text.secondary} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search conversations..."
-            placeholderTextColor={THEME.colors.text.secondary}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
+    <Modal
+      transparent
+      visible={visible}
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      <View style={styles.container}>
+        {/* Backdrop */}
+        <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]}>
+          <TouchableOpacity
+            style={styles.backdropTouchable}
+            onPress={onClose}
+            activeOpacity={1}
           />
-        </View>
+        </Animated.View>
 
-        {/* Sessions List */}
-        <ScrollView 
-          style={styles.sessionsList}
-          showsVerticalScrollIndicator={false}
+        {/* Sidebar */}
+        <Animated.View
+          style={[
+            styles.sidebar,
+            { transform: [{ translateX: slideAnim }] }
+          ]}
         >
-          {isLoading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color={THEME.colors.primary} />
-              <Text style={styles.loadingText}>Loading...</Text>
-            </View>
-          ) : hasAnySessions ? (
-            <>
-              {renderSessionGroup('Today', sessions.today)}
-              {renderSessionGroup('Yesterday', sessions.yesterday)}
-              {renderSessionGroup('Previous 7 Days', sessions.lastWeek)}
-              {renderSessionGroup('Older', sessions.older)}
-            </>
-          ) : (
-            <View style={styles.emptyContainer}>
-              <View style={styles.emptyIconContainer}>
-                <MessageSquare size={32} color={THEME.colors.primary} />
-              </View>
-              <Text style={styles.emptyTitle}>No conversations yet</Text>
-              <Text style={styles.emptyText}>
-                Start a new chat to begin your parenting journey
-              </Text>
-            </View>
-          )}
-        </ScrollView>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Chat History</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <X size={24} color={THEME.colors.text.primary} />
+            </TouchableOpacity>
+          </View>
 
-        {/* Footer with Profile */}
-        <View style={styles.footer}>
-          <TouchableOpacity 
-            style={styles.profileSection}
-            onPress={onProfilePress}
-            activeOpacity={0.7}
+          {/* Search */}
+          <View style={styles.searchContainer}>
+            <Search size={18} color={THEME.colors.text.secondary} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search conversations..."
+              placeholderTextColor={THEME.colors.text.secondary}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
+
+          {/* Sessions List */}
+          <ScrollView
+            style={styles.sessionsList}
+            showsVerticalScrollIndicator={false}
           >
-            <View style={styles.profileAvatar}>
-              <Text style={styles.profileInitials}>{getUserInitials()}</Text>
-            </View>
-            <View style={styles.profileInfo}>
-              <Text style={styles.profileName} numberOfLines={1}>
-                {user?.name || 'Guest User'}
-              </Text>
-              {user?.email && (
-                <Text style={styles.profileEmail} numberOfLines={1}>
-                  {user.email}
+            {isLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color={THEME.colors.primary} />
+                <Text style={styles.loadingText}>Loading...</Text>
+              </View>
+            ) : hasAnySessions ? (
+              <>
+                {renderSessionGroup('Today', sessions.today)}
+                {renderSessionGroup('Yesterday', sessions.yesterday)}
+                {renderSessionGroup('Previous 7 Days', sessions.lastWeek)}
+                {renderSessionGroup('Older', sessions.older)}
+              </>
+            ) : (
+              <View style={styles.emptyContainer}>
+                <View style={styles.emptyIconContainer}>
+                  <MessageSquare size={32} color={THEME.colors.primary} />
+                </View>
+                <Text style={styles.emptyTitle}>No conversations yet</Text>
+                <Text style={styles.emptyText}>
+                  Start a new chat to begin your parenting journey
                 </Text>
-              )}
-            </View>
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
-    </View>
+              </View>
+            )}
+          </ScrollView>
+
+          {/* Footer with Profile */}
+          <View style={styles.footer}>
+            <TouchableOpacity
+              style={styles.profileSection}
+              onPress={onProfilePress}
+              activeOpacity={0.7}
+            >
+              <View style={styles.profileAvatar}>
+                <Text style={styles.profileInitials}>{getUserInitials()}</Text>
+              </View>
+              <View style={styles.profileInfo}>
+                <Text style={styles.profileName} numberOfLines={1}>
+                  {user?.name || 'Guest User'}
+                </Text>
+                {user?.email && (
+                  <Text style={styles.profileEmail} numberOfLines={1}>
+                    {user.email}
+                  </Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      </View>
+    </Modal>
   );
 };
 

@@ -10,6 +10,7 @@ export interface ChatMessage {
   session_id: string | null;
   child_id: string | null;
   image_url: string | null;
+  message_type?: 'general' | 'recipe';
 }
 
 export interface ChatSession {
@@ -108,6 +109,7 @@ export class ChatService {
         .from('chat_messages')
         .select('*')
         .eq('session_id', sessionId)
+        .or('message_type.is.null,message_type.eq.general') // Only get general messages or null (old messages)
         .order('created_at', { ascending: true });
 
       if (error) {
@@ -190,7 +192,9 @@ export class ChatService {
     message: string,
     childId?: string,
     sessionId?: string,
-    imageUrl?: string
+    imageUrl?: string,
+    messageType?: 'general' | 'recipe',
+    recipeMode?: 'ingredient' | 'progress'
   ): Promise<SendMessageResult> {
     try {
       const { data, error } = await supabase.functions.invoke(ChatService.EDGE_FUNCTION_URL, {
@@ -200,6 +204,8 @@ export class ChatService {
           childId,
           sessionId,
           imageUrl,
+          messageType: messageType || 'general',
+          recipeMode,  // NEW: Pass recipe mode to backend
         },
       });
 

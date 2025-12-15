@@ -1,0 +1,759 @@
+{
+    "recipes":
+    [
+        {
+            "title": "Sweet Potato & Spinach Frittata Fingers",
+            "description": "These protein-packed egg strips are soft, easy to hold, and a perfect way to introduce leafy greens. They store beautifully, making them a breakfast lifesaver for busy mornings.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "nut-free",
+                "gluten-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "batch",
+                "quick"
+            ],
+            "meal_types":
+            [
+                "breakfast",
+                "lunch"
+            ],
+            "cuisine": "italian",
+            "age_range_min": 6,
+            "age_range_max": 24,
+            "ingredients":
+            [
+                {
+                    "item": "eggs",
+                    "amount": "6 large"
+                },
+                {
+                    "item": "sweet potato, cooked and mashed",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "fresh spinach, finely chopped",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "milk (dairy or breastmilk)",
+                    "amount": "2 tbsp"
+                },
+                {
+                    "item": "mild cheddar cheese, shredded",
+                    "amount": "1/4 cup"
+                }
+            ],
+            "instructions":
+            [
+                "Preheat your oven to 350°F (175°C) and grease an 8x8 inch square baking dish with a little oil or butter.",
+                "In a large bowl, whisk the eggs and milk together until fully combined and slightly frothy.",
+                "Stir in the mashed sweet potato, ensuring there are no large lumps, then fold in the finely chopped spinach and shredded cheese.",
+                "Pour the mixture into the prepared baking dish, spreading it out evenly with a spatula.",
+                "Bake for 18-22 minutes. The center should be firm to the touch and the edges slightly pulling away from the sides.",
+                "Remove from oven and let cool completely in the dish for at least 15 minutes to set.",
+                "Slice into rectangular strips (approx. 1 inch by 3 inches) suitable for your baby's grip.",
+                "SAFETY CHECK: Ensure the spinach is chopped very finely to prevent gagging."
+            ],
+            "tips":
+            [
+                "Steam the sweet potato in the microwave for 5 minutes for a quick prep hack."
+            ],
+            "time_minutes": 30,
+            "difficulty": "easy",
+            "servings": 8,
+            "calories": 90,
+            "allergens":
+            [
+                "eggs",
+                "milk"
+            ],
+            "storage": "Store in an airtight container in the fridge for up to 3 days. Freeze with parchment paper between layers for up to 2 months."
+        },
+        {
+            "title": "Mini Turkey & Apple Meatloaf Muffins",
+            "description": "Savory turkey meets sweet apple in these moist, iron-rich mini meatloaves. The muffin tin shape creates perfect portions that are tender enough for gums but sturdy enough for little hands.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "nut-free",
+                "dairy-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "batch",
+                "picky"
+            ],
+            "meal_types":
+            [
+                "dinner",
+                "lunch"
+            ],
+            "cuisine": "american",
+            "age_range_min": 9,
+            "age_range_max": 36,
+            "ingredients":
+            [
+                {
+                    "item": "ground turkey",
+                    "amount": "1 lb"
+                },
+                {
+                    "item": "apple, peeled and grated",
+                    "amount": "1 medium"
+                },
+                {
+                    "item": "breadcrumbs (panko or regular)",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "egg",
+                    "amount": "1 large"
+                },
+                {
+                    "item": "dried thyme",
+                    "amount": "1/2 tsp"
+                },
+                {
+                    "item": "garlic powder",
+                    "amount": "1/2 tsp"
+                }
+            ],
+            "instructions":
+            [
+                "Preheat oven to 375°F (190°C) and liberally grease a mini muffin tin with oil.",
+                "Peel and grate the apple, then squeeze out excess moisture using a paper towel or clean cloth (this prevents sogginess).",
+                "In a large mixing bowl, combine ground turkey, squeezed apple, breadcrumbs, egg, thyme, and garlic powder.",
+                "Mix gently with your hands until just combined—do not overwork the meat or it will become tough.",
+                "Scoop mixture into the mini muffin tin, filling each cup to the top and gently patting down.",
+                "Bake for 20-25 minutes. The internal temperature must reach 165°F (74°C) and tops should be golden.",
+                "Allow to cool in the pan for 5 minutes, then run a butter knife around the edges to release.",
+                "Cut muffins in half or quarters depending on your child's age and chewing ability."
+            ],
+            "tips":
+            [
+                "Grating the apple adds natural sweetness and keeps the turkey moist without needing extra fat."
+            ],
+            "time_minutes": 35,
+            "difficulty": "medium",
+            "servings": 12,
+            "calories": 85,
+            "allergens":
+            [
+                "eggs",
+                "wheat"
+            ],
+            "storage": "Refrigerate for 3 days. Freeze individually on a tray before bagging for up to 3 months."
+        },
+        {
+            "title": "Soft-Baked Blueberry & Oat Bars",
+            "description": "Ideally textured for babies transitioning to solids, these bars hold together but melt in the mouth. They are naturally sweetened with bananas and blueberries, perfect for snacks or breakfast.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "dairy-free",
+                "nut-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "quick",
+                "batch"
+            ],
+            "meal_types":
+            [
+                "snack",
+                "breakfast"
+            ],
+            "cuisine": "american",
+            "age_range_min": 6,
+            "age_range_max": 48,
+            "ingredients":
+            [
+                {
+                    "item": "rolled oats",
+                    "amount": "1.5 cups"
+                },
+                {
+                    "item": "ripe bananas, mashed",
+                    "amount": "2 medium"
+                },
+                {
+                    "item": "blueberries (fresh or frozen)",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "coconut oil, melted",
+                    "amount": "2 tbsp"
+                },
+                {
+                    "item": "vanilla extract",
+                    "amount": "1/2 tsp"
+                }
+            ],
+            "instructions":
+            [
+                "Preheat oven to 350°F (175°C) and line an 8x8 inch baking pan with parchment paper, leaving some overhang for easy removal.",
+                "Place 1 cup of oats in a blender or food processor and pulse until it resembles coarse flour.",
+                "In a medium bowl, mix the mashed bananas, melted coconut oil, and vanilla extract until smooth.",
+                "Stir in the oat flour and the remaining 1/2 cup of whole rolled oats until a dough forms.",
+                "Gently fold in the blueberries. If using frozen, do not thaw beforehand to prevent bleeding color.",
+                "Press the dough firmly and evenly into the prepared pan.",
+                "Bake for 12-15 minutes until the edges are golden and the center feels set/firm to the touch.",
+                "Cool completely in the pan before lifting out by the parchment paper and cutting into 16 small squares or bars.",
+                "SAFETY NOTE: For younger babies (6-9mo), smash the blueberries before baking to reduce choking risk."
+            ],
+            "tips":
+            [
+                "Use very ripe bananas (brown spots are good!) for the best sweetness and binding texture."
+            ],
+            "time_minutes": 25,
+            "difficulty": "easy",
+            "servings": 16,
+            "calories": 60,
+            "allergens":
+            [],
+            "storage": "Store in airtight container at room temperature for 2 days, fridge for 5 days, or freeze for 3 months."
+        },
+        {
+            "title": "Cheesy Broccoli & Quinoa Bites",
+            "description": "A fantastic vegetarian option that packs complete protein from quinoa and calcium from cheese. The savory broccoli flavor is mild and the texture is soft and crumbly.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "gluten-free",
+                "nut-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "batch",
+                "picky"
+            ],
+            "meal_types":
+            [
+                "lunch",
+                "dinner"
+            ],
+            "cuisine": "american",
+            "age_range_min": 9,
+            "age_range_max": 60,
+            "ingredients":
+            [
+                {
+                    "item": "cooked quinoa",
+                    "amount": "2 cups"
+                },
+                {
+                    "item": "broccoli florets, steamed and finely chopped",
+                    "amount": "1 cup"
+                },
+                {
+                    "item": "shredded cheddar cheese",
+                    "amount": "1 cup"
+                },
+                {
+                    "item": "eggs, beaten",
+                    "amount": "2 large"
+                },
+                {
+                    "item": "onion powder",
+                    "amount": "1/2 tsp"
+                }
+            ],
+            "instructions":
+            [
+                "Preheat oven to 375°F (190°C) and grease a mini muffin tin.",
+                "Ensure broccoli is steamed until very tender and chopped into tiny pieces (no large stems).",
+                "In a large bowl, combine the cooked quinoa, chopped broccoli, shredded cheese, beaten eggs, and onion powder.",
+                "Mix thoroughly. The egg and cheese act as the binder.",
+                "Spoon tablespoon-sized portions into the mini muffin cups, pressing down gently to compact them.",
+                "Bake for 15-20 minutes until the edges are golden brown.",
+                "Let them cool in the pan for 10 minutes to firm up before removing.",
+                "Serve warm or at room temperature. Break into smaller pieces for babies under 12 months."
+            ],
+            "tips":
+            [
+                "Cook the quinoa in low-sodium vegetable broth instead of water for extra flavor."
+            ],
+            "time_minutes": 35,
+            "difficulty": "medium",
+            "servings": 18,
+            "calories": 45,
+            "allergens":
+            [
+                "eggs",
+                "milk"
+            ],
+            "storage": "Refrigerate for up to 4 days. Freeze flat on a baking sheet, then transfer to a bag for up to 2 months."
+        },
+        {
+            "title": "Avocado & Black Bean Quesadilla Strips",
+            "description": "Quick, nutritious, and easy to handle, these quesadillas offer healthy fats and fiber. The creamy avocado acts as a binder to keep the beans in place.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "nut-free",
+                "egg-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "quick",
+                "picky"
+            ],
+            "meal_types":
+            [
+                "lunch"
+            ],
+            "cuisine": "mexican",
+            "age_range_min": 9,
+            "age_range_max": 60,
+            "ingredients":
+            [
+                {
+                    "item": "soft flour or corn tortilla",
+                    "amount": "1"
+                },
+                {
+                    "item": "canned black beans, rinsed and smashed",
+                    "amount": "2 tbsp"
+                },
+                {
+                    "item": "ripe avocado, mashed",
+                    "amount": "2 tbsp"
+                },
+                {
+                    "item": "mild shredded cheese",
+                    "amount": "1 tbsp"
+                }
+            ],
+            "instructions":
+            [
+                "Place the tortilla flat on a clean surface.",
+                "Spread the mashed avocado over one half of the tortilla.",
+                "Top the avocado with the smashed black beans (ensure beans are flattened to reduce choking risk) and sprinkle with cheese.",
+                "Fold the tortilla in half to cover the filling.",
+                "Heat a non-stick skillet over medium heat. Place the folded tortilla in the pan.",
+                "Cook for 2-3 minutes per side until the tortilla is lightly golden and the cheese has melted.",
+                "Remove from heat and let cool for a few minutes.",
+                "Use a pizza cutter or knife to slice into strips about 1 inch wide.",
+                "Check temperature of the filling before serving."
+            ],
+            "tips":
+            [
+                "Smashing the black beans is crucial for safety and helps them stick inside the quesadilla."
+            ],
+            "time_minutes": 10,
+            "difficulty": "easy",
+            "servings": 1,
+            "calories": 220,
+            "allergens":
+            [
+                "wheat",
+                "milk"
+            ],
+            "storage": "Best served fresh. Can be refrigerated for 24 hours but tortilla may become soft."
+        },
+        {
+            "title": "Mild Curried Red Lentil Cakes",
+            "description": "Introduce baby to warm spices with these soft, savory lentil cakes. They are rich in plant-based iron and have a soft texture that breaks down easily in the mouth.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "gluten-free",
+                "nut-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "batch"
+            ],
+            "meal_types":
+            [
+                "dinner"
+            ],
+            "cuisine": "indian",
+            "age_range_min": 10,
+            "age_range_max": 48,
+            "ingredients":
+            [
+                {
+                    "item": "red lentils, dried",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "water",
+                    "amount": "1.5 cups"
+                },
+                {
+                    "item": "carrot, grated finely",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "chickpea flour (besan)",
+                    "amount": "2 tbsp"
+                },
+                {
+                    "item": "mild curry powder",
+                    "amount": "1/4 tsp"
+                },
+                {
+                    "item": "cumin powder",
+                    "amount": "1/4 tsp"
+                }
+            ],
+            "instructions":
+            [
+                "Rinse lentils thoroughly. In a small pot, combine lentils and water. Bring to a boil, then simmer for 15-20 minutes until water is absorbed and lentils are mushy.",
+                "Stir in the finely grated carrot and cook for another 2 minutes until carrot is soft. Remove from heat.",
+                "Transfer mixture to a bowl. Add chickpea flour, curry powder, and cumin. Mix well until it forms a thick, moldable dough.",
+                "Allow mixture to cool enough to handle.",
+                "Form small patties (about 1.5 inches wide and 1/2 inch thick) with your hands.",
+                "Heat a non-stick skillet with a thin layer of oil over medium heat.",
+                "Cook patties for 3-4 minutes on each side until a golden crust forms.",
+                "Cool on a wire rack. Ensure the inside is soft but cooked through."
+            ],
+            "tips":
+            [
+                "Red lentils cook much faster and softer than brown/green ones, making them perfect for baby food."
+            ],
+            "time_minutes": 30,
+            "difficulty": "medium",
+            "servings": 10,
+            "calories": 40,
+            "allergens":
+            [],
+            "storage": "Refrigerate for up to 3 days. Freeze in a single layer for up to 2 months."
+        },
+        {
+            "title": "Salmon & Pea Fish Cakes",
+            "description": "A gentle introduction to fish, packed with Omega-3s. The potato base keeps these cakes moist and fluffy, while the peas add a pop of sweetness and color.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "nut-free",
+                "dairy-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "batch"
+            ],
+            "meal_types":
+            [
+                "dinner"
+            ],
+            "cuisine": "mediterranean",
+            "age_range_min": 9,
+            "age_range_max": 60,
+            "ingredients":
+            [
+                {
+                    "item": "fresh salmon fillet, boneless",
+                    "amount": "8 oz"
+                },
+                {
+                    "item": "potatoes, peeled and cubed",
+                    "amount": "2 medium"
+                },
+                {
+                    "item": "frozen peas, thawed",
+                    "amount": "1/4 cup"
+                },
+                {
+                    "item": "lemon juice",
+                    "amount": "1 tsp"
+                },
+                {
+                    "item": "flour (for dusting)",
+                    "amount": "2 tbsp"
+                }
+            ],
+            "instructions":
+            [
+                "Boil the potatoes in water until tender (about 15 mins). Drain and mash until smooth.",
+                "While potatoes cook, steam or pan-sear the salmon until fully cooked (flakes easily with a fork). Remove skin.",
+                "In a bowl, flake the salmon into small pieces, checking rigorously for any bones.",
+                "Combine mashed potato, flaked salmon, thawed peas, and lemon juice. Mix gently.",
+                "Shape into 8 small, round patties.",
+                "Lightly dust each patty with flour to prevent sticking.",
+                "Heat 1 tbsp oil in a skillet over medium heat. Cook patties for 3-4 minutes per side until golden brown.",
+                "Allow to cool. Cut into strips for younger babies.",
+                "SAFETY REMINDER: Double check for bones even in 'boneless' fillets."
+            ],
+            "tips":
+            [
+                "Smash the peas slightly with a fork before mixing if your baby is still learning to chew round textures."
+            ],
+            "time_minutes": 35,
+            "difficulty": "medium",
+            "servings": 8,
+            "calories": 110,
+            "allergens":
+            [
+                "fish",
+                "wheat"
+            ],
+            "storage": "Refrigerate for up to 2 days. Freeze cooked patties for up to 1 month."
+        },
+        {
+            "title": "Sesame Tofu & Veggie Cubes",
+            "description": "Soft tofu is an excellent first protein, and this recipe adds mild Asian flavors. The cubes are easy to pick up and dissolve easily, making them safe for early eaters.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegan",
+                "vegetarian",
+                "dairy-free",
+                "egg-free",
+                "nut-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "quick",
+                "easy"
+            ],
+            "meal_types":
+            [
+                "dinner",
+                "lunch"
+            ],
+            "cuisine": "asian",
+            "age_range_min": 6,
+            "age_range_max": 36,
+            "ingredients":
+            [
+                {
+                    "item": "firm tofu, drained",
+                    "amount": "1 block (14oz)"
+                },
+                {
+                    "item": "sesame oil",
+                    "amount": "1 tsp"
+                },
+                {
+                    "item": "garlic powder",
+                    "amount": "1/4 tsp"
+                },
+                {
+                    "item": "cornstarch",
+                    "amount": "1 tbsp"
+                }
+            ],
+            "instructions":
+            [
+                "Drain the tofu and wrap in a paper towel. Press gently with a heavy plate for 10 minutes to remove excess water.",
+                "Cut the tofu into strips (for 6-9 months) or 1/2 inch cubes (for 9+ months with pincer grasp).",
+                "In a bowl, toss the tofu gently with sesame oil and garlic powder.",
+                "Sprinkle cornstarch over the tofu and toss to coat lightly. This helps create a slight texture without being hard.",
+                "Heat a non-stick skillet over medium heat.",
+                "Add tofu in a single layer (do not crowd pan). Cook for 2-3 minutes on each side until lightly golden.",
+                "Remove from heat and let cool completely. The texture should be firm enough to hold but soft inside."
+            ],
+            "tips":
+            [
+                "Firm tofu is easier for babies to hold than silken tofu, which falls apart too easily."
+            ],
+            "time_minutes": 20,
+            "difficulty": "easy",
+            "servings": 4,
+            "calories": 90,
+            "allergens":
+            [
+                "soy",
+                "sesame"
+            ],
+            "storage": "Refrigerate in airtight container for up to 3 days. Freezing changes the texture of tofu significantly, so fresh is best."
+        },
+        {
+            "title": "Zucchini & Feta Fritters",
+            "description": "These Mediterranean-style fritters are a tasty way to serve vegetables. The feta adds a nice savory kick, and the interior stays soft and spongy.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "nut-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "quick"
+            ],
+            "meal_types":
+            [
+                "lunch",
+                "side"
+            ],
+            "cuisine": "mediterranean",
+            "age_range_min": 8,
+            "age_range_max": 60,
+            "ingredients":
+            [
+                {
+                    "item": "zucchini, grated",
+                    "amount": "1 medium"
+                },
+                {
+                    "item": "egg",
+                    "amount": "1 large"
+                },
+                {
+                    "item": "all-purpose flour",
+                    "amount": "3 tbsp"
+                },
+                {
+                    "item": "feta cheese, crumbled",
+                    "amount": "2 tbsp"
+                },
+                {
+                    "item": "fresh dill or mint (optional)",
+                    "amount": "1 tsp"
+                }
+            ],
+            "instructions":
+            [
+                "Grate the zucchini and place it in the center of a clean kitchen towel. Squeeze tightly to remove as much water as possible (essential for crispness).",
+                "In a bowl, whisk the egg.",
+                "Add the squeezed zucchini, flour, crumbled feta, and herbs to the egg. Mix until combined.",
+                "Heat a little oil in a skillet over medium heat.",
+                "Drop tablespoon-sized mounds into the pan and flatten slightly with the back of the spoon.",
+                "Cook for 2-3 minutes per side until golden brown and cooked through.",
+                "Transfer to a paper towel to absorb excess oil.",
+                "Serve warm or cold. Cut into strips for easier handling if needed."
+            ],
+            "tips":
+            [
+                "If the batter is too runny, add another teaspoon of flour. If too dry, let it sit for a minute to hydrate."
+            ],
+            "time_minutes": 15,
+            "difficulty": "easy",
+            "servings": 6,
+            "calories": 55,
+            "allergens":
+            [
+                "eggs",
+                "wheat",
+                "milk"
+            ],
+            "storage": "Refrigerate for up to 3 days. Reheat in a dry pan or toaster oven to restore texture."
+        },
+        {
+            "title": "Pumpkin & Ricotta Gnocchi Pillows",
+            "description": "Homemade gnocchi sounds hard, but these are simple drop-style dumplings. They are incredibly soft, easy to swallow, and combine the sweetness of pumpkin with creamy cheese.",
+            "feeding_types":
+            [
+                "fingerFoods",
+                "babyLedWeaning"
+            ],
+            "dietary_tags":
+            [
+                "vegetarian",
+                "nut-free",
+                "soy-free"
+            ],
+            "kitchen_style_tags":
+            [
+                "batch",
+                "picky"
+            ],
+            "meal_types":
+            [
+                "dinner"
+            ],
+            "cuisine": "italian",
+            "age_range_min": 8,
+            "age_range_max": 48,
+            "ingredients":
+            [
+                {
+                    "item": "pumpkin puree (canned or homemade)",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "ricotta cheese",
+                    "amount": "1/2 cup"
+                },
+                {
+                    "item": "all-purpose flour",
+                    "amount": "3/4 cup"
+                },
+                {
+                    "item": "parmesan cheese, grated",
+                    "amount": "2 tbsp"
+                }
+            ],
+            "instructions":
+            [
+                "Bring a large pot of water to a gentle boil.",
+                "In a medium bowl, mix pumpkin puree and ricotta cheese until smooth.",
+                "Gradually stir in the flour and parmesan until a soft, sticky dough forms. Do not overmix or they will be tough.",
+                "Dust a clean surface with flour. Take a handful of dough and roll it gently into a 'snake' about 3/4 inch thick.",
+                "Use a knife to cut the snake into 1-inch pillows or nuggets.",
+                "Drop the gnocchi into the boiling water in batches.",
+                "Cook for 3-4 minutes. They are done when they float to the surface.",
+                "Remove with a slotted spoon and let cool on a plate.",
+                "Serve plain or with a tiny bit of olive oil."
+            ],
+            "tips":
+            [
+                "If the dough is too sticky to roll, simply scoop small amounts with a teaspoon directly into the boiling water."
+            ],
+            "time_minutes": 25,
+            "difficulty": "medium",
+            "servings": 4,
+            "calories": 140,
+            "allergens":
+            [
+                "wheat",
+                "milk"
+            ],
+            "storage": "Refrigerate for up to 3 days. Freeze uncooked gnocchi on a tray, then bag; boil from frozen."
+        }
+    ]
+}

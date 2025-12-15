@@ -6,7 +6,7 @@ import { THEME } from '@/src/lib/constants';
 import { Video, ResizeMode } from 'expo-av';
 import { useAuthStore } from '@/src/shared/stores/authStore';
 import { AntDesign } from '@expo/vector-icons';
-import AnimatedLogo from '@/components/AnimatedLogo';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,9 +31,7 @@ export default function LaunchScreen() {
 
       <SafeAreaView style={styles.content}>
         <View style={styles.header}>
-          <View style={styles.logoWrapper}>
-            <AnimatedLogo width={180} height={180} />
-          </View>
+
           <Text style={styles.title}>My Curated Haven</Text>
           <Text style={styles.subtitle}>AI Curated for Family's Growth Journey</Text>
         </View>
@@ -85,33 +83,16 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'space-between',
     padding: 24,
   },
   header: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40, // Reduced margin since logo takes space
     paddingHorizontal: 24,
   },
-  logoWrapper: {
-    marginBottom: 10,
-  },
-  logoContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-  },
-  logoText: {
-    fontSize: 40,
-    fontFamily: THEME.fonts.header,
-    color: '#FFFFFF',
-  },
+
+
   title: {
     fontSize: 42,
     fontFamily: THEME.fonts.header,

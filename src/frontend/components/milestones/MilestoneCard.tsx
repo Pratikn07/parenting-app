@@ -38,7 +38,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
       activeOpacity={0.7}
     >
       <View style={styles.content}>
-        <View style={styles.categoryIndicator} style={{backgroundColor: categoryColor}} />
+        <View style={[styles.categoryIndicator, {backgroundColor: categoryColor}]} />
         
         <View style={styles.textContent}>
           <View style={styles.header}>

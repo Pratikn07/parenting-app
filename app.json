@@ -2,7 +2,7 @@
   "expo": {
     "name": "My Curated Haven",
     "slug": "parenting-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "parenting-app",
@@ -32,6 +32,7 @@
         "backgroundColor": "#FDF7F3"
       },
       "permissions": [
+        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ]
     },
@@ -60,6 +61,10 @@
         "projectId": "3054562a-2829-49cc-9d51-6be05d78c5a9"
       }
     },
-    "owner": "pratik_n"
+    "owner": "pratik_n",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/3054562a-2829-49cc-9d51-6be05d78c5a9"
+    }
   }
 }
