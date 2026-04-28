@@ -77,3 +77,7 @@ ui-snapshots/
 
 # supabase CLI local state
 supabase/.temp/
+.gitnexus
+
+# Claude Code user-specific settings (skills are tracked)
+.claude/settings.local.json
