@@ -2,7 +2,7 @@ import { useChildStore } from '../../src/shared/stores/childStore';
 import type { Child } from '../../src/lib/database.types';
 
 const buildChild = (overrides: Partial<Child> & { id: string; name: string }): Child => ({
-  parent_id: 'parent-1',
+  user_id: 'parent-1',
   birth_date: '2025-01-15',
   gender: 'female',
   created_at: '2025-01-15T00:00:00Z',

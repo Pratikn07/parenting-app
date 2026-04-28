@@ -40,19 +40,23 @@ export interface Database {
       children: {
         Row: {
           id: string; // UUID
-          parent_id: string; // references profiles(id)
+          user_id: string; // references profiles(id)
           name: string;
           birth_date?: string;
           gender?: 'male' | 'female' | 'other';
+          developmental_stage?: ParentingStage;
+          last_milestone_check?: string; // ISO date
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id?: string;
-          parent_id: string;
+          user_id: string;
           name: string;
           birth_date?: string;
           gender?: 'male' | 'female' | 'other';
+          developmental_stage?: ParentingStage;
+          last_milestone_check?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -60,6 +64,8 @@ export interface Database {
           name?: string;
           birth_date?: string;
           gender?: 'male' | 'female' | 'other';
+          developmental_stage?: ParentingStage;
+          last_milestone_check?: string;
           updated_at?: string;
         };
       };

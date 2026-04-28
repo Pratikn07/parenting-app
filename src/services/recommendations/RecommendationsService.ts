@@ -257,8 +257,8 @@ export class RecommendationsService {
       .from('milestone_templates')
       .select('*')
       .eq('is_active', true)
-      .lte('min_age_months', ageInMonths + 1) // Due within next month
-      .gte('max_age_months', ageInMonths - 1) // Not too old
+      .lte('age_min_months', ageInMonths + 1) // Due within next month
+      .gte('age_max_months', ageInMonths - 1) // Not too old
       .limit(3);
 
     // Check which ones user hasn't completed yet
