@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hooks": {
+    "stop": [
+      {
+        "command": ".cursor/hooks/test-loop.sh",
+        "matcher": "Stop",
+        "timeout": 180,
+        "loop_limit": 3,
+        "failClosed": false
+      }
+    ]
+  }
+}
