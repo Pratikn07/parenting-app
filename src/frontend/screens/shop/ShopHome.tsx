@@ -85,7 +85,12 @@ export default function ShopHome() {
                         <Text style={styles.welcomeText}>Curated Shop</Text>
                         <Text style={styles.subtitle}>Handpicked essentials for your little one</Text>
                     </View>
-                    <TouchableOpacity style={styles.iconButton}>
+                    <TouchableOpacity
+                        style={styles.iconButton}
+                        onPress={() => router.push('/shop/search')}
+                        accessibilityLabel="Search products"
+                        accessibilityRole="button"
+                    >
                         <Search size={22} color={THEME.colors.text.primary} />
                     </TouchableOpacity>
                 </View>

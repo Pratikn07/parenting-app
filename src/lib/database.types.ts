@@ -696,7 +696,8 @@ export type RecommendationSection =
   | 'milestone_based'
   | 'category_spotlight'
   | 'top_rated'
-  | 'popular';
+  | 'popular'
+  | 'search';
 
 // Helper types for easier use
 export type Profile = Database['public']['Tables']['profiles']['Row'];

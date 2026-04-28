@@ -6,7 +6,8 @@ export type RecommendationSection =
     | 'milestone_based'
     | 'category_spotlight'
     | 'top_rated'
-    | 'popular';
+    | 'popular'
+    | 'search';
 
 export interface ShopCategory {
     id: string;
@@ -152,4 +153,5 @@ export const SECTION_TITLES: Record<RecommendationSection, string> = {
     category_spotlight: '{category} Essentials',
     top_rated: 'Top Rated',
     popular: 'Parent Favorites',
+    search: 'Search Results',
 };

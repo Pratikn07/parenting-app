@@ -208,6 +208,48 @@ class ShopService {
     }
 
     /**
+     * DB-backed product search. RPC -> hydrate -> preserve relevance order.
+     *
+     * Two-step on purpose: the RPC returns relevance-ranked product ids; we
+     * then fetch the full product+affiliate join via the shared select shape
+     * and re-sort to match the RPC's ordering. Keeps the SQL side tiny and
+     * the join logic in one place.
+     */
+    async searchProducts(query: string, limit = 30): Promise<ShopProduct[]> {
+        const q = query.trim();
+        if (q.length < 2) return [];
+
+        const { data: rankedIds, error: rpcError } = await supabase
+            .rpc('search_shop_products', { query_text: q, result_limit: limit });
+
+        if (rpcError) {
+            console.error('Error searching shop products:', rpcError);
+            return [];
+        }
+        if (!rankedIds?.length) return [];
+
+        const ids = (rankedIds as Array<{ product_id: string }>).map(r => r.product_id);
+
+        const { data: products, error } = await supabase
+            .from('shop_products')
+            .select(this.productSelectQuery)
+            .in('id', ids)
+            .eq('is_active', true)
+            .eq('shop_product_affiliates.is_primary', true);
+
+        if (error) {
+            console.error('Error hydrating search results:', error);
+            return [];
+        }
+
+        const order = new Map(ids.map((id, i) => [id, i] as const));
+        const mapped = this.mapProductData(products || []);
+        return mapped.sort(
+            (a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0)
+        );
+    }
+
+    /**
      * Fetch all sections data for shop home
      */
     async getShopHomeSections(): Promise<{
