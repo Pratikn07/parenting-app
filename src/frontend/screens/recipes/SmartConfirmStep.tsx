@@ -4,6 +4,8 @@ import { Utensils, Check } from 'lucide-react-native';
 import { useRecipeOnboardingStore, getDefaultFeedingTypes, FeedingTypes } from '@/src/shared/stores/recipeStore';
 import { useChildStore } from '@/src/shared/stores/childStore';
 import { THEME, FEEDING_TYPES_DATA } from '@/src/lib/constants';
+import { getAgeInMonths } from '@/src/lib/dateUtils';
+import { logger } from '@/src/lib/logger';
 
 export default function SmartConfirmStep() {
     const { activeChild } = useChildStore();
@@ -12,34 +14,27 @@ export default function SmartConfirmStep() {
     // Calculate child age in months and set defaults on mount
     useEffect(() => {
         if (activeChild?.birth_date) {
-            const birthDate = new Date(activeChild.birth_date);
-            const now = new Date();
-            const ageMonths = Math.floor((now.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
+            const ageMonths = getAgeInMonths(activeChild.birth_date);
 
-            console.log('🔍 SmartConfirmStep Debug:');
-            console.log('  Child:', activeChild.name);
-            console.log('  Birth Date:', activeChild.birth_date);
-            console.log('  Calculated Age (months):', ageMonths);
+            logger.log('🔍 SmartConfirmStep Debug:');
+            logger.log('  Child:', activeChild.name);
+            logger.log('  Birth Date:', activeChild.birth_date);
+            logger.log('  Calculated Age (months):', ageMonths);
 
-            // Set age-based defaults, only if not already set or we want to force reset on entry (discussable)
-            // For now, we set them based on age. If user toggles, store updates.
             const defaults = getDefaultFeedingTypes(ageMonths);
-            console.log('  Calculated Defaults:', JSON.stringify(defaults, null, 2));
+            logger.log('  Calculated Defaults:', JSON.stringify(defaults, null, 2));
 
             setFeedingTypes(defaults);
-            console.log('  ✅ setFeedingTypes called with defaults');
+            logger.log('  ✅ setFeedingTypes called with defaults');
         } else {
-            // No child yet - user is expecting
-            console.log('⚠️ SmartConfirmStep: No activeChild - assuming expecting mother');
-            const defaults = getDefaultFeedingTypes(-1); // -1 = expecting
+            logger.log('⚠️ SmartConfirmStep: No activeChild - assuming expecting mother');
+            const defaults = getDefaultFeedingTypes(-1);
             setFeedingTypes(defaults);
         }
     }, [activeChild]);
 
     const childName = activeChild?.name || 'your little one';
-    const childAge = activeChild?.birth_date
-        ? Math.floor((new Date().getTime() - new Date(activeChild.birth_date).getTime()) / (1000 * 60 * 60 * 24 * 30.44))
-        : -1; // -1 indicates expecting
+    const childAge = activeChild?.birth_date ? getAgeInMonths(activeChild.birth_date) : -1;
 
     const isExpecting = childAge === -1;
 

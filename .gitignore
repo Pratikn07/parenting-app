@@ -68,3 +68,8 @@ firebase-adminsdk-*.json
 
 # typescript
 *.tsbuildinfo
+
+# generated/temp data
+temp_images/
+temp_recipes/
+coverage/

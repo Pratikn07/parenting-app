@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/src/lib/logger';
 
 export interface User {
   id: string;
@@ -61,7 +62,7 @@ export const useAuthStore = create<AuthState>()(
           // But we reset it here in case the browser is dismissed without completing
           set({ isLoading: false });
         } catch (error) {
-          console.log('Google auth error:', error);
+          logger.log('Google auth error:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Google Sign In failed',
@@ -74,7 +75,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
 
         try {
-          console.log('Login attempt:', { email });
+          logger.log('Login attempt:', { email });
 
           // Call actual Supabase authentication
           const { AuthService } = await import('../../services/auth/AuthService');
@@ -103,7 +104,7 @@ export const useAuthStore = create<AuthState>()(
             error: null,
           });
         } catch (error) {
-          console.log('Login error:', error);
+          logger.log('Login error:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Login failed. Please check your email and password.',
@@ -115,7 +116,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
 
         try {
-          console.log('Signup attempt:', { name, email });
+          logger.log('Signup attempt:', { name, email });
 
           // Call actual Supabase authentication
           const { AuthService } = await import('../../services/auth/AuthService');
@@ -144,7 +145,7 @@ export const useAuthStore = create<AuthState>()(
             error: null,
           });
         } catch (error) {
-          console.log('Signup error:', error);
+          logger.log('Signup error:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Signup failed. Please try again.',
@@ -154,7 +155,7 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          console.log('Logout');
+          logger.log('Logout');
 
           // Actually sign out from Supabase to clear session
           const { AuthService } = await import('../../services/auth/AuthService');
@@ -170,7 +171,7 @@ export const useAuthStore = create<AuthState>()(
             guestData: null,
           });
         } catch (error) {
-          console.log('Logout error:', error);
+          logger.log('Logout error:', error);
           // Still clear local state even if logout fails
           set({
             user: null,
@@ -211,18 +212,18 @@ export const useAuthStore = create<AuthState>()(
         try {
           const { AuthService } = await import('../../services/auth/AuthService');
 
-          console.log('🔍 Auth state check started...');
+          logger.log('🔍 Auth state check started...');
 
           // Handle OAuth callback if URL is provided
           if (url) {
-            console.log('🔗 Processing OAuth callback URL:', url);
+            logger.log('🔗 Processing OAuth callback URL:', url);
             await AuthService.handleOAuthCallback(url);
           }
 
           // Check current session
-          console.log('🔑 Getting current session...');
+          logger.log('🔑 Getting current session...');
           const session = await AuthService.getSession();
-          console.log('📋 Session result:', session ? 'Found session' : 'No session');
+          logger.log('📋 Session result:', session ? 'Found session' : 'No session');
 
           if (!session) {
             set({
@@ -233,9 +234,9 @@ export const useAuthStore = create<AuthState>()(
             return;
           }
 
-          console.log('👤 Getting current user...');
+          logger.log('👤 Getting current user...');
           const currentUser = await AuthService.getCurrentUser();
-          console.log('📋 User result:', currentUser ? `Found user: ${currentUser.email}` : 'No user');
+          logger.log('📋 User result:', currentUser ? `Found user: ${currentUser.email}` : 'No user');
 
           if (currentUser) {
             set({
@@ -254,7 +255,7 @@ export const useAuthStore = create<AuthState>()(
             });
           } else {
             // User has a session but no profile - sign them out to clear stale session
-            console.log('⚠️ Session exists but no user profile found, signing out...');
+            logger.log('⚠️ Session exists but no user profile found, signing out...');
             await AuthService.signOut();
             set({
               user: null,
@@ -263,13 +264,13 @@ export const useAuthStore = create<AuthState>()(
             });
           }
         } catch (error) {
-          console.log('Check auth state error:', error);
+          logger.log('Check auth state error:', error);
           // If there's an error (like user deleted), clear the session
           try {
             const { AuthService } = await import('../../services/auth/AuthService');
             await AuthService.signOut();
           } catch (signOutError) {
-            console.log('Failed to sign out after error:', signOutError);
+            logger.log('Failed to sign out after error:', signOutError);
           }
           set({
             user: null,

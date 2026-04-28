@@ -1,5 +1,6 @@
 import { supabase } from '../../lib/supabase';
 import { Child } from '../../lib/database.types';
+import EventSource from 'react-native-sse';
 
 export interface ChatMessage {
   id: string;
@@ -248,6 +249,102 @@ export class ChatService {
       };
     }
   }
+
+  /**
+   * Send a message to the AI chat with STREAMING support (React Native compatible)
+   */
+  async sendMessageStreaming(
+    userId: string,
+    message: string,
+    onChunk: (text: string) => void,
+    childId?: string,
+    sessionId?: string,
+    imageUrl?: string,
+    messageType?: 'general' | 'recipe',
+    recipeMode?: 'ingredient' | 'progress'
+  ): Promise<SendMessageResult> {
+    try {
+      // Get the auth session for the token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        return {
+          success: false,
+          error: 'Not authenticated',
+          fallbackResponse: "Please sign in to continue chatting.",
+        };
+      }
+
+      const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+
+      return new Promise((resolve) => {
+        let fullResponse = '';
+
+        // Use react-native-sse EventSource with POST support
+        const es = new EventSource(`${supabaseUrl}/functions/v1/chat`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            userId,
+            message,
+            childId,
+            sessionId,
+            imageUrl,
+            messageType: messageType || 'general',
+            recipeMode,
+            stream: true,
+          }),
+        });
+
+        es.addEventListener('message', (event: any) => {
+          if (event.data === '[DONE]') {
+            es.close();
+            resolve({
+              success: true,
+              data: {
+                id: `streamed-${Date.now()}`,
+                message,
+                response: fullResponse,
+                createdAt: new Date().toISOString(),
+                sessionId: sessionId,
+              },
+            });
+            return;
+          }
+
+          try {
+            const parsed = JSON.parse(event.data);
+            if (parsed.content) {
+              fullResponse += parsed.content;
+              onChunk(fullResponse);
+            }
+          } catch (e) {
+            // Skip malformed JSON
+          }
+        });
+
+        es.addEventListener('error', (event: any) => {
+          console.error('SSE error:', event);
+          es.close();
+          resolve({
+            success: false,
+            error: event.message || 'Stream error',
+            fallbackResponse: "I'm having trouble right now. Please try again shortly.",
+          });
+        });
+      });
+    } catch (err) {
+      console.error('Chat streaming error:', err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Unknown error',
+        fallbackResponse: "I'm having trouble right now. Please try again shortly.",
+      };
+    }
+  }
+
 
   /**
    * Get recent chat history for a user

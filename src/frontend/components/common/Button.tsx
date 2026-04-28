@@ -58,6 +58,7 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {loading ? (
         <ActivityIndicator
+          testID="button-loading"
           size="small"
           color={variant === 'primary' ? '#FFFFFF' : '#D4635A'}
         />

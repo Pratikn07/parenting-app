@@ -23,3 +23,17 @@ export const getDevelopmentalStage = (dateOfBirth: string) => {
     if (months < 60) return { label: 'Preschool', icon: '🎨' };
     return { label: 'Child', icon: '🌟' };
 };
+
+// Calendar-correct: handles DST and varying month lengths via month arithmetic
+// rather than the naïve 1000*60*60*24*30.44 approximation.
+
+/**
+ * Check if a date is older than specified hours
+ */
+export const isOlderThanHours = (date: string | Date, hours: number): boolean => {
+    const targetDate = new Date(date);
+    const now = new Date();
+    const diffMs = now.getTime() - targetDate.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+    return diffHours > hours;
+};

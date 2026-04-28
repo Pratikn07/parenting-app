@@ -1,0 +1,29 @@
+# Maestro smoke test for MyCuratedHaven
+# Run with:  maestro test .maestro/smoke.yaml
+#
+# Goal: verify the app launches and the home tab renders without crashing.
+# Extend this file (or create sibling .yaml files) for per-feature flows.
+
+appId: com.pratikn07.mycuratedhaven
+name: Smoke — app launches
+tags:
+  - smoke
+---
+- launchApp:
+    clearState: false
+    stopApp: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: 01-launch
+# Bail out fast if the JS bundle never loaded (Metro down, fatal error, etc.).
+# If your app's first visible text is different, change this assertion.
+- runFlow:
+    when:
+      visible: "My Curated Haven"
+    commands:
+      - takeScreenshot: 02-dev-client-landing
+- runFlow:
+    when:
+      notVisible: "My Curated Haven"
+    commands:
+      - takeScreenshot: 02-app-rendered

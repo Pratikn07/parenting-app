@@ -152,7 +152,7 @@ app/                      # Expo Router screens and navigation
 ├── auth/                # Authentication screens
 ├── onboarding.tsx       # Wizard onboarding flow
 ├── chat.tsx             # AI chat interface with vision support
-├── resources.tsx        # Resources & tips hub
+├── (tabs)/bloom.tsx     # Bloom — milestones, progress & daily tips
 ├── settings.tsx         # User profile and settings
 └── (tabs)/              # Tab navigation layout
 
@@ -251,8 +251,8 @@ Build profiles are configured in `eas.json`.
 - **Database**: Supabase PostgreSQL with real-time subscriptions
 - **Authentication**: Supabase Auth with Google OAuth integration
 - **File Storage**: Supabase Storage for user uploads and chat images
-- **Schema**: See `supabase-schema.sql` for complete database structure
-- **Migrations**: Database migrations in `migrations/` directory
+- **Schema**: See `scripts/supabase-schema.sql` for complete database structure
+- **Migrations**: Database migrations in `supabase/migrations/` directory
 
 Key tables:
 - `users`: Parent profiles and preferences

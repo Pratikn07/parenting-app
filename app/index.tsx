@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { router } from 'expo-router';
 import { useAuthStore } from '../src/shared/stores/authStore';
 import { View, StyleSheet, Linking, ActivityIndicator } from 'react-native';
+import { logger } from '../src/lib/logger';
 
 export default function AppEntry() {
   const { isAuthenticated, hasCompletedOnboarding, isLoading, checkAuthState } = useAuthStore();
@@ -11,7 +12,7 @@ export default function AppEntry() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        console.log('App initializing...');
+        logger.log('App initializing...');
 
         // Check for initial URL (deep link)
         const url = await Linking.getInitialURL();
@@ -21,7 +22,7 @@ export default function AppEntry() {
           url.includes('code=') ||
           url.includes('oauth')
         )) {
-          console.log('🔗 Initial URL detected with OAuth params:', url);
+          logger.log('🔗 Initial URL detected with OAuth params:', url);
           // If we have an OAuth URL, check auth state with it immediately
           await checkAuthState(url);
         } else {
@@ -44,7 +45,7 @@ export default function AppEntry() {
       // Mark as navigated immediately to prevent double navigation
       hasNavigated.current = true;
 
-      console.log('🚀 Navigation decision:', {
+      logger.log('🚀 Navigation decision:', {
         isAuthenticated,
         hasCompletedOnboarding,
         isInitializing,
@@ -53,15 +54,15 @@ export default function AppEntry() {
 
       if (isAuthenticated && hasCompletedOnboarding) {
         // User is authenticated and has completed onboarding - go to chat tab
-        console.log('📱 Navigating to chat tab (authenticated + onboarded)');
+        logger.log('📱 Navigating to chat tab (authenticated + onboarded)');
         router.replace('/(tabs)/chat');
       } else if (isAuthenticated && !hasCompletedOnboarding) {
         // User is authenticated but hasn't completed onboarding
-        console.log('📝 Navigating to onboarding (authenticated but not onboarded)');
+        logger.log('📝 Navigating to onboarding (authenticated but not onboarded)');
         router.replace('/onboarding');
       } else {
         // User is not authenticated - show launch screen first
-        console.log('🚪 Navigating to launch (not authenticated)');
+        logger.log('🚪 Navigating to launch (not authenticated)');
         router.replace('/launch');
       }
     }

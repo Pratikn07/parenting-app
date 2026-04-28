@@ -2,17 +2,18 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Linking } from 'react-native';
 import { useAuthStore } from '../src/shared/stores/authStore';
+import { logger } from '../src/lib/logger';
 
 export default function DeepLinkTest() {
   const { checkAuthState } = useAuthStore();
 
   const testDeepLink = async () => {
     const testUrl = 'com.parentingcompass.app://auth/callback?access_token=test&refresh_token=test';
-    console.log('Testing deep link:', testUrl);
+    logger.log('Testing deep link:', testUrl);
     
     try {
       const canOpen = await Linking.canOpenURL(testUrl);
-      console.log('Can open deep link:', canOpen);
+      logger.log('Can open deep link:', canOpen);
       
       if (canOpen) {
         await Linking.openURL(testUrl);
@@ -26,7 +27,7 @@ export default function DeepLinkTest() {
   };
 
   const testAuthCallback = async () => {
-    console.log('Testing auth callback manually...');
+    logger.log('Testing auth callback manually...');
     const testUrl = 'com.parentingcompass.app://auth/callback?access_token=test123&refresh_token=refresh123';
     await checkAuthState(testUrl);
   };

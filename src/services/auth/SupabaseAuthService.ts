@@ -1,6 +1,7 @@
 import { supabase } from '../../lib/supabase';
 import { AuthResponse, SignInCredentials, SignUpCredentials } from '../../shared/types/auth.types';
 import { Profile } from '../../lib/database.types';
+import { logger } from '../../lib/logger';
 
 /**
  * Real Supabase Authentication Service
@@ -30,7 +31,7 @@ class SupabaseAuthService {
       try {
         profile = await this.getUserProfile(data.user.id);
       } catch (error) {
-        console.log('📝 No profile found, creating basic profile from auth data');
+        logger.log('📝 No profile found, creating basic profile from auth data');
         // Create basic profile from auth metadata
         profile = {
           id: data.user.id,
@@ -51,7 +52,7 @@ class SupabaseAuthService {
         refreshToken: data.session.refresh_token,
       };
     } catch (error) {
-      console.log('Sign in error:', error);
+      logger.log('Sign in error:', error);
       throw error;
     }
   }
@@ -88,7 +89,7 @@ class SupabaseAuthService {
         refreshToken: data.session.refresh_token,
       };
     } catch (error) {
-      console.log('Sign up error:', error);
+      logger.log('Sign up error:', error);
       throw error;
     }
   }
@@ -101,7 +102,7 @@ class SupabaseAuthService {
       const { makeRedirectUri } = await import('expo-auth-session');
       const WebBrowser = await import('expo-web-browser');
 
-      console.log('Starting Google OAuth with proper redirect handling...');
+      logger.log('Starting Google OAuth with proper redirect handling...');
 
       // Create proper redirect URI for development build
       const redirectUri = makeRedirectUri({
@@ -109,7 +110,7 @@ class SupabaseAuthService {
         path: 'auth/callback'
       });
 
-      console.log('Using redirect URI:', redirectUri);
+      logger.log('Using redirect URI:', redirectUri);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -129,7 +130,7 @@ class SupabaseAuthService {
 
       // Open OAuth URL in browser
       if (data?.url) {
-        console.log('Opening Google OAuth URL:', data.url);
+        logger.log('Opening Google OAuth URL:', data.url);
 
         const result = await WebBrowser.openBrowserAsync(data.url, {
           showTitle: true,
@@ -138,18 +139,18 @@ class SupabaseAuthService {
           dismissButtonStyle: 'done',
         });
 
-        console.log('WebBrowser result:', result);
+        logger.log('WebBrowser result:', result);
 
         // Handle different result types
         if (result.type === 'success') {
           // Browser was closed via deep link redirect - this is what we want
-          console.log('OAuth redirect successful, checking for session...');
+          logger.log('OAuth redirect successful, checking for session...');
         } else if (result.type === 'cancel') {
           // User manually closed browser or OAuth was cancelled
-          console.log('OAuth was cancelled by user');
+          logger.log('OAuth was cancelled by user');
           throw new Error('Google sign-in was cancelled');
         } else {
-          console.log('OAuth completed, checking for session...');
+          logger.log('OAuth completed, checking for session...');
         }
 
         // Give a moment for the session to be established
@@ -170,7 +171,7 @@ class SupabaseAuthService {
         throw new Error('OAuth completed but session not found');
       }
     } catch (error) {
-      console.log('Google sign in error:', error);
+      logger.log('Google sign in error:', error);
       throw error;
     }
   }
@@ -189,7 +190,7 @@ class SupabaseAuthService {
       // Note: We don't clear Google's browser session as it causes
       // unwanted deep link redirects that auto-trigger sign-in
     } catch (error) {
-      console.log('Sign out error:', error);
+      logger.log('Sign out error:', error);
       throw error;
     }
   }
@@ -213,7 +214,7 @@ class SupabaseAuthService {
       try {
         return await this.getUserProfile(user.id);
       } catch (profileError) {
-        console.log('📝 No profile table found, using auth metadata');
+        logger.log('📝 No profile table found, using auth metadata');
         // Create basic profile from auth metadata
         return {
           id: user.id,
@@ -228,7 +229,7 @@ class SupabaseAuthService {
         };
       }
     } catch (error) {
-      console.log('Get current user error:', error);
+      logger.log('Get current user error:', error);
       return null;
     }
   }
@@ -243,7 +244,7 @@ class SupabaseAuthService {
       if (error) {
         // If it's a network error, just return null instead of throwing
         if (error.message.includes('Network request failed')) {
-          console.log('Network error checking session, assuming offline/logged out');
+          logger.log('Network error checking session, assuming offline/logged out');
           return null;
         }
         throw new Error(error.message);
@@ -251,7 +252,7 @@ class SupabaseAuthService {
 
       return data.session;
     } catch (error) {
-      console.log('Get session error:', error);
+      logger.log('Get session error:', error);
       return null;
     }
   }
@@ -269,7 +270,7 @@ class SupabaseAuthService {
    */
   async handleOAuthCallback(url: string): Promise<void> {
     try {
-      console.log('🔗 Processing OAuth callback URL:', url);
+      logger.log('🔗 Processing OAuth callback URL:', url);
 
       // Parse URL hash parameters
       const urlObj = new URL(url.replace('#', '?'));
@@ -290,9 +291,9 @@ class SupabaseAuthService {
         throw new Error(error.message);
       }
 
-      console.log('✅ OAuth callback handled successfully, session established');
+      logger.log('✅ OAuth callback handled successfully, session established');
     } catch (error) {
-      console.log('OAuth callback error:', error);
+      logger.log('OAuth callback error:', error);
       throw error;
     }
   }
@@ -310,7 +311,7 @@ class SupabaseAuthService {
         throw new Error(error.message);
       }
     } catch (error) {
-      console.log('Password reset error:', error);
+      logger.log('Password reset error:', error);
       throw error;
     }
   }
@@ -328,7 +329,7 @@ class SupabaseAuthService {
         throw new Error(error.message);
       }
     } catch (error) {
-      console.log('Update password error:', error);
+      logger.log('Update password error:', error);
       throw error;
     }
   }
@@ -357,7 +358,7 @@ class SupabaseAuthService {
 
       return data;
     } catch (error) {
-      console.log('Update profile error:', error);
+      logger.log('Update profile error:', error);
       throw error;
     }
   }
@@ -380,7 +381,7 @@ class SupabaseAuthService {
 
       // If no user found, create a new profile record
       if (error?.code === 'PGRST116' || error?.message?.includes('No rows')) {
-        console.log('📝 No user profile found, creating new one');
+        logger.log('📝 No user profile found, creating new one');
 
         // Get user info from auth
         const { data: authUser, error: authError } = await supabase.auth.getUser();
@@ -411,14 +412,14 @@ class SupabaseAuthService {
           throw new Error(`Failed to create user profile: ${createError.message}`);
         }
 
-        console.log('✅ Created new user profile');
+        logger.log('✅ Created new user profile');
         return createdUser;
       }
 
       // Other error
       throw new Error(`Failed to get user profile: ${error?.message}`);
     } catch (error) {
-      console.log('Get user profile error:', error);
+      logger.log('Get user profile error:', error);
       throw error;
     }
   }
@@ -428,7 +429,7 @@ class SupabaseAuthService {
    */
   onAuthStateChange(callback: (event: string, session: any) => void) {
     return supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session);
+      logger.log('Auth state changed:', event, session);
       callback(event, session);
     });
   }

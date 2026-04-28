@@ -16,6 +16,7 @@ interface ChatRequest {
   imageUrl?: string; // For vision analysis
   messageType?: 'general' | 'recipe';
   recipeMode?: 'ingredient' | 'progress';  // NEW: Mode for recipe assistance
+  stream?: boolean;  // NEW: Enable streaming responses
 }
 
 interface ChatResponse {
@@ -62,17 +63,28 @@ const SYSTEM_PROMPT = `You are Bloom, a warm and empathetic parenting assistant 
 
 CORE PERSONALITY:
 - Warm, supportive, conversational, and non-judgmental
-- You REMEMBER previous discussions and reference them naturally
-- You acknowledge progress and challenges from past conversations
+- ALWAYS READ THE "CURRENT CONTEXT" section provided below. It contains the user's name, children's names, and ages.
+- NEVER say you don't have access to past conversations or don't know the child's name/age if it's provided in the context.
 - Use the parent's name when addressing them
 
 PERSONALIZATION RULES (CRITICAL):
-1. **Always use the child's name** - NEVER say "your child"
+1. **Always use the child's name** - NEVER say "your child". You have their name in the CURRENT CONTEXT.
 2. **Reference age/stage naturally** - "At 23 months, Emma..." not "Your toddler..."
-3. **Build on past conversations** - If you have memory context, reference it naturally
+3. **DO NOT ask for the child's name or age** - you already have it in the context section.
 4. **Adapt complexity for child's age** - Advice for 6-month-old ≠ advice for 3-year-old
 5. **Anticipate needs** - Mention upcoming milestones relevant to their stage
 6. **Show you remember** - If recent concerns are provided, acknowledge them
+
+STRICT SCOPE & GUARDRAILS (CRITICAL):
+- You are a parenting assistant. Your jurisdiction is STRICTLY limited to:
+  * Child development, behavior, and psychology.
+  * Baby and toddler routines (sleep, feeding, potty training).
+  * Child safety, health guidance, and **product safety or recalls**.
+  * Nutrition and recipes for children and families.
+  * Developmental milestones and play ideas.
+  * Using and navigating this app's features.
+- OUT-OF-SCOPE: General knowledge trivia, coding/programming, politics, news (unless related to child product recalls), general medical advice for adults, or unrelated professional advice.
+- REFUSAL GUIDELINE: If a user asks a question outside these topics, politely decline by saying something like: "I'd love to help, but I'm specialized in all things parenting and [Child Name]'s development. If you have a question about [Child Name], recipes, or parenting tips, I'm your bestie!"
 
 MEMORY & CONTINUITY:
 - If you have information about past conversations, USE IT naturally in your response
@@ -82,14 +94,14 @@ MEMORY & CONTINUITY:
 - DON'T just repeat old advice - build on it or adjust based on feedback
 
 SMART FOLLOW-UPS (END OF RESPONSE):
-- After answering the parent's question, add ONE optional follow-up
-- Format: "Is there anything else I can help with today? \n\nAlso, [contextual follow-up from memory]"
-- Only ask if you have memory context from the last 7 days
-- Keep it brief and relevant
-- Examples:
-  * "Also, how did Emma's bedtime routine go this week?"
-  * "By the way, you mentioned tantrums were tough - any improvement?"
-  * "Last time you were trying X - how's that working out?"
+- Your goals are to keep the conversation going naturally and proactively.
+- If you have memory context from the last 7 days, reference it with a casual follow-up question.
+- Transition naturally! DO NOT use robotic phrases like "Is there anything else I can help with today?".
+- Examples of natural transitions:
+  * "By the way, how's that new bedtime routine you mentioned last week going for Emma?"
+  * "I recall we talked about tantrums on Tuesday—have you seen any improvement since we tried [previous advice]?"
+  * "Since we're on the topic of transition, how did the nursery setup work out?"
+- If no relevant recent memory exists, simply end your message with a warm concluding thought or a broad, natural parenting question.
 
 ===== CONTEXT-AWARE PERSONA SYSTEM =====
 Before responding, ANALYZE the user's message to detect intent. Then adapt your tone:
@@ -410,7 +422,7 @@ function calculateAgeInMonths(dateOfBirth: string): number {
 
 async function getUserContext(supabase: any, userId: string): Promise<UserContext> {
   const { data: userData } = await supabase
-    .from("users")
+    .from("profiles")
     .select("name, parenting_stage, feeding_preference")
     .eq("id", userId)
     .single();
@@ -840,6 +852,53 @@ async function callDeepSeek(
   return content;
 }
 
+// Text-only chat using DeepSeek with STREAMING
+async function callDeepSeekStreaming(
+  systemPrompt: string,
+  contextPrompt: string,
+  conversationHistory: ConversationMessage[],
+  userMessage: string
+): Promise<ReadableStream> {
+  const deepseekApiKey = Deno.env.get("DEEPSEEK_API_KEY");
+
+  if (!deepseekApiKey) {
+    throw new Error("DEEPSEEK_API_KEY is not configured");
+  }
+
+  const messages = [
+    { role: "system", content: `${systemPrompt}\n\nCURRENT CONTEXT:\n${contextPrompt}` },
+    ...conversationHistory,
+    { role: "user", content: userMessage },
+  ];
+
+  const response = await fetch(DEEPSEEK_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${deepseekApiKey}`,
+    },
+    body: JSON.stringify({
+      model: "deepseek-chat",
+      messages,
+      temperature: 0.7,
+      max_tokens: 800,
+      presence_penalty: 0.1,
+      frequency_penalty: 0.1,
+      stream: true, // Enable streaming
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("DeepSeek API error:", errorText);
+    throw new Error(`DeepSeek API error: ${response.status}`);
+  }
+
+  // Return the stream directly - caller will handle it
+  return response.body!;
+}
+
+
 // Vision analysis using OpenAI GPT-4 Vision
 async function callOpenAIVision(
   systemPrompt: string,  // NEW: Accept custom system prompt
@@ -1126,7 +1185,7 @@ Deno.serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const body: ChatRequest = await req.json();
-    const { userId, message, childId, sessionId, imageUrl, messageType, recipeMode } = body;
+    const { userId, message, childId, sessionId, imageUrl, messageType, recipeMode, stream } = body;
 
     if (!userId) {
       return new Response(JSON.stringify({ error: "userId is required" }), {
@@ -1187,7 +1246,7 @@ Deno.serve(async (req: Request) => {
       imageUrl
     );
 
-    // Call appropriate AI based on whether image is present
+    // Call appropriate AI based on whether image is present AND streaming is requested
     let aiResponse: string;
 
     // Select system prompt based on message type and recipe mode
@@ -1200,6 +1259,119 @@ Deno.serve(async (req: Request) => {
       console.log(`Using ${recipeMode} mode prompt for recipe assistance`);
     }
 
+    // STREAMING MODE (only for text-only messages, not images)
+    if (stream && !hasImage) {
+      console.log("Processing STREAMING text request");
+
+      const deepseekStream = await callDeepSeekStreaming(
+        systemPrompt,
+        contextPrompt,
+        conversationHistory,
+        userMessageText
+      );
+
+      // Create SSE stream to client
+      const encoder = new TextEncoder();
+      let fullResponse = "";
+
+      const responseStream = new ReadableStream({
+        async start(controller) {
+          const reader = deepseekStream.getReader();
+          const decoder = new TextDecoder();
+
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split("\n");
+
+              for (const line of lines) {
+                if (line.startsWith("data: ")) {
+                  const data = line.slice(6);
+                  if (data === "[DONE]") continue;
+
+                  try {
+                    const parsed = JSON.parse(data);
+                    const content = parsed.choices?.[0]?.delta?.content;
+
+                    if (content) {
+                      fullResponse += content;
+                      // Send chunk to client in SSE format
+                      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
+                    }
+                  } catch (e) {
+                    // Skip malformed JSON
+                  }
+                }
+              }
+            }
+
+            // Send completion signal
+            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+            controller.close();
+
+            // Save to database after streaming completes
+            try {
+              // Enrich response with affiliate products
+              let finalResponse = fullResponse;
+              if (messageType !== 'recipe') {
+                const { enrichedResponse } = await enrichWithAffiliateProducts(
+                  supabase,
+                  fullResponse,
+                  session.id,
+                  userId
+                );
+                finalResponse = enrichedResponse;
+              }
+
+              // Save AI response
+              await saveMessage(
+                supabase,
+                userId,
+                finalResponse,
+                false,
+                session.id,
+                childId
+              );
+
+              // Update session metadata
+              await updateSessionMetadata(supabase, session.id, session.message_count);
+
+              // Generate title if first message
+              if (!session.title && session.message_count === 0) {
+                const sessionTitle = await generateSessionTitle(userMessageText, hasImage);
+                await updateSessionTitle(supabase, session.id, sessionTitle);
+              }
+
+              // Save conversation summary in background
+              if (session.message_count >= 4) {
+                saveConversationSummary(supabase, userId, session.id, childId).catch(err => {
+                  console.error("Background summary save failed:", err);
+                });
+              }
+            } catch (dbError) {
+              console.error("Database save error after streaming:", dbError);
+            }
+          } catch (error) {
+            console.error("Stream error:", error);
+            controller.error(error);
+          }
+        },
+      });
+
+      return new Response(responseStream, {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    }
+
+    // NON-STREAMING MODE (original behavior)
     if (hasImage) {
       console.log("Processing vision request with image");
       // For images, use vision prompt + mode-specific guidance

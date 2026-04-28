@@ -14,24 +14,34 @@ export const SUPABASE_CONFIG = {
 
 export const THEME = {
   colors: {
-    primary: '#E07A5F',    // Terracotta - Love/Care/Primary Actions
-    secondary: '#8BA888',  // Sage Green - Growth/Data/Success
-    background: '#FDFCF8', // Soft Cream
+    primary: '#E8725C',    // Coral Terracotta - Love/Care/Primary Actions
+    secondary: '#5B8A72',  // Rich Sage Green - Growth/Data/Success
+    accent: '#D4A853',     // Warm Gold - Achievements/Premium
+    background: '#FDFAF7', // Warm Cream
     text: {
       primary: '#3D405B',
       secondary: '#6B7280',
       light: '#FFFFFF',
-      accent: '#E07A5F',
+      accent: '#E8725C',
     },
     ui: {
       white: '#FFFFFF',
       border: '#E5E7EB',
       inputBg: '#F9FAFB',
+      cardBg: '#FFFFFF',
+      surfaceLow: '#F6F3F0',
+      surfaceHigh: '#EAE8E5',
     },
     status: {
-      error: '#EF4444',
-      success: '#8BA888',
+      error: '#BA1A1A',
+      success: '#5B8A72',
       warning: '#F59E0B',
+    },
+    milestone: {
+      physical: '#E8725C',
+      cognitive: '#5B8A72',
+      social: '#6366F1',
+      emotional: '#D4A853',
     }
   },
   fonts: {
@@ -61,6 +71,12 @@ export const AUTH_CONFIG = {
     onboarding: 'parenting-app.onboarding',
   },
 } as const;
+
+export const CHAT_CONFIG = {
+  // Auto-start new session if last activity > 24 hours
+  sessionTimeoutHours: 24,
+} as const;
+
 
 export const PARENTING_STAGES = {
   expecting: 'Expecting',
@@ -101,7 +117,7 @@ export const ROUTES = {
   auth: '/auth',
   onboarding: '/onboarding',
   chat: '/chat',
-  resources: '/resources',
+  bloom: '/(tabs)/bloom',
   settings: '/settings',
 } as const;
 

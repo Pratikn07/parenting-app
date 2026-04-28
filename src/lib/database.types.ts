@@ -9,7 +9,7 @@ export interface Database {
           id: string; // UUID, references auth.users(id)
           name: string;
           email: string;
-          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
           feeding_preference: 'breastfeeding' | 'formula' | 'mixed';
           has_completed_onboarding: boolean;
           avatar_url?: string;
@@ -20,7 +20,7 @@ export interface Database {
           id: string;
           name: string;
           email: string;
-          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
           feeding_preference?: 'breastfeeding' | 'formula' | 'mixed';
           has_completed_onboarding?: boolean;
           avatar_url?: string;
@@ -30,7 +30,7 @@ export interface Database {
         Update: {
           name?: string;
           email?: string;
-          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
           feeding_preference?: 'breastfeeding' | 'formula' | 'mixed';
           has_completed_onboarding?: boolean;
           avatar_url?: string;
@@ -99,7 +99,7 @@ export interface Database {
           description?: string;
           content?: string;
           category?: string;
-          parenting_stages?: ('expecting' | 'newborn' | 'infant' | 'toddler')[];
+          parenting_stages?: ('expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school')[];
           tags?: string[];
           image_url?: string;
           is_featured: boolean;
@@ -112,7 +112,7 @@ export interface Database {
           description?: string;
           content?: string;
           category?: string;
-          parenting_stages?: ('expecting' | 'newborn' | 'infant' | 'toddler')[];
+          parenting_stages?: ('expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school')[];
           tags?: string[];
           image_url?: string;
           is_featured?: boolean;
@@ -124,7 +124,7 @@ export interface Database {
           description?: string;
           content?: string;
           category?: string;
-          parenting_stages?: ('expecting' | 'newborn' | 'infant' | 'toddler')[];
+          parenting_stages?: ('expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school')[];
           tags?: string[];
           image_url?: string;
           is_featured?: boolean;
@@ -218,7 +218,7 @@ export interface Database {
           title: string;
           description: string;
           category: string;
-          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
           child_age_months?: number;
           quick_tips?: string[];
           is_viewed: boolean;
@@ -232,7 +232,7 @@ export interface Database {
           title: string;
           description: string;
           category: string;
-          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          parenting_stage: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
           child_age_months?: number;
           quick_tips?: string[];
           is_viewed?: boolean;
@@ -243,7 +243,7 @@ export interface Database {
           title?: string;
           description?: string;
           category?: string;
-          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler';
+          parenting_stage?: 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
           child_age_months?: number;
           quick_tips?: string[];
           is_viewed?: boolean;

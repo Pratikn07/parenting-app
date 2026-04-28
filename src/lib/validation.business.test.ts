@@ -50,16 +50,17 @@ describe('Validation Business Logic', () => {
 
     it('should validate password complexity requirements', () => {
       const validPasswords = [
-        'Password123',
-        'MySecure123',
-        'Test123Pass',
-        'AbCdEf123'
+        'Password123!',
+        'MySecure123@',
+        'Test123Pass$',
+        'AbCdEf123&'
       ];
 
       const invalidPasswords = [
-        'password123', // No uppercase
-        'PASSWORD123', // No lowercase
-        'PasswordABC'  // No digit
+        'password123!', // No uppercase
+        'PASSWORD123!', // No lowercase
+        'PasswordABC!', // No digit
+        'Password123'   // No symbol
       ];
 
       validPasswords.forEach(password => {
@@ -109,7 +110,7 @@ describe('Validation Business Logic', () => {
 
   describe('Business Rule Validation', () => {
     it('should validate parenting stage values', () => {
-      const validStages = ['expecting', 'newborn', 'infant', 'toddler'];
+      const validStages = ['expecting', 'newborn', 'infant', 'toddler', 'preschool', 'school'];
       const invalidStages = ['teenager', 'adult', '', 'unknown'];
 
       // Check that all valid stages are defined in constants
@@ -152,7 +153,7 @@ describe('Validation Business Logic', () => {
 
   describe('Route Validation', () => {
     it('should have all required application routes defined', () => {
-      const requiredRoutes = ['index', 'launch', 'auth', 'onboarding', 'chat', 'resources', 'settings'];
+      const requiredRoutes = ['index', 'launch', 'auth', 'onboarding', 'chat', 'bloom', 'settings'];
 
       requiredRoutes.forEach(route => {
         expect(ROUTES).toHaveProperty(route);

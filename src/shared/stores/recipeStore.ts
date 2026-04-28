@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/src/lib/logger';
 
 export interface FeedingTypes {
     pregnancyNutrition: boolean; // For expecting mothers
@@ -90,15 +91,15 @@ export const useRecipeOnboardingStore = create<RecipeOnboardingState>()(
             preferences: DEFAULT_PREFERENCES,
 
             setFeedingTypes: (types) => {
-                console.log('📝 setFeedingTypes called with:', types);
-                console.log('   Current state before merge:', get().preferences.feedingTypes);
+                logger.log('📝 setFeedingTypes called with:', types);
+                logger.log('   Current state before merge:', get().preferences.feedingTypes);
 
                 set((state) => {
                     const newFeedingTypes = {
                         ...state.preferences.feedingTypes,
                         ...types,
                     };
-                    console.log('   New state after merge:', newFeedingTypes);
+                    logger.log('   New state after merge:', newFeedingTypes);
 
                     return {
                         preferences: {

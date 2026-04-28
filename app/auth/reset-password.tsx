@@ -13,6 +13,7 @@ import { router } from 'expo-router';
 import { THEME } from '@/src/lib/constants';
 import { Input } from '@/src/frontend/components/common/Input';
 import { supabase } from '@/src/lib/supabase';
+import { logger } from '@/src/lib/logger';
 
 export default function ResetPasswordScreen() {
     const [newPassword, setNewPassword] = useState('');
@@ -25,7 +26,7 @@ export default function ResetPasswordScreen() {
         const handleDeepLink = async () => {
             const url = await Linking.getInitialURL();
             if (url) {
-                console.log('Reset password deep link:', url);
+                logger.log('Reset password deep link:', url);
                 // The URL will contain the access_token and refresh_token
                 // Supabase automatically handles this when we call updateUser
             }

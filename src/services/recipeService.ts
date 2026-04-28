@@ -1,5 +1,6 @@
 import { supabase } from '@/src/lib/supabase';
 import { Recipe } from '@/src/lib/types/recipes';
+import { logger } from '@/src/lib/logger';
 
 // Fetch all recipes from Supabase
 // Fetch recipes with pagination for efficiency
@@ -95,7 +96,7 @@ export async function getFilteredRecipes(filters: {
 
         if (searchError) {
             // Fallback to basic search if RPC fails (function not yet created)
-            console.log('RPC function not available, using basic search');
+            logger.log('RPC function not available, using basic search');
             query = query.or(`title.ilike.%${filters.searchQuery}%,description.ilike.%${filters.searchQuery}%`);
         } else if (searchResults && searchResults.length > 0) {
             // Filter by recipe IDs returned from RPC
@@ -312,7 +313,7 @@ export async function getTrendingSearches(): Promise<string[]> {
         if (error) {
             // If table doesn't exist yet, just return empty array (graceful degradation)
             if (error.code === 'PGRST205' || error.message?.includes('search_analytics')) {
-                console.log('search_analytics table not yet created, skipping trending searches');
+                logger.log('search_analytics table not yet created, skipping trending searches');
                 return [];
             }
             console.error('Error fetching trending searches:', error);

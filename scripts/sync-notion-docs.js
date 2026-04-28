@@ -29,9 +29,9 @@ const FEATURES = [
                 "src/frontend/components/milestones/ProgressRing.tsx (UI Component)",
                 "src/frontend/components/milestones/CategoryStats.tsx (UI Component)",
                 "src/frontend/components/milestones/MilestoneFilters.tsx (UI Component)",
-                "src/frontend/screens/resources/ResourcesScreen.tsx (Integration)"
+                "src/frontend/screens/bloom/BloomScreen.tsx (Integration)"
             ],
-            database: "1. Created `milestone_templates` table: Stores static milestone definitions (title, description, category, age range).\n2. Created `user_milestone_progress` table: Links users/children to milestones with completion status and timestamps.\n3. Seeded 80+ milestones via `migrations/002_seed_milestone_templates.sql`.\n4. Added indexes on `child_id` and `template_id` for performance."
+            database: "1. Created `milestone_templates` table: Stores static milestone definitions (title, description, category, age range).\n2. Created `user_milestone_progress` table: Links users/children to milestones with completion status and timestamps.\n3. Seeded 80+ milestones via `supabase/migrations/20251201000004_seed_milestone_templates.sql`.\n4. Added indexes on `child_id` and `template_id` for performance."
         }
     },
     {
@@ -71,12 +71,12 @@ const FEATURES = [
             ]
         },
         technical: {
-            architecture: "The `ResourcesService` acts as the data layer, fetching articles from Supabase. The `ResourcesScreen` is the presentation layer, handling tab switching (Next Steps vs Library), search state, and category filtering. Content is rendered dynamically based on database records.",
+            architecture: "The `ResourcesService` acts as the data layer, fetching articles from Supabase. The `BloomScreen` is the current presentation layer, surfacing milestones, progress rings, daily tips, and personalized content. Content is rendered dynamically based on database records.",
             files: [
                 "src/services/resources/ResourcesService.ts (Data Fetching)",
-                "src/frontend/screens/resources/ResourcesScreen.tsx (UI)",
-                "migrations/004_create_articles_table.sql (Schema)",
-                "migrations/003_saved_articles.sql (Bookmarking)"
+                "src/frontend/screens/bloom/BloomScreen.tsx (UI)",
+                "supabase/migrations/20251201000000_create_articles_system.sql (Schema)",
+                "supabase/migrations/20251201000000_create_articles_system.sql (Bookmarking)"
             ],
             database: "1. Created `articles` table: id, title, content, category, author, read_time, published_at.\n2. Created `saved_articles` table: user_id, article_id, saved_at.\n3. Implemented RLS policies for public read access to articles."
         }

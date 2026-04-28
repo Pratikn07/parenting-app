@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useRecipeOnboardingStore, arrayToFeedingTypes } from '@/src/shared/stores/recipeStore';
 import RecipesOnboarding from '@/src/frontend/screens/recipes/RecipesOnboarding';
-import RecipesHome from '@/src/frontend/screens/recipes/RecipesHome';
+import RecipesHome from '@/src/frontend/screens/recipes/recipesHome/RecipesHome';
 import { supabase } from '@/src/lib/supabase';
 import { useAuthStore } from '@/src/shared/stores/authStore';
 import { useChildStore } from '@/src/shared/stores/childStore';
+import { logger } from '@/src/lib/logger';
 
 export default function RecipesScreen() {
     const {
@@ -22,7 +23,7 @@ export default function RecipesScreen() {
         const syncPreferences = async () => {
             if (!user?.id) return;
 
-            console.log('🔄 RecipesScreen: Syncing preferences from DB for user:', user.email);
+            logger.log('🔄 RecipesScreen: Syncing preferences from DB for user:', user.email);
 
             // Fetch profile data (onboarding status + kitchen styles)
             const { data: profileData, error: profileError } = await supabase
@@ -32,7 +33,7 @@ export default function RecipesScreen() {
                 .single();
 
             if (!profileError && profileData) {
-                console.log('📊 Profile data:', profileData);
+                logger.log('📊 Profile data:', profileData);
                 if (profileData.has_completed_recipe_onboarding !== hasCompletedOnboarding) {
                     setHasCompletedOnboarding(profileData.has_completed_recipe_onboarding);
                 }
@@ -43,7 +44,7 @@ export default function RecipesScreen() {
 
             // Fetch child preferences (dietary needs + feeding types)
             if (activeChild?.id) {
-                console.log('👶 Fetching preferences for child:', activeChild.name);
+                logger.log('👶 Fetching preferences for child:', activeChild.name);
                 const { data: childPrefData, error: childPrefError } = await supabase
                     .from('child_preferences')
                     .select('dietary_needs, feeding_types')
@@ -51,7 +52,7 @@ export default function RecipesScreen() {
                     .single();
 
                 if (!childPrefError && childPrefData) {
-                    console.log('📊 Child preferences:', childPrefData);
+                    logger.log('📊 Child preferences:', childPrefData);
                     if (childPrefData.dietary_needs && childPrefData.dietary_needs.length > 0) {
                         setDietaryNeeds(childPrefData.dietary_needs);
                     }

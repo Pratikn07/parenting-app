@@ -219,7 +219,7 @@ These prompts are crafted using techniques from the Nano Banana Pro prompt libra
         outputContent += `${index + 1}. \`${shortPrompt}\`\n\n`;
     });
 
-    const outputPath = path.join(__dirname, '..', 'NANO_BANANA_PROMPTS.txt');
+    const outputPath = path.join(__dirname, 'NANO_BANANA_PROMPTS.txt');
     fs.writeFileSync(outputPath, outputContent);
 
     console.log(`✅ Successfully generated PREMIUM prompts for ${totalCount} recipes!`);

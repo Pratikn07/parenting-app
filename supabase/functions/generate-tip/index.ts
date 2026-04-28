@@ -145,7 +145,7 @@ async function getRecentTipCategories(supabase: any, userId: string): Promise<st
 
 async function getUserContext(supabase: any, userId: string): Promise<{ parentingStage: string; feedingPreference: string | null }> {
   const { data } = await supabase
-    .from("users")
+    .from("profiles")
     .select("parenting_stage, feeding_preference")
     .eq("id", userId)
     .single();
