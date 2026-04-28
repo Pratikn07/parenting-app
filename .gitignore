@@ -73,3 +73,7 @@ firebase-adminsdk-*.json
 temp_images/
 temp_recipes/
 coverage/
+ui-snapshots/
+
+# supabase CLI local state
+supabase/.temp/
