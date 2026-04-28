@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, SafeAreaView, ActivityIndicator, TouchableOpacity, Linking } from 'react-native';
-import { Search, ShoppingBag } from 'lucide-react-native';
+import { Search, ShoppingBag, Heart } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { THEME } from '@/src/lib/constants';
 import { shopService } from '@/src/services/shop/ShopService';
@@ -85,14 +85,24 @@ export default function ShopHome() {
                         <Text style={styles.welcomeText}>Curated Shop</Text>
                         <Text style={styles.subtitle}>Handpicked essentials for your little one</Text>
                     </View>
-                    <TouchableOpacity
-                        style={styles.iconButton}
-                        onPress={() => router.push('/shop/search')}
-                        accessibilityLabel="Search products"
-                        accessibilityRole="button"
-                    >
-                        <Search size={22} color={THEME.colors.text.primary} />
-                    </TouchableOpacity>
+                    <View style={styles.headerActions}>
+                        <TouchableOpacity
+                            style={styles.iconButton}
+                            onPress={() => router.push('/shop/saved')}
+                            accessibilityLabel="View saved products"
+                            accessibilityRole="button"
+                        >
+                            <Heart size={22} color={THEME.colors.text.primary} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.iconButton}
+                            onPress={() => router.push('/shop/search')}
+                            accessibilityLabel="Search products"
+                            accessibilityRole="button"
+                        >
+                            <Search size={22} color={THEME.colors.text.primary} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <ScrollView
@@ -268,6 +278,11 @@ const styles = StyleSheet.create({
         fontFamily: THEME.fonts.body,
         color: THEME.colors.text.secondary,
         marginTop: 2,
+    },
+    headerActions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
     },
     iconButton: {
         width: 44,

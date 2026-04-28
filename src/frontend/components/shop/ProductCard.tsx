@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { THEME } from '@/src/lib/constants';
 import { ShopProduct } from '@/src/types/shop';
+import SaveButton from './SaveButton';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -22,6 +23,7 @@ interface ProductCardProps {
     variant?: 'horizontal' | 'grid';
     index?: number;
     showCategoryBadge?: boolean;
+    showSaveButton?: boolean;
 }
 
 // Category styling with labels
@@ -36,7 +38,7 @@ const categoryConfig: Record<string, { emoji: string; label: string; bgColor: st
     nursery: { emoji: '🌼', label: 'Nursery', bgColor: 'rgba(254, 249, 195, 0.9)', textColor: '#A16207' },
 };
 
-export default function ProductCard({ product, onPress, variant = 'horizontal', index = 0, showCategoryBadge = true }: ProductCardProps) {
+export default function ProductCard({ product, onPress, variant = 'horizontal', index = 0, showCategoryBadge = true, showSaveButton = true }: ProductCardProps) {
     const isHorizontal = variant === 'horizontal';
     const cardWidth = isHorizontal ? 220 : (SCREEN_WIDTH - 52) / 2;
 
@@ -105,6 +107,9 @@ export default function ProductCard({ product, onPress, variant = 'horizontal', 
                         <Text style={[styles.categoryLabel, { color: category.textColor }]}>{category.label}</Text>
                     </View>
                 )}
+
+                {/* Save (heart) Button - Top Right (conditional) */}
+                {showSaveButton && <SaveButton productId={product.id} />}
             </View>
 
             {/* Content Section */}

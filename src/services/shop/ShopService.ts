@@ -208,6 +208,111 @@ class ShopService {
     }
 
     /**
+     * Save a product to the user's wishlist. Auth-required (RLS enforces).
+     * Idempotent: duplicate saves (race / double-tap) collapse via the
+     * UNIQUE (user_id, product_id) constraint and are not surfaced as errors.
+     */
+    async saveProduct(productId: string): Promise<{ ok: boolean; error?: string }> {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { ok: false, error: 'auth_required' };
+
+        const { error } = await supabase
+            .from('shop_user_saved_products')
+            .insert({ user_id: user.id, product_id: productId });
+
+        if (error) {
+            const isDuplicate =
+                error.code === '23505' ||
+                /duplicate key|already exists/i.test(error.message);
+            if (!isDuplicate) {
+                console.error('Error saving product:', error);
+                return { ok: false, error: error.message };
+            }
+        }
+        return { ok: true };
+    }
+
+    /**
+     * Remove a product from the user's wishlist.
+     */
+    async unsaveProduct(productId: string): Promise<{ ok: boolean; error?: string }> {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { ok: false, error: 'auth_required' };
+
+        const { error } = await supabase
+            .from('shop_user_saved_products')
+            .delete()
+            .eq('user_id', user.id)
+            .eq('product_id', productId);
+
+        if (error) {
+            console.error('Error unsaving product:', error);
+            return { ok: false, error: error.message };
+        }
+        return { ok: true };
+    }
+
+    /**
+     * Fetch the user's saved products (full hydrated rows), most-recently
+     * saved first. Two-step: read save rows for ordering, then hydrate via
+     * the shared product+affiliate join.
+     */
+    async getSavedProducts(): Promise<ShopProduct[]> {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return [];
+
+        const { data: saved, error: savedErr } = await supabase
+            .from('shop_user_saved_products')
+            .select('product_id, saved_at')
+            .eq('user_id', user.id)
+            .order('saved_at', { ascending: false });
+
+        if (savedErr) {
+            console.error('Error fetching saved products:', savedErr);
+            return [];
+        }
+        if (!saved?.length) return [];
+
+        const ids = saved.map(r => r.product_id);
+        const { data: products, error } = await supabase
+            .from('shop_products')
+            .select(this.productSelectQuery)
+            .in('id', ids)
+            .eq('is_active', true)
+            .eq('shop_product_affiliates.is_primary', true);
+
+        if (error) {
+            console.error('Error hydrating saved products:', error);
+            return [];
+        }
+
+        const order = new Map(ids.map((id, i) => [id, i] as const));
+        return this.mapProductData(products || [])
+            .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
+    }
+
+    /**
+     * Fetch just the IDs of saved products. Used by the global
+     * useSavedProductIds store to populate filled-vs-outline state on every
+     * ProductCard without a per-card DB query.
+     */
+    async getSavedProductIds(): Promise<string[]> {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return [];
+
+        const { data, error } = await supabase
+            .from('shop_user_saved_products')
+            .select('product_id')
+            .eq('user_id', user.id);
+
+        if (error) {
+            console.error('Error fetching saved product ids:', error);
+            return [];
+        }
+        return (data || []).map(r => r.product_id);
+    }
+
+    /**
      * DB-backed product search. RPC -> hydrate -> preserve relevance order.
      *
      * Two-step on purpose: the RPC returns relevance-ranked product ids; we

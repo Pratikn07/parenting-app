@@ -648,6 +648,23 @@ export interface Database {
           updated_at?: string;
         };
       };
+      shop_user_saved_products: {
+        Row: {
+          id: string;
+          user_id: string;
+          product_id: string;
+          saved_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          product_id: string;
+          saved_at?: string;
+        };
+        Update: {
+          saved_at?: string;
+        };
+      };
       product_mentions_log: {
         Row: {
           id: string;
@@ -697,7 +714,8 @@ export type RecommendationSection =
   | 'category_spotlight'
   | 'top_rated'
   | 'popular'
-  | 'search';
+  | 'search'
+  | 'saved';
 
 // Helper types for easier use
 export type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -749,10 +767,12 @@ export type ShopProductRow = Database['public']['Tables']['shop_products']['Row'
 export type ShopProductAffiliateRow = Database['public']['Tables']['shop_product_affiliates']['Row'];
 export type ShopClickRow = Database['public']['Tables']['shop_clicks']['Row'];
 export type ShopUserRecommendationRow = Database['public']['Tables']['shop_user_recommendations']['Row'];
+export type ShopUserSavedProductRow = Database['public']['Tables']['shop_user_saved_products']['Row'];
 
 export type ShopProductInsert = Database['public']['Tables']['shop_products']['Insert'];
 export type ShopProductAffiliateInsert = Database['public']['Tables']['shop_product_affiliates']['Insert'];
 export type ShopClickInsert = Database['public']['Tables']['shop_clicks']['Insert'];
+export type ShopUserSavedProductInsert = Database['public']['Tables']['shop_user_saved_products']['Insert'];
 
 export type ProductMentionLog = Database['public']['Tables']['product_mentions_log']['Row'];
 

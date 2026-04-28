@@ -7,7 +7,8 @@ export type RecommendationSection =
     | 'category_spotlight'
     | 'top_rated'
     | 'popular'
-    | 'search';
+    | 'search'
+    | 'saved';
 
 export interface ShopCategory {
     id: string;
@@ -154,4 +155,5 @@ export const SECTION_TITLES: Record<RecommendationSection, string> = {
     top_rated: 'Top Rated',
     popular: 'Parent Favorites',
     search: 'Search Results',
+    saved: 'Saved',
 };
