@@ -9,14 +9,10 @@ import {
 } from 'react-native';
 import { ExternalLink } from 'lucide-react-native';
 import { THEME } from '../../../lib/constants';
+import { parseProductCards, type ProductCardData } from './parseProductCards';
 
-export interface ProductCardData {
-    id: string;
-    name: string;
-    price: string | null;
-    affiliateUrl: string;
-    imageUrl: string | null;
-}
+export { parseProductCards };
+export type { ProductCardData };
 
 interface ProductCardProps {
     product: ProductCardData;
@@ -85,66 +81,6 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
             </View>
         </TouchableOpacity>
     );
-}
-
-/**
- * Parse product card markers from chat message
- * Format: [PRODUCT_CARD|id|name|price|url|image]
- * Handles both pipe (new) and colon (legacy) delimiters to prevent visual glitches
- */
-export function parseProductCards(message: string): {
-    textParts: string[];
-    products: ProductCardData[];
-} {
-    // Match ANY product card tag (colon or pipe) to capture content
-    const productRegex = /\[PRODUCT_CARD[:|](.+?)\]/g;
-    const products: ProductCardData[] = [];
-    const textParts: string[] = [];
-
-    let lastIndex = 0;
-    let match;
-
-    while ((match = productRegex.exec(message)) !== null) {
-        // Add text before this product card
-        if (match.index > lastIndex) {
-            textParts.push(message.slice(lastIndex, match.index));
-        }
-
-        const rawContent = match[1];
-        let isValid = false;
-
-        // Try pipe format (preferred/new)
-        if (rawContent.includes('|')) {
-            const parts = rawContent.split('|');
-            // Expected: id|name|price|url|image
-            if (parts.length >= 4) {
-                products.push({
-                    id: parts[0],
-                    name: parts[1],
-                    price: parts[2] || null,
-                    affiliateUrl: parts[3],
-                    imageUrl: parts[4] || null,
-                });
-                isValid = true;
-            }
-        }
-        // Legacy colon format is consumed but ignored to prevent raw text display
-        // (URLs with colons often break strict parsing in this format anyway)
-
-        if (isValid) {
-            textParts.push(`__PRODUCT_${products.length - 1}__`);
-        }
-        // If invalid, the tag is consumed from textParts (effectively hidden)
-
-        lastIndex = match.index + match[0].length;
-    }
-
-    // Add remaining text
-    if (lastIndex < message.length) {
-        textParts.push(message.slice(lastIndex));
-    }
-
-    return { textParts, products };
 }
 
 const styles = StyleSheet.create({

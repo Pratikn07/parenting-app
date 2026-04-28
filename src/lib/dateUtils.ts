@@ -1,5 +1,10 @@
 export const getAgeInMonths = (dateOfBirth: string): number => {
-    const birth = new Date(dateOfBirth);
+    // Parse 'YYYY-MM-DD' as a local-calendar date. `new Date('2026-04-01')`
+    // is interpreted by JS as UTC midnight, which becomes the previous day
+    // in any timezone west of UTC — producing off-by-one-month errors for
+    // birthdays on the 1st of a month for users in the Americas.
+    const [y, m, d] = dateOfBirth.split('T')[0].split('-').map(Number);
+    const birth = new Date(y, m - 1, d);
     const now = new Date();
     return (now.getFullYear() - birth.getFullYear()) * 12 +
         (now.getMonth() - birth.getMonth());

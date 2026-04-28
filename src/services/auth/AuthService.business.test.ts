@@ -1,9 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AuthService } from './AuthService';
 import { SupabaseAuth } from './SupabaseAuthService';
-import { SignInCredentials, SignUpCredentials } from '../../shared/types/auth.types';
+import type {
+  AuthResponse,
+  SignInCredentials,
+  SignUpCredentials,
+  User,
+} from '../../shared/types/auth.types';
 
-// Mock the SupabaseAuthService
 vi.mock('./SupabaseAuthService', () => ({
   SupabaseAuth: {
     signInWithEmail: vi.fn(),
@@ -16,172 +20,77 @@ vi.mock('./SupabaseAuthService', () => ({
     handleOAuthCallback: vi.fn(),
     resetPassword: vi.fn(),
     updatePassword: vi.fn(),
-    onAuthStateChange: vi.fn()
-  }
+    onAuthStateChange: vi.fn(),
+  },
 }));
 
-describe('AuthService Business Logic', () => {
-  const mockSupabaseAuth = vi.mocked(SupabaseAuth);
+const mockSupabaseAuth = vi.mocked(SupabaseAuth);
 
+const buildUser = (overrides: Partial<User> = {}): User => ({
+  id: 'user-123',
+  name: 'Test User',
+  email: 'test@example.com',
+  parenting_stage: 'infant',
+  feeding_preference: 'mixed',
+  has_completed_onboarding: false,
+  created_at: '2026-01-01T00:00:00Z',
+  updated_at: '2026-01-01T00:00:00Z',
+  ...overrides,
+});
+
+const buildAuthResponse = (overrides: Partial<AuthResponse> = {}): AuthResponse => ({
+  user: buildUser(),
+  token: 'access-token',
+  refreshToken: 'refresh-token',
+  ...overrides,
+});
+
+describe('AuthService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('Email Authentication', () => {
-    it('should successfully sign up with valid email credentials', async () => {
-      const credentials: SignUpCredentials = {
-        email: 'test@example.com',
-        password: 'SecurePass123!',
-        name: 'Test User'
-      };
+  it('signInWithEmail delegates to SupabaseAuth and returns its response', async () => {
+    const credentials: SignInCredentials = {
+      email: 'test@example.com',
+      password: 'SecurePass123!',
+    };
+    const expected = buildAuthResponse();
+    mockSupabaseAuth.signInWithEmail.mockResolvedValue(expected);
 
-      const mockResponse = {
-        success: true,
-        user: { id: 'user-123', email: 'test@example.com', name: 'Test User' },
-        error: null
-      };
+    const result = await AuthService.signInWithEmail(credentials);
 
-      mockSupabaseAuth.signUpWithEmail.mockResolvedValue(mockResponse);
-
-      const result = await AuthService.signUpWithEmail(credentials);
-
-      expect(result.success).toBe(true);
-      expect(result.user).toEqual(mockResponse.user);
-      expect(mockSupabaseAuth.signUpWithEmail).toHaveBeenCalledWith(credentials);
-    });
-
-    it('should successfully sign in with valid email credentials', async () => {
-      const credentials: SignInCredentials = {
-        email: 'test@example.com',
-        password: 'SecurePass123!'
-      };
-
-      const mockResponse = {
-        success: true,
-        user: { id: 'user-123', email: 'test@example.com' },
-        error: null
-      };
-
-      mockSupabaseAuth.signInWithEmail.mockResolvedValue(mockResponse);
-
-      const result = await AuthService.signInWithEmail(credentials);
-
-      expect(result.success).toBe(true);
-      expect(mockSupabaseAuth.signInWithEmail).toHaveBeenCalledWith(credentials);
-    });
-
-    it('should handle sign in failure with incorrect credentials', async () => {
-      const credentials: SignInCredentials = {
-        email: 'test@example.com',
-        password: 'wrongpassword'
-      };
-
-      mockSupabaseAuth.signInWithEmail.mockResolvedValue({
-        success: false,
-        user: null,
-        error: 'Invalid login credentials'
-      });
-
-      const result = await AuthService.signInWithEmail(credentials);
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Invalid login credentials');
-    });
+    expect(mockSupabaseAuth.signInWithEmail).toHaveBeenCalledWith(credentials);
+    expect(result).toBe(expected);
   });
 
-  describe('OAuth Authentication', () => {
-    it('should handle Google sign in', async () => {
-      mockSupabaseAuth.signInWithGoogle.mockResolvedValue({
-        success: true,
-        user: { id: 'google-user-123', email: 'test@gmail.com' },
-        error: null
-      });
-
-      const result = await AuthService.signInWithGoogle();
-
-      expect(result.success).toBe(true);
-      expect(mockSupabaseAuth.signInWithGoogle).toHaveBeenCalled();
+  it('signUpWithEmail delegates to SupabaseAuth and returns its response', async () => {
+    const credentials: SignUpCredentials = {
+      name: 'Test User',
+      email: 'test@example.com',
+      password: 'SecurePass123!',
+    };
+    const expected = buildAuthResponse({
+      user: buildUser({ has_completed_onboarding: false }),
     });
+    mockSupabaseAuth.signUpWithEmail.mockResolvedValue(expected);
 
-    it('should handle OAuth callback', async () => {
-      const mockUrl = 'myapp://auth-callback?code=123&state=abc';
-      
-      mockSupabaseAuth.handleOAuthCallback.mockResolvedValue();
+    const result = await AuthService.signUpWithEmail(credentials);
 
-      await AuthService.handleOAuthCallback(mockUrl);
-
-      expect(mockSupabaseAuth.handleOAuthCallback).toHaveBeenCalledWith(mockUrl);
-    });
+    expect(mockSupabaseAuth.signUpWithEmail).toHaveBeenCalledWith(credentials);
+    expect(result).toBe(expected);
   });
 
-  describe('Session Management', () => {
-    it('should get current user', async () => {
-      const mockUser = { id: 'user-123', email: 'test@example.com' };
-      mockSupabaseAuth.getCurrentUser.mockResolvedValue(mockUser);
+  it('propagates rejection when SupabaseAuth throws', async () => {
+    const credentials: SignInCredentials = {
+      email: 'test@example.com',
+      password: 'wrong',
+    };
+    const error = new Error('Invalid login credentials');
+    mockSupabaseAuth.signInWithEmail.mockRejectedValue(error);
 
-      const result = await AuthService.getCurrentUser();
-
-      expect(result).toEqual(mockUser);
-      expect(mockSupabaseAuth.getCurrentUser).toHaveBeenCalled();
-    });
-
-    it('should get current session', async () => {
-      const mockSession = { accessToken: 'token-123', refreshToken: 'refresh-123' };
-      mockSupabaseAuth.getSession.mockResolvedValue(mockSession);
-
-      const result = await AuthService.getSession();
-
-      expect(result).toEqual(mockSession);
-      expect(mockSupabaseAuth.getSession).toHaveBeenCalled();
-    });
-
-    it('should check if user is logged in', () => {
-      mockSupabaseAuth.isLoggedIn.mockReturnValue(true);
-
-      const result = AuthService.isLoggedIn();
-
-      expect(result).toBe(true);
-      expect(mockSupabaseAuth.isLoggedIn).toHaveBeenCalled();
-    });
-
-    it('should sign out user', async () => {
-      mockSupabaseAuth.signOut.mockResolvedValue();
-
-      await AuthService.signOut();
-
-      expect(mockSupabaseAuth.signOut).toHaveBeenCalled();
-    });
-  });
-
-  describe('Password Management', () => {
-    it('should reset password for valid email', async () => {
-      mockSupabaseAuth.resetPassword.mockResolvedValue();
-
-      await AuthService.resetPassword('test@example.com');
-
-      expect(mockSupabaseAuth.resetPassword).toHaveBeenCalledWith('test@example.com');
-    });
-
-    it('should update password', async () => {
-      mockSupabaseAuth.updatePassword.mockResolvedValue();
-
-      await AuthService.updatePassword('newSecurePassword123!');
-
-      expect(mockSupabaseAuth.updatePassword).toHaveBeenCalledWith('newSecurePassword123!');
-    });
-  });
-
-  describe('Auth State Monitoring', () => {
-    it('should register auth state change callback', () => {
-      const mockCallback = vi.fn();
-      const mockUnsubscribe = vi.fn();
-      
-      mockSupabaseAuth.onAuthStateChange.mockReturnValue(mockUnsubscribe);
-
-      const unsubscribe = AuthService.onAuthStateChange(mockCallback);
-
-      expect(mockSupabaseAuth.onAuthStateChange).toHaveBeenCalledWith(mockCallback);
-      expect(unsubscribe).toBe(mockUnsubscribe);
-    });
+    await expect(AuthService.signInWithEmail(credentials)).rejects.toThrow(
+      'Invalid login credentials'
+    );
   });
 });

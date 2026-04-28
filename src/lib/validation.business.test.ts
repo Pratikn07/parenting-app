@@ -156,9 +156,10 @@ describe('Validation Business Logic', () => {
       const requiredRoutes = ['index', 'launch', 'auth', 'onboarding', 'chat', 'bloom', 'settings'];
 
       requiredRoutes.forEach(route => {
+        const key = route as keyof typeof ROUTES;
         expect(ROUTES).toHaveProperty(route);
-        expect(typeof ROUTES[route]).toBe('string');
-        expect(ROUTES[route].startsWith('/')).toBe(true);
+        expect(typeof ROUTES[key]).toBe('string');
+        expect(ROUTES[key].startsWith('/')).toBe(true);
       });
     });
 

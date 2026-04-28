@@ -71,11 +71,13 @@ fi
 if [ "$NO_BUILD" = "0" ]; then
   log "Building (incremental)…"
   BUILD_LOG=$(mktemp)
+  # Use UDID (id=…) instead of name+platform — unambiguous, immune to "OS:latest"
+  # picking a runtime that doesn't have your device (e.g. leftover iOS 26.x SDKs).
   if ! xcodebuild \
         -workspace "$WORKSPACE" \
         -scheme "$SCHEME" \
         -configuration Debug \
-        -destination "platform=iOS Simulator,name=$SIM_NAME" \
+        -destination "id=$SIM_UDID" \
         -derivedDataPath ios/build \
         -quiet \
         build >"$BUILD_LOG" 2>&1; then

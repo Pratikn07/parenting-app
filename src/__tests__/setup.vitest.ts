@@ -1,5 +1,5 @@
 // Vitest setup file for business logic testing
-import { beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import { beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
 
 // Global test setup
 beforeAll(() => {
@@ -23,7 +23,7 @@ afterEach(() => {
 });
 
 // Mock environment variables for testing
-process.env.NODE_ENV = 'test';
+process.env['NODE_ENV'] = 'test';
 
 // Global test utilities (available in all test files)
 globalThis.testUtils = {
