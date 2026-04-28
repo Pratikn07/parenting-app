@@ -8,4 +8,3 @@ export * from './recommendations/RecommendationsService';
 export * from './chat/ChatService';
 export * from './images/ImageService';
 export * from './recipeService';
-export * from './affiliate/AffiliateService';

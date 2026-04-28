@@ -429,12 +429,12 @@ async function getUserContext(supabase: any, userId: string): Promise<UserContex
 
   const { data: childrenData } = await supabase
     .from("children")
-    .select("id, name, date_of_birth")
+    .select("id, name, birth_date")
     .eq("user_id", userId)
-    .order("date_of_birth", { ascending: true });
+    .order("birth_date", { ascending: true });
 
   const children: ChildInfo[] = (childrenData || []).map((child: any) => {
-    const ageInMonths = calculateAgeInMonths(child.date_of_birth);
+    const ageInMonths = calculateAgeInMonths(child.birth_date);
     return {
       id: child.id,  // Include id for matching
       name: child.name || "Baby",
@@ -996,23 +996,49 @@ async function saveMessage(
 }
 
 // =====================================================
-// AFFILIATE PRODUCT ENRICHMENT
+// SHOP PRODUCT ENRICHMENT
 // =====================================================
+// Reads from shop_products joined with the primary shop_product_affiliates row.
+// Replaced legacy affiliate_products on 2026-04-27 (consolidation migration
+// 20260427210000_consolidate_affiliate_to_shop). product_mentions_log writes
+// are kept for analytics continuity.
 
-interface AffiliateProduct {
+interface ShopProductMatch {
   id: string;
-  product_name: string;
+  name: string;
   name_variants: string[];
   affiliate_url: string;
   image_url: string | null;
   price: number | null;
-  category: string | null;
+  category_slug: string | null;
 }
 
 interface ProductMatch {
   originalText: string;
   productName: string;
-  affiliate: AffiliateProduct | null;
+  product: ShopProductMatch | null;
+}
+
+/**
+ * Flatten the joined shop_products + shop_product_affiliates row into the
+ * ShopProductMatch shape used by the marker generator. The affiliate row is
+ * an array because of the join; we take the first (and only, due to
+ * is_primary filter) entry.
+ */
+function normalizeShopRow(row: any): ShopProductMatch | null {
+  const affiliateRows = row.shop_product_affiliates;
+  const primaryAffiliate = Array.isArray(affiliateRows) ? affiliateRows[0] : affiliateRows;
+  if (!primaryAffiliate?.affiliate_url) return null;
+
+  return {
+    id: row.id,
+    name: row.name,
+    name_variants: row.name_variants || [],
+    affiliate_url: primaryAffiliate.affiliate_url,
+    image_url: row.image_url,
+    price: primaryAffiliate.price ?? row.price,
+    category_slug: row.category_slug,
+  };
 }
 
 /**
@@ -1034,44 +1060,64 @@ function extractBoldProductNames(response: string): string[] {
 }
 
 /**
- * Find matching affiliate product for a product name
+ * Find matching shop product for a bolded product name.
+ * Strategy: ilike on name first; fall back to substring match against
+ * name_variants for fuzzy matches like "Hatch Rest Sound Machine" -> "Hatch Rest".
  */
-async function findAffiliateMatch(
+async function findShopProductMatch(
   supabase: any,
   productName: string
-): Promise<AffiliateProduct | null> {
+): Promise<ShopProductMatch | null> {
   const normalizedName = productName.toLowerCase().trim();
 
-  // First, try exact match on product_name
+  const productSelect = `
+    id, name, name_variants, image_url, price, category_slug,
+    shop_product_affiliates!inner (
+      affiliate_url,
+      price,
+      is_primary,
+      is_available
+    )
+  `;
+
+  // First, direct ilike match on the canonical name.
   const { data: exactMatch } = await supabase
-    .from('affiliate_products')
-    .select('id, product_name, name_variants, affiliate_url, image_url, price, category')
+    .from('shop_products')
+    .select(productSelect)
     .eq('is_active', true)
-    .ilike('product_name', `%${normalizedName}%`)
+    .eq('shop_product_affiliates.is_primary', true)
+    .eq('shop_product_affiliates.is_available', true)
+    .ilike('name', `%${normalizedName}%`)
     .limit(1)
-    .single();
+    .maybeSingle();
 
-  if (exactMatch) return exactMatch;
+  if (exactMatch) {
+    const normalized = normalizeShopRow(exactMatch);
+    if (normalized) return normalized;
+  }
 
-  // Try matching against name_variants using array contains
-  const { data: variantMatches } = await supabase
-    .from('affiliate_products')
-    .select('id, product_name, name_variants, affiliate_url, image_url, price, category')
-    .eq('is_active', true);
+  // Fallback: bidirectional substring match against name_variants.
+  // Bounded result count keeps this safe even as the catalog grows.
+  const { data: variantCandidates } = await supabase
+    .from('shop_products')
+    .select(productSelect)
+    .eq('is_active', true)
+    .eq('shop_product_affiliates.is_primary', true)
+    .eq('shop_product_affiliates.is_available', true)
+    .limit(200);
 
-  if (variantMatches) {
-    for (const product of variantMatches) {
-      const variants = product.name_variants || [];
-      for (const variant of variants) {
-        if (normalizedName.includes(variant.toLowerCase()) ||
-          variant.toLowerCase().includes(normalizedName)) {
-          return product;
-        }
+  if (!variantCandidates) return null;
+
+  for (const candidate of variantCandidates) {
+    const variants: string[] = candidate.name_variants || [];
+    for (const variant of variants) {
+      const v = variant.toLowerCase();
+      if (normalizedName.includes(v) || v.includes(normalizedName)) {
+        return normalizeShopRow(candidate);
       }
-      // Also check if product_name is contained in the mention
-      if (normalizedName.includes(product.product_name.toLowerCase())) {
-        return product;
-      }
+    }
+    if (normalizedName.includes(candidate.name.toLowerCase())) {
+      return normalizeShopRow(candidate);
     }
   }
 
@@ -1079,7 +1125,9 @@ async function findAffiliateMatch(
 }
 
 /**
- * Log product mention for analytics (which products are mentioned most)
+ * Log product mention for analytics (which products are mentioned most).
+ * Continues to write to product_mentions_log; this analytics surface is
+ * intentionally preserved across the consolidation.
  */
 async function logProductMention(
   supabase: any,
@@ -1101,10 +1149,12 @@ async function logProductMention(
 }
 
 /**
- * Enrich AI response with affiliate product data
- * Returns modified response with product markers for frontend
+ * Enrich AI response with shop product data.
+ * Returns modified response with [PRODUCT_CARD|...] markers for frontend.
+ * Marker format is unchanged from the legacy implementation so
+ * parseProductCards on the client keeps working without changes.
  */
-async function enrichWithAffiliateProducts(
+async function enrichWithShopProducts(
   supabase: any,
   response: string,
   sessionId: string,
@@ -1114,31 +1164,28 @@ async function enrichWithAffiliateProducts(
   const products: ProductMatch[] = [];
 
   for (const productName of boldNames) {
-    const affiliate = await findAffiliateMatch(supabase, productName);
+    const product = await findShopProductMatch(supabase, productName);
 
     products.push({
       originalText: productName,
-      productName: affiliate?.product_name || productName,
-      affiliate,
+      productName: product?.name || productName,
+      product,
     });
 
-    // Log for analytics
-    await logProductMention(supabase, productName, !!affiliate, sessionId, userId);
+    await logProductMention(supabase, productName, !!product, sessionId, userId);
   }
 
-  // If we have affiliate matches, add product markers to response
-  // Format: [PRODUCT_CARD|id|name|price|url|image] (using pipe to avoid URL conflicts)
+  // Format: [PRODUCT_CARD|id|name|price|url|image] (pipe-delimited to avoid URL conflicts)
   let enrichedResponse = response;
 
-  for (const product of products) {
-    if (product.affiliate) {
-      const marker = `\n[PRODUCT_CARD|${product.affiliate.id}|${product.affiliate.product_name}|${product.affiliate.price || ''}|${product.affiliate.affiliate_url}|${product.affiliate.image_url || ''}]`;
-      // Add marker after the bold product name
-      const boldPattern = `**${product.originalText}**`;
+  for (const match of products) {
+    if (match.product) {
+      const marker = `\n[PRODUCT_CARD|${match.product.id}|${match.product.name}|${match.product.price || ''}|${match.product.affiliate_url}|${match.product.image_url || ''}]`;
+      const boldPattern = `**${match.originalText}**`;
       const insertIndex = enrichedResponse.indexOf(boldPattern);
       if (insertIndex !== -1) {
         const insertPoint = insertIndex + boldPattern.length;
-        // Find end of current sentence or line
+        // Insert at end of the sentence containing the product
         let sentenceEnd = enrichedResponse.indexOf('.', insertPoint);
         const lineEnd = enrichedResponse.indexOf('\n', insertPoint);
         if (sentenceEnd === -1 || (lineEnd !== -1 && lineEnd < sentenceEnd)) {
@@ -1146,7 +1193,6 @@ async function enrichWithAffiliateProducts(
         }
         if (sentenceEnd === -1) sentenceEnd = enrichedResponse.length;
 
-        // Insert marker after the sentence containing the product
         enrichedResponse =
           enrichedResponse.slice(0, sentenceEnd + 1) +
           marker +
@@ -1314,10 +1360,10 @@ Deno.serve(async (req: Request) => {
 
             // Save to database after streaming completes
             try {
-              // Enrich response with affiliate products
+              // Enrich response with shop products
               let finalResponse = fullResponse;
               if (messageType !== 'recipe') {
-                const { enrichedResponse } = await enrichWithAffiliateProducts(
+                const { enrichedResponse } = await enrichWithShopProducts(
                   supabase,
                   fullResponse,
                   session.id,
@@ -1392,11 +1438,11 @@ Deno.serve(async (req: Request) => {
     }
 
 
-    // Enrich AI response with affiliate product data (for general chat, not recipe mode)
+    // Enrich AI response with shop product data (for general chat, not recipe mode)
     let finalResponse = aiResponse;
     if (messageType !== 'recipe') {
       try {
-        const { enrichedResponse } = await enrichWithAffiliateProducts(
+        const { enrichedResponse } = await enrichWithShopProducts(
           supabase,
           aiResponse,
           session.id,
@@ -1404,7 +1450,7 @@ Deno.serve(async (req: Request) => {
         );
         finalResponse = enrichedResponse;
       } catch (enrichError) {
-        console.error("Affiliate enrichment error (non-fatal):", enrichError);
+        console.error("Shop enrichment error (non-fatal):", enrichError);
         // Continue with original response if enrichment fails
       }
     }

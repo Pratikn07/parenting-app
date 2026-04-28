@@ -270,8 +270,12 @@ export function useChatMessages({
         if (result.success && result.data) {
           if (result.data.sessionId && result.data.sessionId !== currentSessionId) {
             setCurrentSessionId(result.data.sessionId);
-            reloadSessions();
           }
+          // Always reload after a successful stream so post-stream enriched
+          // [PRODUCT_CARD] markers (added server-side after streaming completes)
+          // show up in the UI immediately. Without this, cards only appeared
+          // when the user reopened the session.
+          reloadSessions();
         } else {
           setMessages((prev) => {
             const filtered = prev.filter((m) => m.id !== 'typing');

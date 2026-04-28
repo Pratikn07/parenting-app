@@ -6,7 +6,7 @@ import {
   ProductCard,
   parseProductCards,
 } from '@/src/frontend/components/chat/ProductCard';
-import { affiliateService } from '@/src/services';
+import { shopService } from '@/src/services/shop/ShopService';
 import type { Message } from '../types';
 import { markdownStyles } from '../markdownStyles';
 import { TypingIndicator } from './TypingIndicator';
@@ -14,14 +14,12 @@ import { TypingIndicator } from './TypingIndicator';
 interface MessageBubbleProps {
   message: Message;
   childName?: string;
-  userId: string | undefined;
   currentSessionId: string | null;
 }
 
 export function MessageBubble({
   message,
   childName,
-  userId,
   currentSessionId,
 }: MessageBubbleProps) {
   const wrapperStyle = [
@@ -102,13 +100,12 @@ export function MessageBubble({
                   key={`product-${index}`}
                   product={product}
                   onPress={() => {
-                    if (userId) {
-                      affiliateService.trackClick(
-                        userId,
-                        product.id,
-                        currentSessionId || undefined
-                      );
-                    }
+                    shopService.trackClick(
+                      product.id,
+                      'chat_based',
+                      'chat',
+                      currentSessionId
+                    );
                   }}
                 />
               );

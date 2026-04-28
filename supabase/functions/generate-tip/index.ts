@@ -159,14 +159,14 @@ async function getUserContext(supabase: any, userId: string): Promise<{ parentin
 async function getChildAges(supabase: any, userId: string): Promise<number[]> {
   const { data } = await supabase
     .from("children")
-    .select("date_of_birth")
+    .select("birth_date")
     .eq("user_id", userId);
-  
+
   if (!data || data.length === 0) return [];
-  
+
   const now = new Date();
-  return data.map((child: { date_of_birth: string }) => {
-    const birth = new Date(child.date_of_birth);
+  return data.map((child: { birth_date: string }) => {
+    const birth = new Date(child.birth_date);
     const years = now.getFullYear() - birth.getFullYear();
     const months = now.getMonth() - birth.getMonth();
     return years * 12 + months;

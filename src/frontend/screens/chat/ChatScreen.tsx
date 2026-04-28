@@ -189,7 +189,6 @@ export default function ChatScreen() {
                 key={message.id}
                 message={message}
                 childName={selectedChild?.name}
-                userId={user?.id}
                 currentSessionId={currentSessionId}
               />
             ))}

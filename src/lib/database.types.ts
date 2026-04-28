@@ -419,6 +419,331 @@ export interface Database {
           updated_at?: string;
         };
       };
+      shop_categories: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          emoji: string;
+          description: string | null;
+          sort_order: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          emoji?: string;
+          description?: string | null;
+          sort_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+          emoji?: string;
+          description?: string | null;
+          sort_order?: number;
+          is_active?: boolean;
+          updated_at?: string;
+        };
+      };
+      shop_affiliates: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          logo_url: string | null;
+          base_url: string;
+          tag_param: string | null;
+          store_tag: string | null;
+          commission_rate: number | null;
+          is_active: boolean;
+          priority: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          logo_url?: string | null;
+          base_url: string;
+          tag_param?: string | null;
+          store_tag?: string | null;
+          commission_rate?: number | null;
+          is_active?: boolean;
+          priority?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+          logo_url?: string | null;
+          base_url?: string;
+          tag_param?: string | null;
+          store_tag?: string | null;
+          commission_rate?: number | null;
+          is_active?: boolean;
+          priority?: number;
+          updated_at?: string;
+        };
+      };
+      shop_products: {
+        Row: {
+          id: string;
+          name: string;
+          description: string | null;
+          image_url: string | null;
+          price: number | null;
+          original_price: number | null;
+          rating: number | null;
+          review_count: number;
+          category_id: string | null;
+          category_slug: string | null;
+          age_range_min: number;
+          age_range_max: number | null;
+          tags: string[] | null;
+          is_active: boolean;
+          is_featured: boolean;
+          click_count: number;
+          name_variants: string[] | null;
+          /** @deprecated traceability column from affiliate_products backfill; will be dropped after deprecation soak */
+          legacy_affiliate_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          description?: string | null;
+          image_url?: string | null;
+          price?: number | null;
+          original_price?: number | null;
+          rating?: number | null;
+          review_count?: number;
+          category_id?: string | null;
+          category_slug?: string | null;
+          age_range_min?: number;
+          age_range_max?: number | null;
+          tags?: string[] | null;
+          is_active?: boolean;
+          is_featured?: boolean;
+          click_count?: number;
+          name_variants?: string[] | null;
+          legacy_affiliate_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          description?: string | null;
+          image_url?: string | null;
+          price?: number | null;
+          original_price?: number | null;
+          rating?: number | null;
+          review_count?: number;
+          category_id?: string | null;
+          category_slug?: string | null;
+          age_range_min?: number;
+          age_range_max?: number | null;
+          tags?: string[] | null;
+          is_active?: boolean;
+          is_featured?: boolean;
+          click_count?: number;
+          name_variants?: string[] | null;
+          updated_at?: string;
+        };
+      };
+      shop_product_affiliates: {
+        Row: {
+          id: string;
+          product_id: string;
+          affiliate_id: string;
+          affiliate_product_id: string | null;
+          affiliate_url: string;
+          price: number | null;
+          is_available: boolean;
+          is_primary: boolean;
+          last_checked_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          product_id: string;
+          affiliate_id: string;
+          affiliate_product_id?: string | null;
+          affiliate_url: string;
+          price?: number | null;
+          is_available?: boolean;
+          is_primary?: boolean;
+          last_checked_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          affiliate_product_id?: string | null;
+          affiliate_url?: string;
+          price?: number | null;
+          is_available?: boolean;
+          is_primary?: boolean;
+          last_checked_at?: string | null;
+          updated_at?: string;
+        };
+      };
+      shop_clicks: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          product_id: string;
+          affiliate_id: string | null;
+          session_id: string | null;
+          source: string | null;
+          section_type: RecommendationSection | null;
+          clicked_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          product_id: string;
+          affiliate_id?: string | null;
+          session_id?: string | null;
+          source?: string | null;
+          section_type?: RecommendationSection | null;
+          clicked_at?: string;
+        };
+        Update: {
+          source?: string | null;
+          section_type?: RecommendationSection | null;
+        };
+      };
+      shop_user_recommendations: {
+        Row: {
+          id: string;
+          user_id: string;
+          section_type: RecommendationSection;
+          product_ids: string[];
+          context: Record<string, unknown> | null;
+          expires_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          section_type: RecommendationSection;
+          product_ids: string[];
+          context?: Record<string, unknown> | null;
+          expires_at: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          product_ids?: string[];
+          context?: Record<string, unknown> | null;
+          expires_at?: string;
+          updated_at?: string;
+        };
+      };
+      /** @deprecated superseded by shop_products as of 2026-04-27. Kept for soak window. */
+      affiliate_products: {
+        Row: {
+          id: string;
+          product_name: string;
+          name_variants: string[];
+          description: string | null;
+          affiliate_url: string;
+          affiliate_network: string;
+          image_url: string | null;
+          price: number | null;
+          category: string | null;
+          age_range_min: number;
+          age_range_max: number | null;
+          is_active: boolean;
+          click_count: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          product_name: string;
+          name_variants?: string[];
+          description?: string | null;
+          affiliate_url: string;
+          affiliate_network?: string;
+          image_url?: string | null;
+          price?: number | null;
+          category?: string | null;
+          age_range_min?: number;
+          age_range_max?: number | null;
+          is_active?: boolean;
+          click_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          product_name?: string;
+          name_variants?: string[];
+          description?: string | null;
+          affiliate_url?: string;
+          affiliate_network?: string;
+          image_url?: string | null;
+          price?: number | null;
+          category?: string | null;
+          age_range_min?: number;
+          age_range_max?: number | null;
+          is_active?: boolean;
+          click_count?: number;
+          updated_at?: string;
+        };
+      };
+      /** @deprecated superseded by shop_clicks as of 2026-04-27. Kept for soak window. */
+      affiliate_clicks: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          product_id: string | null;
+          session_id: string | null;
+          clicked_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          product_id?: string | null;
+          session_id?: string | null;
+          clicked_at?: string;
+        };
+        Update: {
+          clicked_at?: string;
+        };
+      };
+      product_mentions_log: {
+        Row: {
+          id: string;
+          product_name: string;
+          had_affiliate: boolean;
+          session_id: string | null;
+          user_id: string | null;
+          mentioned_at: string;
+        };
+        Insert: {
+          id?: string;
+          product_name: string;
+          had_affiliate?: boolean;
+          session_id?: string | null;
+          user_id?: string | null;
+          mentioned_at?: string;
+        };
+        Update: {
+          had_affiliate?: boolean;
+        };
+      };
     };
     Views: {
       // Add views if needed later
@@ -432,9 +757,21 @@ export interface Database {
       milestone_type: 'physical' | 'cognitive' | 'social' | 'emotional';
       gender: 'male' | 'female' | 'other';
       activity_type: 'resource_viewed' | 'resource_saved' | 'resource_shared' | 'milestone_completed' | 'milestone_uncompleted' | 'question_asked' | 'tip_viewed' | 'search_performed' | 'category_filtered';
+      shop_category: 'feeding' | 'sleep' | 'safety' | 'toys' | 'health' | 'clothing' | 'travel' | 'nursery';
+      recommendation_section: RecommendationSection;
     };
   };
 }
+
+export type RecommendationSection =
+  | 'for_you'
+  | 'chat_based'
+  | 'age_based'
+  | 'recipe_based'
+  | 'milestone_based'
+  | 'category_spotlight'
+  | 'top_rated'
+  | 'popular';
 
 // Helper types for easier use
 export type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -478,6 +815,25 @@ export type UserMilestoneProgressUpdate = Database['public']['Tables']['user_mil
 export type Article = Database['public']['Tables']['articles']['Row'];
 export type ArticleInsert = Database['public']['Tables']['articles']['Insert'];
 export type ArticleUpdate = Database['public']['Tables']['articles']['Update'];
+
+// Shop types (single source of truth for product recommendations app-wide)
+export type ShopCategoryRow = Database['public']['Tables']['shop_categories']['Row'];
+export type ShopAffiliateRow = Database['public']['Tables']['shop_affiliates']['Row'];
+export type ShopProductRow = Database['public']['Tables']['shop_products']['Row'];
+export type ShopProductAffiliateRow = Database['public']['Tables']['shop_product_affiliates']['Row'];
+export type ShopClickRow = Database['public']['Tables']['shop_clicks']['Row'];
+export type ShopUserRecommendationRow = Database['public']['Tables']['shop_user_recommendations']['Row'];
+
+export type ShopProductInsert = Database['public']['Tables']['shop_products']['Insert'];
+export type ShopProductAffiliateInsert = Database['public']['Tables']['shop_product_affiliates']['Insert'];
+export type ShopClickInsert = Database['public']['Tables']['shop_clicks']['Insert'];
+
+// Legacy affiliate types (deprecated; kept for backfill traceability and one-release soak)
+/** @deprecated use ShopProductRow */
+export type LegacyAffiliateProduct = Database['public']['Tables']['affiliate_products']['Row'];
+/** @deprecated use ShopClickRow */
+export type LegacyAffiliateClick = Database['public']['Tables']['affiliate_clicks']['Row'];
+export type ProductMentionLog = Database['public']['Tables']['product_mentions_log']['Row'];
 
 // Enum types
 export type ParentingStage = 'expecting' | 'newborn' | 'infant' | 'toddler' | 'preschool' | 'school';
