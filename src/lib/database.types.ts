@@ -513,8 +513,6 @@ export interface Database {
           is_featured: boolean;
           click_count: number;
           name_variants: string[] | null;
-          /** @deprecated traceability column from affiliate_products backfill; will be dropped after deprecation soak */
-          legacy_affiliate_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -536,7 +534,6 @@ export interface Database {
           is_featured?: boolean;
           click_count?: number;
           name_variants?: string[] | null;
-          legacy_affiliate_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -651,78 +648,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      /** @deprecated superseded by shop_products as of 2026-04-27. Kept for soak window. */
-      affiliate_products: {
-        Row: {
-          id: string;
-          product_name: string;
-          name_variants: string[];
-          description: string | null;
-          affiliate_url: string;
-          affiliate_network: string;
-          image_url: string | null;
-          price: number | null;
-          category: string | null;
-          age_range_min: number;
-          age_range_max: number | null;
-          is_active: boolean;
-          click_count: number;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          product_name: string;
-          name_variants?: string[];
-          description?: string | null;
-          affiliate_url: string;
-          affiliate_network?: string;
-          image_url?: string | null;
-          price?: number | null;
-          category?: string | null;
-          age_range_min?: number;
-          age_range_max?: number | null;
-          is_active?: boolean;
-          click_count?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          product_name?: string;
-          name_variants?: string[];
-          description?: string | null;
-          affiliate_url?: string;
-          affiliate_network?: string;
-          image_url?: string | null;
-          price?: number | null;
-          category?: string | null;
-          age_range_min?: number;
-          age_range_max?: number | null;
-          is_active?: boolean;
-          click_count?: number;
-          updated_at?: string;
-        };
-      };
-      /** @deprecated superseded by shop_clicks as of 2026-04-27. Kept for soak window. */
-      affiliate_clicks: {
-        Row: {
-          id: string;
-          user_id: string | null;
-          product_id: string | null;
-          session_id: string | null;
-          clicked_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id?: string | null;
-          product_id?: string | null;
-          session_id?: string | null;
-          clicked_at?: string;
-        };
-        Update: {
-          clicked_at?: string;
-        };
-      };
       product_mentions_log: {
         Row: {
           id: string;
@@ -828,11 +753,6 @@ export type ShopProductInsert = Database['public']['Tables']['shop_products']['I
 export type ShopProductAffiliateInsert = Database['public']['Tables']['shop_product_affiliates']['Insert'];
 export type ShopClickInsert = Database['public']['Tables']['shop_clicks']['Insert'];
 
-// Legacy affiliate types (deprecated; kept for backfill traceability and one-release soak)
-/** @deprecated use ShopProductRow */
-export type LegacyAffiliateProduct = Database['public']['Tables']['affiliate_products']['Row'];
-/** @deprecated use ShopClickRow */
-export type LegacyAffiliateClick = Database['public']['Tables']['affiliate_clicks']['Row'];
 export type ProductMentionLog = Database['public']['Tables']['product_mentions_log']['Row'];
 
 // Enum types
